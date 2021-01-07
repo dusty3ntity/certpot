@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Monitors;
-using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +15,11 @@ namespace API.Controllers
             return await Mediator.Send(new List.Query());
         }
 
-        // [HttpGet("{monitorId}")]
-        // public async Task<ActionResult<Monitor>> Details(Guid monitorId)
-        // {
-        //     return await Mediator.Send(new Details.Query {Id = dictionaryId});
-        // }
+        [HttpGet("{monitorId}")]
+        public async Task<ActionResult<MonitorDto>> Details(Guid monitorId)
+        {
+            return await Mediator.Send(new Details.Query {Id = monitorId});
+        }
 
         [HttpPost]
         public async Task<ActionResult<MonitorDto>> Create(Create.Command command)
