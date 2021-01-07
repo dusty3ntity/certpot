@@ -16,14 +16,15 @@ namespace Persistence
         {
             base.OnModelCreating(builder);
 
-            // SetupMonitors(builder);
+            SetupMonitors(builder);
         }
 
         private void SetupMonitors(ModelBuilder builder)
         {
             builder.Entity<Monitor>()
                 .HasOne(m => m.Certificate)
-                .WithOne()
+                .WithOne(c => c.Monitor)
+                .HasForeignKey<Certificate>(c => c.MonitorId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

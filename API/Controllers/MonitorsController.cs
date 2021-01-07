@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Monitors;
 using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -9,7 +11,7 @@ namespace API.Controllers
     public class MonitorsController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult<List<Monitor>>> List()
+        public async Task<ActionResult<List<MonitorDto>>> List()
         {
             return await Mediator.Send(new List.Query());
         }
@@ -21,16 +23,15 @@ namespace API.Controllers
         // }
 
         [HttpPost]
-        public async Task<ActionResult<Monitor>> Create(Create.Command command)
+        public async Task<ActionResult<MonitorDto>> Create(Create.Command command)
         {
             return await Mediator.Send(command);
         }
 
-        // [HttpDelete("{dictionaryId}")]
-        // [Authorize(Policy = "IsDictionaryOwner")]
-        // public async Task<ActionResult<Unit>> Delete(Guid dictionaryId)
-        // {
-        //     return await Mediator.Send(new Delete.Command {Id = dictionaryId});
-        // }
+        [HttpDelete("{monitorId}")]
+        public async Task<ActionResult<Unit>> Delete(Guid monitorId)
+        {
+            return await Mediator.Send(new Delete.Command {Id = monitorId});
+        }
     }
 }

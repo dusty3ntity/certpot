@@ -1,6 +1,7 @@
 using Application.Certificates;
 using Application.Interfaces;
 using Application.Monitors;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,7 @@ namespace API
             });
 
             services.AddMediatR(typeof(List));
+            services.AddAutoMapper(typeof(List));
 
             services.AddControllers();
 

@@ -1,16 +1,16 @@
 ﻿using System;
+using Application.Certificates;
 
-namespace Domain
+namespace Application.Monitors
 {
-    public class Monitor
+    public class MonitorDto
     {
         public Guid Id { get; set; }
-        
+
         public string DisplayName { get; set; }
         public string DomainName { get; set; }
         public int Port { get; set; }
 
-        public Guid CertificateId { get; set; }
-        public Certificate Certificate { get; set; }
+        public CertificateDto Certificate { get; set; }
     }
 }

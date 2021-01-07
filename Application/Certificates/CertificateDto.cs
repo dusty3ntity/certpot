@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Domain
+namespace Application.Certificates
 {
-    public class Certificate
+    public class CertificateDto
     {
         public Guid Id { get; set; }
 
@@ -14,8 +14,5 @@ namespace Domain
         public string IssuerOrganization { get; set; }
         public int Version { get; set; }
         public string SerialNumber { get; set; }
-
-        public Guid MonitorId { get; set; }
-        public Monitor Monitor { get; set; }
     }
 }
