@@ -15,6 +15,7 @@ namespace Persistence.Migrations
                     DisplayName = table.Column<string>(type: "text", nullable: true),
                     DomainName = table.Column<string>(type: "text", nullable: true),
                     Port = table.Column<int>(type: "integer", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CertificateId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

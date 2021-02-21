@@ -1,7 +1,9 @@
+using API.Middleware;
 using Application.Certificates;
 using Application.Interfaces;
 using Application.Monitors;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,18 +35,18 @@ namespace API
             services.AddMediatR(typeof(List));
             services.AddAutoMapper(typeof(List));
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(cfg =>
+            {
+                cfg.RegisterValidatorsFromAssemblyContaining<Application.Monitors.Create>();
+            });
 
-            services.AddSingleton<ICertificateParser, CertificateParser>();
+            services.AddTransient<ICertificateParser, CertificateParser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             // app.UseHttpsRedirection();
 

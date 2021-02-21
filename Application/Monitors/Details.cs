@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +38,7 @@ namespace Application.Monitors
                     .SingleOrDefaultAsync();
 
                 if (monitor == null)
-                    throw new Exception("Monitor not found");
+                    throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
                 var monitorToReturn = _mapper.Map<Monitor, MonitorDto>(monitor);
 

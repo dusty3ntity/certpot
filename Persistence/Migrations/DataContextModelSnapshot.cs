@@ -69,6 +69,9 @@ namespace Persistence.Migrations
                     b.Property<Guid>("CertificateId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("DisplayName")
                         .HasColumnType("text");
 

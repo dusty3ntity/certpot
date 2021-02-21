@@ -11,6 +11,8 @@ namespace Application.Monitors
         public string DomainName { get; set; }
         public int Port { get; set; }
 
+        public DateTime CreationDate { get; set; }
+
         public CertificateDto Certificate { get; set; }
     }
 }
