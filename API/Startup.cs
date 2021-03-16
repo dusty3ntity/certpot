@@ -40,7 +40,7 @@ namespace API
                 cfg.RegisterValidatorsFromAssemblyContaining<Application.Monitors.Create>();
             });
 
-            services.AddTransient<ICertificateParser, CertificateParser>();
+            services.AddSingleton<ICertificateParser, CertificateParser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

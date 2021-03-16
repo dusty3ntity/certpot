@@ -1,0 +1,60 @@
+#monitors-list-page {
+	.top-panel {
+		display: flex;
+		align-items: center;
+		margin-bottom: 2rem;
+
+		h2 {
+			font-size: 1.7rem;
+		}
+
+		.add-btn {
+			margin-left: auto;
+			padding: 0.5rem 1rem;
+		}
+	}
+
+	.monitors-table {
+		width: 100%;
+		border-collapse: collapse;
+
+		thead {
+			border-bottom: 1px solid $normal-color;
+		}
+
+		th {
+			text-align: left;
+			padding-bottom: 1rem;
+
+			color: $text-color-grey;
+			text-transform: uppercase;
+		}
+
+		.name-col {
+			width: 12%;
+		}
+
+		.host-col {
+			width: 15%;
+		}
+
+		.issuer-col {
+			width: 15%;
+		}
+	}
+
+	.monitors-list-item {
+		height: 4rem;
+		border-bottom: 1px solid $normal-color;
+		font-size: 1.1rem;
+
+		td {
+			max-width: 1px;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			padding-right: 1rem;
+
+			overflow: hidden;
+		}
+	}
+}
