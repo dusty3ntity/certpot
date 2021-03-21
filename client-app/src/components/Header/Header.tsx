@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
-import LogoIcon from "../Icons/LogoIcon";
+import LogoIcon from "../Common/Icons/LogoIcon";
 
 interface INavProps {
 	id: string;

@@ -7,10 +7,17 @@ export interface IMonitor {
 	port: number;
 	creationDate: Date;
 	certificate: ICertificate;
+	autoRenewalEnabled?: boolean;
+	lastChecked?: Date;
 }
 
 export interface INewMonitor {
 	displayName: string;
 	domainName: string;
 	port: number;
+}
+
+export enum AutoRenewalStatusEnum {
+	ACTIVE = "active",
+	DISABLED = "disabled",
 }

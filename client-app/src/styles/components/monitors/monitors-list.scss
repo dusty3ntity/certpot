@@ -4,8 +4,9 @@
 		align-items: center;
 		margin-bottom: 2rem;
 
-		h2 {
+		.title {
 			font-size: 1.7rem;
+			font-weight: 400;
 		}
 
 		.add-btn {
@@ -14,12 +15,28 @@
 		}
 	}
 
+	.table-wrapper {
+		position: relative;
+		overflow-y: scroll;
+		padding-right: 1rem;
+	}
+
 	.monitors-table {
 		width: 100%;
 		border-collapse: collapse;
 
 		thead {
-			border-bottom: 1px solid $normal-color;
+			position: sticky;
+			top: 0;
+			background: $body-background;
+
+			&::after {
+				position: absolute;
+				content: "";
+				background: $text-color-grey;
+				height: 1px;
+				width: 100%;
+			}
 		}
 
 		th {
@@ -31,30 +48,90 @@
 		}
 
 		.name-col {
-			width: 12%;
+			width: 14%;
 		}
 
 		.host-col {
-			width: 15%;
+			width: 16%;
+		}
+
+		.subject-col {
+			width: 16%;
 		}
 
 		.issuer-col {
-			width: 15%;
+			width: 18%;
+		}
+
+		.expires-in-col {
+			width: 14%;
+		}
+
+		.actions-col {
+			text-align: right;
+			padding-right: 8px;
 		}
 	}
 
-	.monitors-list-item {
+	.monitors-table-item {
 		height: 4rem;
 		border-bottom: 1px solid $normal-color;
-		font-size: 1.1rem;
 
 		td {
 			max-width: 1px;
 			white-space: nowrap;
 			text-overflow: ellipsis;
-			padding-right: 1rem;
+			padding-right: 16px;
 
 			overflow: hidden;
+
+			&:last-child {
+				padding: 0;
+			}
+		}
+
+		.actions-val div {
+			display: flex;
+			justify-content: flex-end;
+
+			.icon {
+				width: 1.5rem;
+				height: 1.5rem;
+			}
+		}
+
+		.expires-in-val {
+			&.expired-severity .badge {
+				background-color: $expired-color;
+			}
+
+			&.high-severity .badge {
+				background-color: $warning-color-darker;
+			}
+
+			&.moderate-severity .badge {
+				background-color: $success-color;
+			}
+
+			&.low-severity .badge {
+				background-color: $active-color;
+			}
+
+			.badge {
+				display: inline-block;
+				width: 10ch;
+				padding: 4px 8px;
+				border-radius: 20px;
+				text-align: center;
+				font-weight: 600;
+
+				color: white;
+			}
 		}
 	}
+}
+
+.subject-tooltip, .issuer-tooltip {
+	display: flex;
+	flex-direction: column;
 }

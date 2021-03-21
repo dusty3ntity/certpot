@@ -16,7 +16,6 @@ export interface IButtonProps extends IComponentProps {
 	disabled?: boolean;
 	onClick?: () => void;
 
-	noDisabledStyles?: boolean;
 	rightIcon?: ReactNode;
 }
 
@@ -35,7 +34,6 @@ const Button: React.FC<IButtonProps> = ({
 	disabled,
 	onClick,
 
-	noDisabledStyles,
 	rightIcon,
 
 	children,
@@ -57,7 +55,7 @@ const Button: React.FC<IButtonProps> = ({
 				primary: primary,
 				round: icon && !text,
 				active: active,
-				"no-disabled-styles": noDisabledStyles,
+				"btn-icon": icon,
 			})}
 			type={type}
 			disabled={disabled || loading}

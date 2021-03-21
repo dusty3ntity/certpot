@@ -1,7 +1,7 @@
 import React from "react";
 
-import { IComponentProps } from "../../models/components";
-import { combineClassNames } from "../../utils/classNames";
+import { IComponentProps } from "../../../models/components";
+import { combineClassNames } from "../../../utils/classNames";
 
 const LogoIcon: React.FC<IComponentProps> = ({ id, className }) => {
 	return (

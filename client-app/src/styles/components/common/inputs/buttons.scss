@@ -58,7 +58,12 @@ button {
 	}
 }
 
+.btn-icon {
+	background: none;
+}
+
 a {
+	display: flex;
 	transition: none;
 	background: none;
 
