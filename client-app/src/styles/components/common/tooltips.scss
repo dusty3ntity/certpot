@@ -2,9 +2,8 @@
 	font-size: 15px;
 	font-weight: 600;
 	padding: 4px;
-	border-radius: 15px;
+	border-radius: 0.5rem;
 	color: $body-background;
-	z-index: 10000;
 
 	&.dark-theme {
 		background: $active-color !important;
@@ -14,7 +13,7 @@
 	}
 
 	&.light-theme {
-		background: #ecf1f6 !important;
+		background: $error-color !important;
 		box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.025), 1px 1px 12px rgba(0, 0, 0, 0.05), 0.5px 0.5px 6px rgba(0, 0, 0, 0.15),
 			-2px -2px 5px #ecf1f6, -0.5px -0.5px 2px #ecf1f6 !important;
 	}
@@ -31,7 +30,7 @@
 	}
 
 	&.light-theme .arrow-regular {
-		background: url(../../images/triangle-white.svg);
+		background: url(../../images/triangle-red.svg);
 	}
 
 	.tippy-tooltip-content {
@@ -45,9 +44,13 @@
 	}
 
 	&.light-theme .tippy-tooltip-content {
-		background: #ecf1f6;
-		color: $primary-color;
+		background: $error-color;
+		color: $text-color-white;
 	}
+}
+
+.tippy-popper {
+	z-index: 1000000 !important;
 }
 
 .tippy-popper[x-placement^="top"] {

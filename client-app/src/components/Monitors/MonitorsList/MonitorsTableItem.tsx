@@ -1,21 +1,22 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { IMonitor } from "../../../models/monitors";
 import StatusBadge from "../../Common/StatusBadge";
 import DeleteIcon from "../../Common/Icons/DeleteIcon";
-import OpenIcon from "../../Common/Icons/OpenIcon";
 import Button from "../../Common/Inputs/Button";
 import { getExpiresInValue, normalizeDomainName } from "../../../utils/certificates";
 import { combineClassNames } from "../../../utils/classNames";
 import Tooltip from "../../Common/Tooltip";
 import { defaultFormat } from "../../../utils/dates";
+import { createConfirmationModal } from "../../Common/Modals/ConfirmationModal";
 
 interface IMonitorsTableItemProps {
 	monitor: IMonitor;
 }
 
 const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }) => {
+	const history = useHistory();
 	const { certificate } = monitor;
 
 	const host = `${monitor.domainName}:${monitor.port}`;
@@ -27,8 +28,22 @@ const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }) => {
 	const status = monitor.autoRenewalEnabled ? "active" : "disabled";
 	const lastCheckString = monitor.lastChecked ? defaultFormat(monitor.lastChecked) : "-";
 
+	const handleMonitorClick = () => {
+		history.push(`/monitors/${monitor.id}`);
+	};
+
+	const handleDeleteClick = () => {
+		const onOk = () => {
+			console.log(`Deleting ${monitor.id}`);
+		};
+
+		const modalContent = <span>Are you sure you want to delete this monitor?</span>;
+
+		createConfirmationModal(modalContent, "Delete", onOk);
+	};
+
 	return (
-		<tr className="monitors-table-item">
+		<tr className="monitors-table-item" onClick={handleMonitorClick}>
 			<td className="name-val">
 				<Tooltip text={monitor.displayName} position="top">
 					{monitor.displayName}
@@ -85,10 +100,7 @@ const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }) => {
 
 			<td className="actions-val">
 				<div>
-					<Link to={`/monitors/${monitor.id}`}>
-						<OpenIcon />
-					</Link>
-					<Button icon={<DeleteIcon />} />
+					<Button icon={<DeleteIcon />} onClick={handleDeleteClick} />
 				</div>
 			</td>
 		</tr>

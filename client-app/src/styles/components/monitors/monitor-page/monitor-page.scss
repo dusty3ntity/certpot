@@ -14,7 +14,11 @@
 		.delete-btn {
 			margin-left: auto;
 			padding: 0.5rem 1rem;
-			background: $expired-color;
+			background: $error-color;
+
+			&:active {
+				background: darken($error-color, 10%);
+			}
 		}
 	}
 }

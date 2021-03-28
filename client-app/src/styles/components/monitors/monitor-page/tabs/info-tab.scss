@@ -4,16 +4,6 @@
 		margin-bottom: 1.5rem;
 	}
 
-	.col {
-		display: flex;
-		flex-direction: column;
-		margin-right: 1rem;
-
-		&:last-child {
-			margin: 0;
-		}
-	}
-
 	.block {
 		display: flex;
 		margin-right: 1.5rem;
@@ -34,17 +24,26 @@
 	}
 
 	.block-content {
-		display: flex;
+		display: grid;
 		overflow: hidden;
-
-		span {
-			margin-bottom: 8px;
-		}
+		grid-template-columns: auto auto;
+		column-gap: 16px;
+		row-gap: 8px;
 	}
 
 	.status-row {
 		.block {
 			width: 50%;
+		}
+
+		.col {
+			display: flex;
+			flex-direction: column;
+			margin-right: 1rem;
+	
+			&:last-child {
+				margin: 0;
+			}
 		}
 
 		.status-block {
@@ -64,12 +63,12 @@
 
 			&.high-severity {
 				.icon {
-					background: $warning-color-darker;
+					background: $warning-color;
 				}
 
 				.value,
 				.status {
-					color: $warning-color-darker;
+					color: $warning-color;
 				}
 			}
 
@@ -98,7 +97,7 @@
 			.icon {
 				height: 3.8rem;
 				width: 3.8rem;
-				margin-right: 2rem;
+				margin-right: 1.5rem;
 				fill: $text-color-white;
 				border-radius: 1rem;
 			}

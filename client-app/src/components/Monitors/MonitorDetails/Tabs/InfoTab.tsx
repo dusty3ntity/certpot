@@ -10,7 +10,7 @@ import { defaultFormat } from "../../../../utils/dates";
 import Tooltip from "../../../Common/Tooltip";
 
 const InfoTab: React.FC = () => {
-	const monitor = monitors[1];
+	const monitor = monitors[5];
 	const { certificate } = monitor;
 
 	const [expiry, setExpiry] = useState(getExpiresInTime(certificate));
@@ -67,16 +67,17 @@ const InfoTab: React.FC = () => {
 					<span className="block-title">Monitor</span>
 
 					<div className="block-content">
-						<div className="col">
-							<span>Name:</span>
-							<span>Domain name:</span>
-							<span>Port:</span>
-						</div>
-						<div className="col">
-							<span>{monitor.displayName}</span>
-							<span>{monitor.domainName}</span>
-							<span>{monitor.port}</span>
-						</div>
+						<span>Name:</span>
+						<span>{monitor.displayName}</span>
+
+						<span>Domain name:</span>
+						<span>{monitor.domainName}</span>
+
+						<span>Port:</span>
+						<span>{monitor.port}</span>
+
+						<span>Last check:</span>
+						<span>{monitor.lastChecked ? defaultFormat(monitor.lastChecked) : "-"}</span>
 					</div>
 				</div>
 
@@ -84,18 +85,15 @@ const InfoTab: React.FC = () => {
 					<span className="block-title">Certificate Subject</span>
 
 					<div className="block-content">
-						<div className="col">
-							<span>Common name:</span>
-							<span>Organization:</span>
-						</div>
-						<div className="col">
-							<span>
-								<Tooltip text={certificate.subjectCommonName} position="top" interactive>
-									{normalizeDomainName(certificate.subjectCommonName)}
-								</Tooltip>
-							</span>
-							<span>{certificate.subjectOrganization}</span>
-						</div>
+						<span>Common name:</span>
+						<span>
+							<Tooltip text={certificate.subjectCommonName} position="top" interactive>
+								{normalizeDomainName(certificate.subjectCommonName)}
+							</Tooltip>
+						</span>
+
+						<span>Organization:</span>
+						<span>{certificate.subjectOrganization}</span>
 					</div>
 				</div>
 
@@ -103,14 +101,11 @@ const InfoTab: React.FC = () => {
 					<span className="block-title">Certificate Issuer</span>
 
 					<div className="block-content">
-						<div className="col">
-							<span>Common name:</span>
-							<span>Organization:</span>
-						</div>
-						<div className="col">
-							<span>{certificate.issuerCommonName}</span>
-							<span>{certificate.issuerOrganization}</span>
-						</div>
+						<span>Common name:</span>
+						<span>{certificate.issuerCommonName}</span>
+
+						<span>Organization:</span>
+						<span>{certificate.issuerOrganization}</span>
 					</div>
 				</div>
 			</div>

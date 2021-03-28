@@ -1,3 +1,5 @@
+@import "./monitors-table-item.scss";
+
 #monitors-list-page {
 	.top-panel {
 		display: flex;
@@ -48,7 +50,8 @@
 		}
 
 		.name-col {
-			width: 16%;
+			width: 19%;
+			padding-left: 1.5rem;
 		}
 
 		.host-col {
@@ -68,70 +71,14 @@
 		}
 
 		.actions-col {
-			text-align: right;
-			padding-right: 8px;
-		}
-	}
-
-	.monitors-table-item {
-		height: 4rem;
-		border-bottom: 1px solid $normal-color;
-
-		td {
-			max-width: 1px;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			padding-right: 16px;
-
-			overflow: hidden;
-
-			&:last-child {
-				padding: 0;
-			}
-		}
-
-		.actions-val div {
-			display: flex;
-			justify-content: flex-end;
-
-			.icon {
-				width: 1.5rem;
-				height: 1.5rem;
-			}
-		}
-
-		.expires-in-val {
-			&.expired-severity .badge {
-				background-color: $expired-color;
-			}
-
-			&.high-severity .badge {
-				background-color: $warning-color-darker;
-			}
-
-			&.moderate-severity .badge {
-				background-color: $success-color;
-			}
-
-			&.low-severity .badge {
-				background-color: $active-color;
-			}
-
-			.badge {
-				display: inline-block;
-				width: 10ch;
-				padding: 4px 8px;
-				border-radius: 20px;
-				text-align: center;
-				font-weight: 600;
-
-				color: white;
-			}
+			width: 8%;
+			color: transparent;
 		}
 	}
 }
 
-.subject-tooltip, .issuer-tooltip {
+.subject-tooltip,
+.issuer-tooltip {
 	display: flex;
 	flex-direction: column;
 }

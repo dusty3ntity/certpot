@@ -1,0 +1,32 @@
+.form {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+
+	row-gap: 2.5rem;
+
+	.form-item {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	label {
+		display: flex;
+		align-items: center;
+		font-size: 1rem;
+		margin: 4px 0;
+		text-transform: uppercase;
+
+		span {
+			margin-right: 8px !important;
+		}
+	}
+
+	.validation-error {
+		.icon {
+			width: 1rem;
+			height: 1rem;
+		}
+	}
+}

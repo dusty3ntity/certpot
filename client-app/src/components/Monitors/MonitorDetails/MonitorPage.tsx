@@ -8,6 +8,7 @@ import Page from "../../Containers/Page";
 import { MONITOR_TABS_CONFIG } from "./tabs-config";
 import Tabs from "../../Common/Tabs";
 import { PageTitle } from "../../Common/PageTitle";
+import { createConfirmationModal } from "../../Common/Modals/ConfirmationModal";
 
 const MonitorPage: React.FC = () => {
 	const history = useHistory();
@@ -24,6 +25,16 @@ const MonitorPage: React.FC = () => {
 		setMonitor(result);
 	}, [monitorId, history]);
 
+	const handleDeleteClick = () => {
+		const onOk = () => {
+			console.log(`Deleting ${monitor!.id}`);
+		};
+
+		const modalContent = <span>Are you sure you want to delete this monitor?</span>;
+
+		createConfirmationModal(modalContent, "Delete", onOk);
+	};
+
 	return (
 		<>
 			{monitor && (
@@ -36,7 +47,7 @@ const MonitorPage: React.FC = () => {
 								Monitors {">"} {monitor.displayName}
 							</h2>
 
-							<Button text="Delete" className="delete-btn" primary />
+							<Button text="Delete" onClick={handleDeleteClick} className="delete-btn" primary />
 						</div>
 
 						<Tabs tabs={MONITOR_TABS_CONFIG} />

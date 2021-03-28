@@ -29,7 +29,7 @@ const columns = [
 		key: "autorenewal",
 	},
 	{
-		label: "Actions",
+		label: ".",
 		key: "actions",
 	},
 ];

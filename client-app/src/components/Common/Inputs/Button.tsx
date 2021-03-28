@@ -40,12 +40,11 @@ const Button: React.FC<IButtonProps> = ({
 	...props
 }) => {
 	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-		if (!onClick) {
-			return undefined;
-		}
-
 		e.stopPropagation();
-		onClick();
+
+		if (onClick) {
+			onClick();
+		}
 	}
 
 	return (
@@ -55,7 +54,7 @@ const Button: React.FC<IButtonProps> = ({
 				primary: primary,
 				round: icon && !text,
 				active: active,
-				"btn-icon": icon,
+				"btn-icon": icon && !text,
 			})}
 			type={type}
 			disabled={disabled || loading}
