@@ -1,5 +1,5 @@
 import punycode from "punycode";
-import { formatDistanceStrict, isBefore } from "date-fns";
+import moment from "moment";
 
 import { ICertificate, ExpirationSeverityEnum } from "../models/certificates";
 
@@ -20,10 +20,11 @@ export const getExpirationSeverity = (daysLeft: number): ExpirationSeverityEnum 
 };
 
 export const getExpiresInValue = (certificate: ICertificate) => {
-	const daysBetween = Number(formatDistanceStrict(certificate.validTo, new Date(), { unit: "day" }).split(" ")[0]);
-	const daysLeft = isBefore(certificate.validTo, new Date()) ? -daysBetween : daysBetween;
+	const duration = moment.duration(moment(certificate.validTo).diff(moment()));
+	const daysBetween = Math.ceil(duration.asDays());
+	const daysLeft = daysBetween < 0 ? 0 : daysBetween;
 
-	const severity = getExpirationSeverity(Number(daysLeft));
+	const severity = getExpirationSeverity(daysBetween);
 	let daysLeftString: string;
 
 	if (severity === ExpirationSeverityEnum.EXPIRED) {
@@ -32,5 +33,18 @@ export const getExpiresInValue = (certificate: ICertificate) => {
 		daysLeftString = daysLeft === 1 ? daysLeft + " day" : daysLeft + " days";
 	}
 
-	return { value: daysLeft, label: daysLeftString, severity };
+	return { value: daysBetween, label: daysLeftString, severity };
+};
+
+export const getExpiresInTime = (certificate: ICertificate) => {
+	const duration = moment.duration(moment(certificate.validTo).diff(moment()));
+	const expired = duration.minutes() < 0;
+	const severity = getExpirationSeverity(Number(Math.floor(duration.asDays())));
+	const time = {
+		days: Math.floor(Math.abs(duration.asDays())),
+		hours: Math.abs(duration.hours()),
+		minutes: Math.abs(duration.minutes()),
+	};
+
+	return { ...time, expired, severity };
 };

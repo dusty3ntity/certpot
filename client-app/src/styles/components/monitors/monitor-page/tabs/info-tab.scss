@@ -1,0 +1,155 @@
+.info-tab {
+	.row {
+		display: flex;
+		margin-bottom: 1.5rem;
+	}
+
+	.col {
+		display: flex;
+		flex-direction: column;
+		margin-right: 1rem;
+
+		&:last-child {
+			margin: 0;
+		}
+	}
+
+	.block {
+		display: flex;
+		margin-right: 1.5rem;
+		padding: 1.5rem;
+		border-radius: 1rem;
+
+		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.08), 0px 0px 6px rgba(0, 0, 0, 0.05);
+
+		&:last-child {
+			margin: 0;
+		}
+	}
+
+	.block-title {
+		color: $text-color-grey;
+		font-weight: 500;
+		margin-bottom: 1rem;
+	}
+
+	.block-content {
+		display: flex;
+		overflow: hidden;
+
+		span {
+			margin-bottom: 8px;
+		}
+	}
+
+	.status-row {
+		.block {
+			width: 50%;
+		}
+
+		.status-block {
+			align-items: center;
+			font-weight: 500;
+
+			&.expired-severity {
+				.icon {
+					background: $expired-color;
+				}
+
+				.value,
+				.status {
+					color: $expired-color;
+				}
+			}
+
+			&.high-severity {
+				.icon {
+					background: $warning-color-darker;
+				}
+
+				.value,
+				.status {
+					color: $warning-color-darker;
+				}
+			}
+
+			&.moderate-severity {
+				.icon {
+					background: $success-color;
+				}
+
+				.value,
+				.status {
+					color: $success-color;
+				}
+			}
+
+			&.low-severity {
+				.icon {
+					background: $active-color;
+				}
+
+				.value,
+				.status {
+					color: $active-color;
+				}
+			}
+
+			.icon {
+				height: 3.8rem;
+				width: 3.8rem;
+				margin-right: 2rem;
+				fill: $text-color-white;
+				border-radius: 1rem;
+			}
+
+			.time-col {
+				border-right: 1px solid $normal-color;
+				padding-right: 1rem;
+			}
+
+			.minutes {
+				border: none;
+				padding: 0;
+			}
+
+			.value {
+				font-size: 2.5rem;
+			}
+
+			.caption {
+				text-transform: uppercase;
+				color: $text-color-grey;
+			}
+
+			.status {
+				font-size: 1.2rem;
+				flex-grow: 1;
+				text-align: center;
+			}
+		}
+
+		.expiration-block {
+			justify-content: space-around;
+			align-items: center;
+
+			.title {
+				font-weight: 500;
+				color: $text-color-grey;
+				margin-bottom: 8px;
+			}
+
+			.value {
+				font-size: 1.2rem;
+				font-weight: 500;
+			}
+		}
+	}
+
+	.info-row {
+		.block {
+			flex-direction: column;
+			width: 33%;
+		}
+	}
+}

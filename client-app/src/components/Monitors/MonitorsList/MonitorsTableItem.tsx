@@ -1,15 +1,15 @@
 import React from "react";
-
-import { IMonitor } from "../../models/monitors";
-import StatusBadge from "../Common/StatusBadge";
-import DeleteIcon from "../Common/Icons/DeleteIcon";
-import OpenIcon from "../Common/Icons/OpenIcon";
-import Button from "../Common/Inputs/Button";
-import { getExpiresInValue, normalizeDomainName } from "../../utils/certificates";
-import { combineClassNames } from "../../utils/classNames";
-import Tooltip from "../Common/Tooltip";
 import { Link } from "react-router-dom";
-import { format } from "date-fns";
+
+import { IMonitor } from "../../../models/monitors";
+import StatusBadge from "../../Common/StatusBadge";
+import DeleteIcon from "../../Common/Icons/DeleteIcon";
+import OpenIcon from "../../Common/Icons/OpenIcon";
+import Button from "../../Common/Inputs/Button";
+import { getExpiresInValue, normalizeDomainName } from "../../../utils/certificates";
+import { combineClassNames } from "../../../utils/classNames";
+import Tooltip from "../../Common/Tooltip";
+import { defaultFormat } from "../../../utils/dates";
 
 interface IMonitorsTableItemProps {
 	monitor: IMonitor;
@@ -19,15 +19,13 @@ const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }) => {
 	const { certificate } = monitor;
 
 	const host = `${monitor.domainName}:${monitor.port}`;
-
 	const subject = normalizeDomainName(certificate.subjectCommonName);
 
 	const { value: expiresIn, label: expiresInString, severity } = getExpiresInValue(certificate);
-	const expirationString =
-		(expiresIn >= 0 ? "Expires on: " : "Expired on: ") + format(certificate.validTo, "d MMMM, Y");
+	const expirationString = (expiresIn >= 0 ? "Expires on: " : "Expired on: ") + defaultFormat(certificate.validTo);
 
 	const status = monitor.autoRenewalEnabled ? "active" : "disabled";
-	const lastCheckString = monitor.lastChecked ? format(monitor.lastChecked, "d MMMM, Y") : "-";
+	const lastCheckString = monitor.lastChecked ? defaultFormat(monitor.lastChecked) : "-";
 
 	return (
 		<tr className="monitors-table-item">
@@ -38,7 +36,7 @@ const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }) => {
 			</td>
 
 			<td className="host-val">
-				<Tooltip text={host} position="top">
+				<Tooltip text={host} position="top" interactive>
 					{host}
 				</Tooltip>
 			</td>
@@ -52,6 +50,7 @@ const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }) => {
 						</div>
 					}
 					position="top"
+					interactive
 				>
 					{subject}
 				</Tooltip>
@@ -66,6 +65,7 @@ const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }) => {
 						</div>
 					}
 					position="top"
+					interactive
 				>
 					{certificate.issuerOrganization}
 				</Tooltip>

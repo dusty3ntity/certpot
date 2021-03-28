@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IMonitor } from "../../models/monitors";
+import { IMonitor } from "../../../models/monitors";
 import MonitorsListItem from "./MonitorsTableItem";
 
 const columns = [

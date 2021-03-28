@@ -1,0 +1,20 @@
+@import "./tabs/tabs.scss";
+
+#monitor-page {
+	.top-panel {
+		display: flex;
+		align-items: center;
+		margin-bottom: 2rem;
+
+		.title {
+			font-size: 1.7rem;
+			font-weight: 400;
+		}
+
+		.delete-btn {
+			margin-left: auto;
+			padding: 0.5rem 1rem;
+			background: $expired-color;
+		}
+	}
+}

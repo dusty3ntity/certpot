@@ -3,7 +3,7 @@ import { IMonitor } from "../models/monitors";
 export const monitors: IMonitor[] = [
 	{
 		id: "c576ca09-1caf-4873-9eee-65c473be7876",
-		displayName: "1 Log ohyr dev dev dev",
+		displayName: "1 Log ohyr dev dev d",
 		domainName: "ohyr.dev",
 		port: 443,
 		creationDate: new Date("2021-02-21T19:54:26.29024"),
@@ -107,7 +107,7 @@ export const monitors: IMonitor[] = [
 			subjectCommonName: "*.google.com",
 			subjectOrganization: "Google LLC",
 			validFrom: new Date("2021-01-26T11:01:00"),
-			validTo: new Date("2025-04-20T12:00:59"),
+			validTo: new Date("2022-04-20T12:00:59"),
 			issuerCommonName: "GTS CA 1O1",
 			issuerOrganization: "Google Trust Services",
 			version: 3,
@@ -239,8 +239,8 @@ export const monitors: IMonitor[] = [
 			id: "c10b4fd1-21bc-45fc-a65e-dd675d4eeaf7",
 			subjectCommonName: "*.google.com",
 			subjectOrganization: "Google LLC",
-			validFrom: new Date("2021-01-26T11:01:00"),
-			validTo: new Date("2021-04-20T12:00:59"),
+			validFrom: new Date("2019-01-26T11:01:00"),
+			validTo: new Date("2020-04-20T12:00:59"),
 			issuerCommonName: "GTS CA 1O1",
 			issuerOrganization: "Google Trust Services",
 			version: 3,
