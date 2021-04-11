@@ -31,7 +31,7 @@ axios.interceptors.response.use(undefined, (error) => {
 	} else if (error.response.status === 400 && !error.response.data.errors.code) {
 		if (isBadId(error.response)) {
 			injectErrorCode(error.response, ErrorType.BadId);
-			history.push("/404");
+			history.push("/not-found");
 			createNotification(NotificationType.Error, {
 				title: "Wrong id!",
 				message: "Please, check the id in the address bar or contact the administrator.",
@@ -62,7 +62,7 @@ axios.interceptors.response.use(undefined, (error) => {
 				error: error.response,
 			});
 		}
-		history.push("/404");
+		history.push("/not-found");
 		throw new CustomError(error.response, error.response.data.errors.code);
 	}
 

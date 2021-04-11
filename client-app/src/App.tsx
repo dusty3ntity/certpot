@@ -22,7 +22,7 @@ export const App: React.FC = () => {
 				draggable={false}
 				hideProgressBar
 				closeOnClick={false}
-				autoClose={500000000}
+				autoClose={5000}
 			/>
 
 			<Container>
