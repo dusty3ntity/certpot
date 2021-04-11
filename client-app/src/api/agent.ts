@@ -1,4 +1,4 @@
-import { IMonitor, INewMonitor } from "./../models/monitors";
+import { IMonitor, INewMonitor } from "../models/types/monitors";
 import axios, { AxiosResponse } from "axios";
 
 import { SLEEP_DURATION } from "./../constants/api";
@@ -39,6 +39,6 @@ const requests = {
 export const Monitors = {
 	list: (): Promise<IMonitor[]> => requests.get("/monitors/"),
 	details: (id: string): Promise<IMonitor> => requests.get(`/monitors/${id}`),
-	create: (data: INewMonitor): Promise<string> => requests.post("/monitors/", data),
+	create: (data: INewMonitor): Promise<IMonitor> => requests.post("/monitors/", data),
 	delete: (id: string): Promise<void> => requests.del(`/monitors/${id}`),
 };

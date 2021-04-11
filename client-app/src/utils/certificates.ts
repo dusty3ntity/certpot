@@ -1,7 +1,7 @@
 import punycode from "punycode";
 import moment from "moment";
 
-import { ICertificate, ExpirationSeverityEnum } from "../models/certificates";
+import { ICertificate, ExpirationSeverityEnum } from "../models/types/certificates";
 
 export const normalizeDomainName = (domainName: string): string => {
 	return domainName.includes("xn--") ? punycode.toUnicode(domainName) : domainName;

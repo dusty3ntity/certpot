@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Application.Errors;
 using Application.Interfaces;
 using Domain;
@@ -62,8 +64,9 @@ namespace Application.Certificates
 
         private static OrganizationData ParseOrganizationData(string data)
         {
-            var tokens = data.Split(", ");
-            var map = tokens.Select(item => item.Split("=")).ToDictionary(s => s[0], s => s[1]);
+            var tokens = SplitCertificateOrganizationData(data);
+            var map = tokens.Select(item => item.Trim().Replace("\"", "").Split("="))
+                .ToDictionary(s => s[0], s => s[1]);
 
             var result = new OrganizationData
             {
@@ -72,6 +75,26 @@ namespace Application.Certificates
             };
 
             return result;
+        }
+
+        private static string[] SplitCertificateOrganizationData(string data)
+        {
+            var isInQuoteBlock = false;
+            var res = new List<StringBuilder> {new StringBuilder()};
+            foreach (var c in data)
+            {
+                if (c == '"')
+                {
+                    isInQuoteBlock = !isInQuoteBlock;
+                    res[res.Count - 1].Append('"');
+                }
+                else if (c == ',')
+                    if (isInQuoteBlock) res[res.Count - 1].Append(',');
+                    else res.Add(new StringBuilder());
+                else res[res.Count - 1].Append(c);
+            }
+
+            return res.Select(b => b.ToString()).ToArray();
         }
     }
 }

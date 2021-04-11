@@ -31,7 +31,7 @@ namespace Application.Monitors
                     .Length(2, 30);
                 RuleFor(m => m.DomainName)
 										.NotEmpty()
-                    .Length(4, 30);
+                    .Length(4, 30)
                     .Must(MonitorPathValidators.BeValidDomainName)
                     .WithMessage("Please specify a valid domain name without protocol.");
                 RuleFor(m => m.Port)

@@ -31,6 +31,19 @@ namespace API
             {
                 opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
+            
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy",
+                    policy =>
+                    {
+                        policy.AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .WithExposedHeaders("WWW-Authenticate")
+                            .WithOrigins("http://localhost:3050")
+                            .AllowCredentials();
+                    });
+            });
 
             services.AddMediatR(typeof(List));
             services.AddAutoMapper(typeof(List));
@@ -51,6 +64,8 @@ namespace API
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 

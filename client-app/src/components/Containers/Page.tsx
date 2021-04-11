@@ -1,13 +1,9 @@
 import React from "react";
-import { IComponentProps } from "../../models/components";
+import { IComponentProps } from "../../models/types/components";
 import { combineClassNames } from "../../utils/classNames";
 
-const Page: React.FC<IComponentProps> = ({ id, className, children }) => {
-	return (
-		<div className={combineClassNames("page", className)} id={id}>
-			{children}
-		</div>
-	);
-};
-
-export default Page;
+export const Page: React.FC<IComponentProps> = ({ id, className, children }) => (
+	<div className={combineClassNames("page", className)} id={id}>
+		{children}
+	</div>
+);

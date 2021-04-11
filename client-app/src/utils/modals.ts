@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { IComponentProps, IConcreteModalProps } from "../models/components";
+import { IComponentProps, IConcreteModalProps } from "../models/types/components";
 
 export const createModal = (
 	component: React.ComponentType<IConcreteModalProps>,

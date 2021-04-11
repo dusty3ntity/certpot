@@ -1,0 +1,1 @@
+export { MonitorsListPage } from "./MonitorsListPage";

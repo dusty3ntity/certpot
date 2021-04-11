@@ -1,5 +1,5 @@
 .loading-indicator-small {
-	fill: $primary-color !important;
+	fill: $primary-color;
 
 	animation: loading 0.8s infinite linear;
 }
@@ -40,16 +40,15 @@
 	100% {
 		transform: scale(0);
 
-		background: #4571e6;
-		box-shadow: -1px -1px 4px #ffffff, inset 2px 2px 4px #2d50a8, inset -2px -2px 4px #86a8ff;
+		background: $success-color;
+		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.08), 0px 0px 6px rgba(0, 0, 0, 0.05);
 	}
 
 	40% {
 		transform: scale(1);
 
-		background: #4d7eff;
-		box-shadow: 2px 2px 4px #b1b1b1, -2px -2px 8px #ffffff, 1px 1px 2px #586689, inset -2px -2px 4px #3a63cc,
-			inset 2px 2px 4px #bed0ff;
+		background: lighen($success-color, 5%);
+		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.08), 0px 0px 6px rgba(0, 0, 0, 0.05);
 	}
 }
 
@@ -63,7 +62,7 @@
 
 	.title {
 		font-size: 2rem;
-		font-weight: 800;
+		font-weight: 600;
 		margin-top: 1.5rem;
 		color: $primary-color;
 	}

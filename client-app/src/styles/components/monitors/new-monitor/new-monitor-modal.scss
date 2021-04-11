@@ -1,6 +1,10 @@
 .new-monitor-modal {
 	.create-btn {
 		background: $success-color;
+
+		&:disabled {
+			background: lighten($success-color, 20%);
+		}
 	}
 
 	.modal-actions {

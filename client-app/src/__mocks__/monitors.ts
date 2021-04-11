@@ -1,4 +1,4 @@
-import { IMonitor } from "../models/monitors";
+import { IMonitor } from "../models/types/monitors";
 
 export const monitors: IMonitor[] = [
 	{
@@ -19,7 +19,7 @@ export const monitors: IMonitor[] = [
 			serialNumber: "04A7F1C7CFA8BD7223C330CADFB9C22EDA8E",
 		},
 		autoRenewalEnabled: true,
-		lastChecked: new Date("2021-03-14T17:51:32"),
+		lastCheckedDate: new Date("2021-03-14T17:51:32"),
 	},
 	{
 		id: "2186b051-eca6-4f33-9abb-5b8544c28f1f",
