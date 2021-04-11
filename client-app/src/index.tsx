@@ -8,6 +8,7 @@ import { history } from "./config";
 import { store } from "./store";
 
 import "react-tippy/dist/tippy.css";
+import "react-toastify/dist/ReactToastify.min.css";
 import "./styles/styles.scss";
 
 ReactDOM.render(

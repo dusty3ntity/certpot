@@ -9,7 +9,13 @@ import { deleteMonitor } from "../../../models/monitors/monitorsSlice";
 import { RootStateType } from "../../../models/rootReducer";
 import { IMonitor } from "../../../models/types";
 import { useAppDispatch } from "../../../store";
-import { normalizeDomainName, getExpiresInValue, combineClassNames, defaultFormat } from "../../../utils";
+import {
+	normalizeDomainName,
+	getExpiresInValue,
+	combineClassNames,
+	defaultFormat,
+	createUnknownError,
+} from "../../../utils";
 
 interface IMonitorsTableItemProps {
 	monitor: IMonitor;
@@ -39,8 +45,7 @@ export const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }
 		const onOk = () => {
 			dispatch(deleteMonitor(monitor.id))
 				.then(unwrapResult)
-				.then(() => console.log("Deleted monitor", monitor.id))
-				.catch((e) => console.log(e));
+				.catch((err) => createUnknownError(err, "[monitorsTable]~deleteMonitor"));
 		};
 
 		const modalContent = <span>Are you sure you want to delete this monitor?</span>;

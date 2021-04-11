@@ -7,3 +7,4 @@ export * from "./modals";
 export * from "./tabs";
 export * from "./tooltip";
 export * from "./empty";
+export * from "./notifications";

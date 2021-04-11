@@ -9,6 +9,7 @@ import { deleteMonitor } from "../../../models/monitors/monitorsSlice";
 import { RootStateType } from "../../../models/rootReducer";
 import { useAppDispatch } from "../../../store";
 import { MonitorPage } from "./MonitorPage";
+import { createUnknownError } from "../../../utils";
 
 export const MonitorPageWrapper = () => {
 	const history = useHistory();
@@ -19,7 +20,9 @@ export const MonitorPageWrapper = () => {
 	const { deleting, deleteTargetId } = useSelector((state: RootStateType) => state.monitors);
 
 	useEffect(() => {
-		dispatch(fetchMonitorById(monitorId));
+		dispatch(fetchMonitorById(monitorId)).catch((err) => {
+			createUnknownError(err, "[monitorPage]~fetchMonitorById");
+		});
 		return () => {
 			dispatch(resetSelectedMonitor());
 		};
@@ -31,7 +34,7 @@ export const MonitorPageWrapper = () => {
 			dispatch(deleteMonitor(monitor.id))
 				.then(unwrapResult)
 				.then(() => history.push("/monitors"))
-				.catch((e) => console.log(e));
+				.catch((err) => createUnknownError(err, "[monitorPage]~deleteMonitor"));
 		};
 
 		const modalContent = <span>Are you sure you want to delete this monitor?</span>;
@@ -40,18 +43,16 @@ export const MonitorPageWrapper = () => {
 	};
 
 	return (
-		<>
-			<Page id="monitor-page">
-				{loading && <LoadingScreen size={2} />}
+		<Page id="monitor-page">
+			{loading && <LoadingScreen size={2} />}
 
-				{!loading && monitor && (
-					<MonitorPage
-						monitor={monitor}
-						onDeleteClick={handleDeleteClick}
-						deleting={deleting && deleteTargetId === monitor.id}
-					/>
-				)}
-			</Page>
-		</>
+			{!loading && monitor && (
+				<MonitorPage
+					monitor={monitor}
+					onDeleteClick={handleDeleteClick}
+					deleting={deleting && deleteTargetId === monitor.id}
+				/>
+			)}
+		</Page>
 	);
 };

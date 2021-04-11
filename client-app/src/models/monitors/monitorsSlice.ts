@@ -21,24 +21,36 @@ const initialState: IMonitorsState = {
 	monitors: [],
 };
 
-export const fetchMonitors = createAsyncThunk<IMonitor[]>("monitors/fetchMonitors", async () => {
-	const response = await Monitors.list();
-	return response.map(mapMonitorDates);
+export const fetchMonitors = createAsyncThunk<IMonitor[]>("monitors/fetchMonitors", async (_, { rejectWithValue }) => {
+	try {
+		const response = await Monitors.list();
+		return response.map(mapMonitorDates);
+	} catch (err) {
+		return rejectWithValue(err);
+	}
 });
 
 export const createMonitor = createAsyncThunk<IMonitor, INewMonitor>(
 	"monitors/createMonitor",
-	async (monitor: INewMonitor) => {
-		const response = await Monitors.create(monitor);
-		return response;
+	async (monitor: INewMonitor, { rejectWithValue }) => {
+		try {
+			const response = await Monitors.create(monitor);
+			return response;
+		} catch (err) {
+			return rejectWithValue(err);
+		}
 	}
 );
 
 export const deleteMonitor = createAsyncThunk<void, string>(
 	"monitors/deleteMonitor",
-	async (id: string, { dispatch }) => {
-		await Monitors.delete(id);
-		dispatch(removeMonitor(id));
+	async (id: string, { dispatch, rejectWithValue }) => {
+		try {
+			await Monitors.delete(id);
+			dispatch(removeMonitor(id));
+		} catch (err) {
+			return rejectWithValue(err);
+		}
 	}
 );
 
@@ -60,7 +72,6 @@ const monitorsSlice = createSlice({
 		});
 		builder.addCase(fetchMonitors.rejected, (state, { error }) => {
 			state.loading = false;
-			console.log(error);
 		});
 
 		builder.addCase(deleteMonitor.pending, (state, { meta }) => {
@@ -74,7 +85,6 @@ const monitorsSlice = createSlice({
 		builder.addCase(deleteMonitor.rejected, (state, { error }) => {
 			state.deleting = false;
 			state.deleteTargetId = null;
-			console.log(error);
 		});
 
 		builder.addCase(createMonitor.pending, (state) => {
@@ -86,7 +96,6 @@ const monitorsSlice = createSlice({
 		});
 		builder.addCase(createMonitor.rejected, (state, { error }) => {
 			state.submitting = false;
-			console.log(error);
 		});
 	},
 });

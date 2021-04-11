@@ -17,7 +17,7 @@ const initialState: IMonitorState = {
 
 export const fetchMonitorById = createAsyncThunk<IMonitor, string>(
 	"monitor/fetchMonitor",
-	async (id: string, { getState, dispatch }) => {
+	async (id: string, { getState, dispatch, rejectWithValue }) => {
 		const {
 			monitors: { monitors },
 		} = getState() as RootStateType;
@@ -27,8 +27,12 @@ export const fetchMonitorById = createAsyncThunk<IMonitor, string>(
 			return monitor;
 		}
 
-		const response = await Monitors.details(id);
-		return mapMonitorDates(response);
+		try {
+			const response = await Monitors.details(id);
+			return mapMonitorDates(response);
+		} catch (err) {
+			return rejectWithValue(err);
+		}
 	}
 );
 
@@ -51,9 +55,8 @@ const monitorSlice = createSlice({
 			state.loading = false;
 			state.monitor = payload;
 		});
-		builder.addCase(fetchMonitorById.rejected, (state, { error }) => {
+		builder.addCase(fetchMonitorById.rejected, (state) => {
 			state.loading = false;
-			console.log(error);
 		});
 	},
 });

@@ -4,10 +4,11 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { createMonitor } from "../../models/monitors/monitorsSlice";
 import { IConcreteModalProps, INewMonitor } from "../../models/types";
 import { useAppDispatch } from "../../store";
-import { combineClassNames } from "../../utils";
+import { combineClassNames, createNotification } from "../../utils";
 import { MonitorForm } from "../new-monitor-form";
 import { useSelector } from "react-redux";
 import { RootStateType } from "../../models/rootReducer";
+import { ErrorType, NotificationType } from "../../models/types/errors";
 
 export const NewMonitorModal: React.FC<IConcreteModalProps> = ({ onOk, onCancel }) => {
 	const [animating, setAnimating] = useState(false);
@@ -29,11 +30,24 @@ export const NewMonitorModal: React.FC<IConcreteModalProps> = ({ onOk, onCancel 
 	const handleNewMonitorSubmit = (monitor: INewMonitor) => {
 		dispatch(createMonitor(monitor))
 			.then(unwrapResult)
-			.then(() => {
-				console.log("Created monitor", monitor.displayName);
-				onOk();
-			})
-			.catch((e) => console.log(e));
+			.then(onOk)
+			.then(() => createNotification(NotificationType.Success, { message: "Monitor created successfully!" }))
+			.catch((err) => {
+				if (err.code < ErrorType.DefaultErrorsBlockEnd) {
+					return;
+				}
+
+				if (err.code === ErrorType.CertificateParsingError) {
+					createNotification(NotificationType.Error, {
+						message: "There was an error parsing the certificate. Please, try again later or check the data provided.",
+					});
+				} else {
+					createNotification(NotificationType.UnknownError, {
+						error: err.body,
+						errorOrigin: "[newMonitorModal]~createMonitor",
+					});
+				}
+			});
 	};
 
 	return (

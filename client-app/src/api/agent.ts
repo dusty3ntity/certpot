@@ -1,7 +1,10 @@
-import { IMonitor, INewMonitor } from "../models/types/monitors";
 import axios, { AxiosResponse } from "axios";
 
 import { SLEEP_DURATION } from "./../constants/api";
+import { IMonitor, INewMonitor } from "../models/types/monitors";
+import { createNotification, injectErrorCode, isBadId } from "../utils";
+import { CustomError, ErrorType, NotificationType } from "../models/types/errors";
+import { history } from "../config/history";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
@@ -11,12 +14,59 @@ axios.interceptors.response.use(undefined, (error) => {
 	}
 
 	if (error.message === "Network Error" && !error.response) {
-		console.log("Network error");
-		throw new Error("No connection");
+		createNotification(NotificationType.Error, {
+			title: "Network error!",
+			message: "The server isn't responding... Check your internet connection or contact the administrator.",
+		});
+		throw new CustomError(error.response, ErrorType.ConnectionRefused);
 	} else if (error.response.status === 500) {
-		console.log("Server error");
-		throw new Error("Server error");
+		if (!error.response.data.errors.code) {
+			injectErrorCode(error.response, ErrorType.DefaultServerError);
+		}
+		createNotification(NotificationType.Error, {
+			title: "Server error!",
+			message: "A server error occurred. Please, refresh the page or contact the administrator!",
+		});
+		throw new CustomError(error.response, error.response.data.errors.code);
+	} else if (error.response.status === 400 && !error.response.data.errors.code) {
+		if (isBadId(error.response)) {
+			injectErrorCode(error.response, ErrorType.BadId);
+			history.push("/404");
+			createNotification(NotificationType.Error, {
+				title: "Wrong id!",
+				message: "Please, check the id in the address bar or contact the administrator.",
+				error: error.response,
+			});
+		} else {
+			injectErrorCode(error.response, ErrorType.DefaultValidationError);
+			createNotification(NotificationType.UnknownError, {
+				title: "Validation error!",
+				error: error.response,
+			});
+		}
+		throw new CustomError(error.response, error.response.data.errors.code);
+	} else if (error.response.status === 404) {
+		if (!error.response.data.errors.code) {
+			injectErrorCode(error.response, ErrorType.DefaultNotFound);
+		}
+		const code = error.response.data.errors.code;
+		if (code === ErrorType.MonitorNotFound) {
+			createNotification(NotificationType.Error, {
+				title: "Not found!",
+				message: "Monitor not found! Please, check the id in the address bar or contact the administrator.",
+				error: error.response,
+			});
+		} else {
+			createNotification(NotificationType.UnknownError, {
+				title: "Not found!",
+				error: error.response,
+			});
+		}
+		history.push("/404");
+		throw new CustomError(error.response, error.response.data.errors.code);
 	}
+
+	throw new CustomError(error.response, error.response.data.errors.code ?? ErrorType.Unknown);
 });
 
 const responseBody = (response: AxiosResponse): any => response.data;

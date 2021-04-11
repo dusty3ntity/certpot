@@ -3,3 +3,5 @@ export { defaultFormat } from "./dates";
 export { normalizeDomainName, getExpiresInValue, getExpiresInTime } from "./certificates";
 export { createModal } from "./modals";
 export { mapMonitorDates } from "./monitors";
+export { createCustomError, injectErrorCode, isBadId, createUnknownError } from "./errors";
+export { createNotification } from "./notifications";

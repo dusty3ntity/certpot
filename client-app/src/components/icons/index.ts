@@ -6,3 +6,6 @@ export { LogoIcon } from "./LogoIcon";
 export { OpenIcon } from "./OpenIcon";
 export { RenewalIcon } from "./RenewalIcon";
 export { TickIcon } from "./TickIcon";
+export { SuccessIcon } from "./SuccessIcon";
+export { WarningIcon } from "./WarningIcon";
+export { CopyIcon } from "./CopyIcon";
