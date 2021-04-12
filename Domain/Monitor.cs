@@ -14,5 +14,8 @@ namespace Domain
 
         public Guid CertificateId { get; set; }
         public Certificate Certificate { get; set; }
+
+        public bool AutoRenewalEnabled { get; set; }
+        public DateTime LastCheckDate { get; set; }
     }
 }

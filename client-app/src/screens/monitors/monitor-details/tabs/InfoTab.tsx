@@ -72,7 +72,7 @@ export const InfoTab: React.FC<ITabProps> = ({ data }) => {
 						<span>{monitor.port}</span>
 
 						<span>Last check:</span>
-						<span>{monitor.lastCheckedDate ? defaultFormat(monitor.lastCheckedDate) : "-"}</span>
+						<span>{monitor.lastCheckDate ? defaultFormat(monitor.lastCheckDate) : "-"}</span>
 					</div>
 				</div>
 
@@ -88,7 +88,7 @@ export const InfoTab: React.FC<ITabProps> = ({ data }) => {
 						</span>
 
 						<span>Organization:</span>
-						<span>{certificate.subjectOrganization}</span>
+						<span>{certificate.subjectOrganization ?? "-"}</span>
 					</div>
 				</div>
 
@@ -100,7 +100,7 @@ export const InfoTab: React.FC<ITabProps> = ({ data }) => {
 						<span>{certificate.issuerCommonName}</span>
 
 						<span>Organization:</span>
-						<span>{certificate.issuerOrganization}</span>
+						<span>{certificate.issuerOrganization ?? "-"}</span>
 					</div>
 				</div>
 			</div>

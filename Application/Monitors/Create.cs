@@ -30,7 +30,7 @@ namespace Application.Monitors
                     .NotEmpty()
                     .Length(2, 30);
                 RuleFor(m => m.DomainName)
-										.NotEmpty()
+                    .NotEmpty()
                     .Length(4, 30)
                     .Must(MonitorPathValidators.BeValidDomainName)
                     .WithMessage("Please specify a valid domain name without protocol.");
@@ -63,7 +63,9 @@ namespace Application.Monitors
                     DomainName = request.DomainName,
                     Port = request.Port,
                     CreationDate = DateTime.Now,
-                    Certificate = certificate
+                    Certificate = certificate,
+                    AutoRenewalEnabled = false,
+                    LastCheckDate = DateTime.Now
                 };
 
                 _context.Monitors.Add(monitor);

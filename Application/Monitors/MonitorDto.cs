@@ -14,5 +14,8 @@ namespace Application.Monitors
         public DateTime CreationDate { get; set; }
 
         public CertificateDto Certificate { get; set; }
+
+        public bool AutoRenewalEnabled { get; set; }
+        public DateTime LastCheckDate { get; set; }
     }
 }

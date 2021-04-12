@@ -8,7 +8,7 @@ export interface IMonitor {
 	creationDate: Date;
 	certificate: ICertificate;
 	autoRenewalEnabled?: boolean;
-	lastCheckedDate?: Date;
+	lastCheckDate?: Date;
 }
 
 export interface INewMonitor {

@@ -35,7 +35,7 @@ export const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }
 	const expirationString = (expiresIn >= 0 ? "Expires on: " : "Expired on: ") + defaultFormat(certificate.validTo);
 
 	const status = monitor.autoRenewalEnabled ? "active" : "disabled";
-	const lastCheckString = monitor.lastCheckedDate ? defaultFormat(monitor.lastCheckedDate) : "-";
+	const lastCheckString = monitor.lastCheckDate ? defaultFormat(monitor.lastCheckDate) : "-";
 
 	const handleMonitorClick = () => {
 		history.push(`/monitors/${monitor.id}`);
