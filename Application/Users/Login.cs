@@ -53,6 +53,9 @@ namespace Application.Users
 
                 if (result.Succeeded)
                 {
+                    user.RefreshToken = _jwtGenerator.GenerateRefreshToken();
+                    user.RefreshTokenExpiry = DateTime.Now.AddDays(30);
+
                     await _userManager.UpdateAsync(user);
 
                     return new User
@@ -62,6 +65,7 @@ namespace Application.Users
                         DisplayName = user.DisplayName,
 
                         Token = _jwtGenerator.CreateToken(user),
+                        RefreshToken = user.RefreshToken
                     };
                 }
 

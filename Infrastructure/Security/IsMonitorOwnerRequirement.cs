@@ -27,18 +27,22 @@ namespace Infrastructure.Security
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
             IsMonitorOwnerRequirement requirement)
         {
-            var currentUserName = _httpContextAccessor.HttpContext.User?.Claims
-                ?.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var username = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var user = _context.Users.SingleOrDefaultAsync(u => u.UserName.Equals(currentUserName)).Result;
+            if (username == null) return Task.CompletedTask;
 
-            var monitorId = Guid.Parse(_httpContextAccessor.HttpContext.Request.RouteValues
-                .SingleOrDefault(x => x.Key == "monitorId").Value.ToString());
+            var monitorId = Guid.Parse(_httpContextAccessor.HttpContext?.Request.RouteValues
+                .SingleOrDefault(x => x.Key == "monitorId").Value?.ToString());
 
-            var monitor = _context.Monitors.FindAsync(monitorId).Result;
+            var user = _context.Users.Where(u => u.UserName == username).Include(u => u.Monitors).SingleOrDefault();
+            
+            if (user == null) return Task.CompletedTask;
 
-            if (monitor == null || monitor.UserId.Equals(user?.Id))
-                context.Succeed(requirement);
+            var monitor = user.Monitors.SingleOrDefault(m => m.Id == monitorId);
+
+            if (monitor == null) return Task.CompletedTask;
+
+            context.Succeed(requirement);
 
             return Task.CompletedTask;
         }

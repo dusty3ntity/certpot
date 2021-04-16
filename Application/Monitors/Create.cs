@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using FluentValidation;
 using MediatR;
 using Persistence;
 using Application.Validators;
+using Microsoft.EntityFrameworkCore;
 using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
@@ -45,20 +47,27 @@ namespace Application.Monitors
             private readonly DataContext _context;
             private readonly ICertificateParser _certificateParser;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, ICertificateParser certificateParser, IMapper mapper)
+            public Handler(DataContext context, ICertificateParser certificateParser, IMapper mapper,
+                IUserAccessor userAccessor)
             {
                 _context = context;
                 _certificateParser = certificateParser;
                 _mapper = mapper;
+                _userAccessor = userAccessor;
             }
 
             public async Task<MonitorDto> Handle(Command request, CancellationToken cancellationToken)
             {
                 var certificate = _certificateParser.GetCertificate(request.DomainName, request.Port);
 
+                var user = await _context.Users
+                    .SingleOrDefaultAsync(x => x.UserName.Equals(_userAccessor.GetCurrentUsername()));
+
                 var monitor = new Monitor
                 {
+                    User = user,
                     DisplayName = request.DisplayName,
                     DomainName = request.DomainName,
                     Port = request.Port,

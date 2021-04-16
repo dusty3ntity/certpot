@@ -15,6 +15,9 @@ namespace Domain
         public string DisplayName { get; set; }
 
         public DateTime RegistrationDate { get; set; }
+        
+        public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiry { get; set; }
 
         public ICollection<Monitor> Monitors { get; set; }
     }

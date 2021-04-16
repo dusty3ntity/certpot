@@ -67,6 +67,9 @@ namespace Application.Users
                     DisplayName = request.DisplayName,
                     Email = request.Email,
                     UserName = request.Username,
+
+                    RefreshToken = _jwtGenerator.GenerateRefreshToken(),
+                    RefreshTokenExpiry = DateTime.Now.AddDays(30),
                 };
 
                 var result = await _userManager.CreateAsync(user, request.Password);
@@ -80,6 +83,7 @@ namespace Application.Users
                         Username = user.UserName,
 
                         Token = _jwtGenerator.CreateToken(user),
+                        RefreshToken = user.RefreshToken
                     };
                 }
 
