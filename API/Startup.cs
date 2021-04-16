@@ -1,17 +1,13 @@
+using API.Extensions;
 using API.Middleware;
-using Application.Certificates;
-using Application.Interfaces;
 using Application.Monitors;
-using AutoMapper;
 using FluentValidation.AspNetCore;
-using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Persistence;
 
 namespace API
 {
@@ -19,54 +15,32 @@ namespace API
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private readonly IConfiguration _configuration;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(opt =>
-            {
-                opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-            });
-            
-            services.AddCors(opt =>
-            {
-                opt.AddPolicy("CorsPolicy",
-                    policy =>
-                    {
-                        policy.AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .WithExposedHeaders("WWW-Authenticate")
-                            .WithOrigins("http://localhost:3050")
-                            .AllowCredentials();
-                    });
-            });
-
-            services.AddMediatR(typeof(List));
-            services.AddAutoMapper(typeof(List));
-
-            services.AddControllers().AddFluentValidation(cfg =>
-            {
-                cfg.RegisterValidatorsFromAssemblyContaining<Application.Monitors.Create>();
-            });
-
-            services.AddSingleton<ICertificateParser, CertificateParser>();
+            services.AddControllers(opt =>
+                {
+                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                    opt.Filters.Add(new AuthorizeFilter(policy));
+                })
+                .AddFluentValidation(config => { config.RegisterValidatorsFromAssemblyContaining<Create>(); });
+            services.AddApplicationServices(_configuration);
+            services.AddIdentityServices(_configuration);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
-            // app.UseHttpsRedirection();
-
             app.UseRouting();
-            
+
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

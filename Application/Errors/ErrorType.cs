@@ -13,10 +13,20 @@
 
         DefaultValidationError = 101,
         BadId = 102,
+
+        Unauthorized = 161,
+        InvalidEmail = 162,
+        InvalidPassword = 163,
+
+        RefreshTokenExpired = 171,
+
         DefaultErrorsBlockEnd = 199,
 
         HostConnectionTimeout = 701,
         CertificateParsingError = 702,
+
+        DuplicateEmailFound = 901,
+        DuplicateUsernameFound = 902,
 
         Unknown = 9999,
     }

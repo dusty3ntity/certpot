@@ -1,9 +1,10 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<AppUser>
     {
         public DataContext(DbContextOptions options) : base(options)
         {
@@ -21,6 +22,12 @@ namespace Persistence
 
         private void SetupMonitors(ModelBuilder builder)
         {
+            builder.Entity<Monitor>()
+                .HasOne(d => d.User)
+                .WithMany(u => u.Monitors)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
             builder.Entity<Monitor>()
                 .HasOne(m => m.Certificate)
                 .WithOne(c => c.Monitor)

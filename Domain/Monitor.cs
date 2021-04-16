@@ -5,6 +5,9 @@ namespace Domain
     public class Monitor
     {
         public Guid Id { get; set; }
+        
+        public string UserId { get; set; }
+        public AppUser User { get; set; }
 
         public string DisplayName { get; set; }
         public string DomainName { get; set; }

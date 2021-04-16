@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Monitors;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -16,6 +17,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{monitorId}")]
+        [Authorize(Policy = "IsMonitorOwner")]
         public async Task<ActionResult<MonitorDto>> Details(Guid monitorId)
         {
             return await Mediator.Send(new Details.Query {Id = monitorId});
@@ -28,6 +30,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{monitorId}")]
+        [Authorize(Policy = "IsMonitorOwner")]
         public async Task<ActionResult<Unit>> Delete(Guid monitorId)
         {
             return await Mediator.Send(new Delete.Command {Id = monitorId});
