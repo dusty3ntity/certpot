@@ -76,6 +76,7 @@ export const MonitorForm: React.FC<IMonitorFormProps> = ({ onSubmit, onCancel, s
 				</label>
 
 				<input
+					id="displayName"
 					name="displayName"
 					className={combineClassNames("text-input display-name", { error: errors.displayName })}
 					type="text"
@@ -109,6 +110,7 @@ export const MonitorForm: React.FC<IMonitorFormProps> = ({ onSubmit, onCancel, s
 					</label>
 
 					<Select
+						id="protocol"
 						onChange={handleTypeChange}
 						options={typeOptions}
 						value={selectedType}
@@ -123,6 +125,7 @@ export const MonitorForm: React.FC<IMonitorFormProps> = ({ onSubmit, onCancel, s
 					</label>
 
 					<input
+						id="domainName"
 						name="domainName"
 						className={combineClassNames("text-input domain-name", { error: errors.domainName })}
 						type="text"
@@ -155,6 +158,7 @@ export const MonitorForm: React.FC<IMonitorFormProps> = ({ onSubmit, onCancel, s
 					</label>
 
 					<input
+						id="port"
 						name="port"
 						className={combineClassNames("text-input port", { error: errors.port })}
 						type="text"

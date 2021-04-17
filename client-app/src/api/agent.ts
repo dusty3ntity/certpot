@@ -4,14 +4,30 @@ import { SLEEP_DURATION } from "./../constants/api";
 import { IMonitor, INewMonitor } from "../models/types/monitors";
 import { createNotification, injectErrorCode, isBadId } from "../utils";
 import { CustomError, ErrorType, NotificationType } from "../models/types/errors";
+import { ILoginUser, IRegisterUser, IUserPayload } from "../models/types";
 import { history } from "../config/history";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+
+axios.interceptors.request.use(
+	(config) => {
+		const token = window.localStorage.getItem("jwt");
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
 
 axios.interceptors.response.use(undefined, (error) => {
 	if (process.env.REACT_APP_ENV === "DEVELOPMENT") {
 		console.error("API error:", error.response);
 	}
+
+	const originalRequest = error.config;
 
 	if (error.message === "Network Error" && !error.response) {
 		createNotification(NotificationType.Error, {
@@ -28,6 +44,49 @@ axios.interceptors.response.use(undefined, (error) => {
 			message: "A server error occurred. Please, refresh the page or contact the administrator!",
 		});
 		throw new CustomError(error.response, error.response.data.errors.code);
+	} else if (error.response.status === 401 && error.response.data?.errors?.code === ErrorType.RefreshTokenExpired) {
+		window.localStorage.removeItem("jwt");
+		window.localStorage.removeItem("refreshToken");
+		history.push("/login");
+
+		createNotification(NotificationType.Error, {
+			title: "Authorization error!",
+			message: "Your session has expired! Please, log in again.",
+			error: error.response,
+		});
+	} else if (error.response.status === 401 && error.response.data?.errors?.code === ErrorType.InvalidEmail) {
+		createNotification(NotificationType.Error, {
+			title: "Authorization error!",
+			message: "Could not find a user with this email. Check your credentials and try again.",
+		});
+	} else if (error.response.status === 401 && error.response.data?.errors?.code === ErrorType.InvalidPassword) {
+		createNotification(NotificationType.Error, {
+			title: "Authorization error!",
+			message: "The password is incorrect. Check your credentials and try again.",
+		});
+	} else if (
+		error.response.status === 401 &&
+		error.response.headers["www-authenticate"].includes('Bearer error="invalid_token"') &&
+		!originalRequest._retry
+	) {
+		originalRequest._retry = true;
+
+		return axios
+			.post("/user/refresh", {
+				token: window.localStorage.getItem("jwt"),
+				refreshToken: window.localStorage.getItem("refreshToken"),
+			})
+			.then((res) => {
+				window.localStorage.setItem("jwt", res.data.token);
+				window.localStorage.setItem("refreshToken", res.data.refreshToken);
+				axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+				return axios(originalRequest);
+			});
+	} else if (error.response.status === 401) {
+		createNotification(NotificationType.Error, {
+			title: "Authorization error!",
+			message: "An authorization error occurred. Please, refresh the page or contact the administrator.",
+		});
 	} else if (error.response.status === 400 && !error.response.data.errors.code) {
 		if (isBadId(error.response)) {
 			injectErrorCode(error.response, ErrorType.BadId);
@@ -91,4 +150,10 @@ export const Monitors = {
 	details: (id: string): Promise<IMonitor> => requests.get(`/monitors/${id}`),
 	create: (data: INewMonitor): Promise<IMonitor> => requests.post("/monitors/", data),
 	delete: (id: string): Promise<void> => requests.del(`/monitors/${id}`),
+};
+
+export const Users = {
+	current: (): Promise<IUserPayload> => requests.get("/user"),
+	login: (user: ILoginUser): Promise<IUserPayload> => requests.post("/user/login", user),
+	register: (user: IRegisterUser): Promise<IUserPayload> => requests.post("/user/register", user),
 };
