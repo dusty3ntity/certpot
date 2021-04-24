@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Domain
 {
@@ -15,7 +16,9 @@ namespace Domain
         public int Version { get; set; }
         public string SerialNumber { get; set; }
 
+        [IgnoreDataMember]
         public Guid MonitorId { get; set; }
+        [IgnoreDataMember]
         public Monitor Monitor { get; set; }
     }
 }

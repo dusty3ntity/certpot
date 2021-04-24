@@ -2,6 +2,7 @@ using API.Extensions;
 using API.Middleware;
 using Application.Monitors;
 using FluentValidation.AspNetCore;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,12 +29,16 @@ namespace API
                     opt.Filters.Add(new AuthorizeFilter(policy));
                 })
                 .AddFluentValidation(config => { config.RegisterValidatorsFromAssemblyContaining<Create>(); });
+
             services.AddApplicationServices(_configuration);
             services.AddIdentityServices(_configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
+
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseRouting();
@@ -43,7 +48,11 @@ namespace API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHangfireDashboard();
+            });
         }
     }
 }

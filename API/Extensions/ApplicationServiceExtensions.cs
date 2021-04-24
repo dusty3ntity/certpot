@@ -1,7 +1,12 @@
 ﻿using Application.Certificates;
+using Application.Emails;
 using Application.Interfaces;
 using Application.Monitors;
 using AutoMapper;
+using FluentEmail.Core;
+using FluentEmail.Mailgun;
+using Hangfire;
+using Hangfire.PostgreSql;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +25,17 @@ namespace API.Extensions
                 opt.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddHangfire(opt => opt
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(configuration.GetConnectionString("HangfireConnection"),
+                    new PostgreSqlStorageOptions()));
+
+            services
+                .AddFluentEmail("noreply@certpot.ohyr.dev")
+                .AddMailGunSender(configuration["MailGun_Domain"], configuration["MailGun_ApiKey"]);
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy",
@@ -37,6 +53,7 @@ namespace API.Extensions
             services.AddAutoMapper(typeof(List));
 
             services.AddSingleton<ICertificateParser, CertificateParser>();
+            services.AddScoped<IEmailSender, EmailSender>();
 
             return services;
         }
