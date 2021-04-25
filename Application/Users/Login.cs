@@ -65,7 +65,12 @@ namespace Application.Users
                         DisplayName = user.DisplayName,
 
                         Token = _jwtGenerator.CreateToken(user),
-                        RefreshToken = user.RefreshToken
+                        RefreshToken = user.RefreshToken,
+
+                        NotificationsEmail = user.NotificationsEmail,
+                        NotifyAboutCertificateChange = user.NotifyAboutCertificateChange,
+                        ExpiryNotificationThreshold = user.ExpiryNotificationThreshold,
+                        NotifyAboutExpiryIfRenewalConfigured = user.NotifyAboutExpiryIfRenewalConfigured,
                     };
                 }
 

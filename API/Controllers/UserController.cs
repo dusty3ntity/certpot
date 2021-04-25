@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Users;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,7 @@ namespace API.Controllers
         {
             return await Mediator.Send(command);
         }
-        
+
         [HttpPost("refresh")]
         [AllowAnonymous]
         public async Task<ActionResult<User>> Refresh(RefreshToken.Query query)
@@ -71,6 +72,12 @@ namespace API.Controllers
         public async Task<ActionResult<User>> CurrentUser()
         {
             return await Mediator.Send(new CurrentUser.Query());
+        }
+
+        [HttpPost("settings")]
+        public async Task<ActionResult<Unit>> UpdateSettings(UpdateSettings.Command command)
+        {
+            return await Mediator.Send(command);
         }
     }
 }

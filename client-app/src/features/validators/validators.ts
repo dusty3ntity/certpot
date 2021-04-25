@@ -26,6 +26,20 @@ export const isValidPort = (value: string): string => {
 	return "";
 };
 
+export const isValidThreshold = (value: string): string => {
+	const threshold = Number(value);
+	const isNumber = Number.isInteger(threshold);
+	if (!isNumber) {
+		return "Threshold must be a number";
+	}
+
+	if (threshold < 1 || threshold > 7) {
+		return "Threshold must be in range: 1-7";
+	}
+
+	return "";
+};
+
 export const isValidDomainName = (value: string): string => {
 	const re = /^(?:[\p{L}0-9](?:[\p{L}0-9-]{0,61}[\p{L}0-9])?\.)+[\p{L}0-9][\p{L}0-9-]{0,61}[\p{L}0-9]$/gu;
 	const result = re.test(value);

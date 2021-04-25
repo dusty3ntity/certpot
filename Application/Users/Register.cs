@@ -70,6 +70,8 @@ namespace Application.Users
 
                     RefreshToken = _jwtGenerator.GenerateRefreshToken(),
                     RefreshTokenExpiry = DateTime.Now.AddDays(30),
+
+                    NotificationsEmail = request.Email,
                 };
 
                 var result = await _userManager.CreateAsync(user, request.Password);
@@ -83,7 +85,12 @@ namespace Application.Users
                         Username = user.UserName,
 
                         Token = _jwtGenerator.CreateToken(user),
-                        RefreshToken = user.RefreshToken
+                        RefreshToken = user.RefreshToken,
+
+                        NotificationsEmail = user.NotificationsEmail,
+                        NotifyAboutCertificateChange = user.NotifyAboutCertificateChange,
+                        ExpiryNotificationThreshold = user.ExpiryNotificationThreshold,
+                        NotifyAboutExpiryIfRenewalConfigured = user.NotifyAboutExpiryIfRenewalConfigured,
                     };
                 }
 

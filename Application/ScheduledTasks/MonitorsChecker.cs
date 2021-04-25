@@ -3,11 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Emails;
 using Application.Interfaces;
-using Application.Monitors;
-using AutoMapper;
-using Domain;
-using FluentEmail.Core;
-using FluentEmail.Core.Interfaces;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -60,22 +55,27 @@ namespace Application.ScheduledTasks
 
                 var user = await _context.Users.FindAsync(monitor.UserId);
 
-                _emailSender.Send("dusty3ntity@gmail.com", "lol", "kek");
-
                 monitor.LastCheckDate = DateTime.Now;
 
                 var certificate = _certificateParser.GetCertificate(monitor.DomainName, monitor.Port);
 
                 if (!certificate.SerialNumber.Equals(monitor.Certificate.SerialNumber))
                 {
-                    _emailSender.Send(user.Email, "Unexpected certificate change",
-                        BodyBuilder.BuildEmailBody(EmailType.CertificateChanged, monitor, user));
                     monitor.Certificate = certificate;
+
+                    if (user.NotifyAboutCertificateChange)
+                        _emailSender.Send(user.NotificationsEmail, "Unexpected certificate change",
+                            BodyBuilder.BuildEmailBody(EmailType.CertificateChanged, monitor, user));
                 }
 
-                if ((DateTime.Now - certificate.ValidTo).TotalDays < 7) // make a user setting
+                // if (!(user.RenewalConfigured && user.NotifyAboutExpiryIfRenewalConfigured) &&
+                //     (DateTime.Now - certificate.ValidTo).TotalDays <= user.ExpiryNotificationThreshold
+                // )
+                if (
+                    (DateTime.Now - certificate.ValidTo).TotalDays <= user.ExpiryNotificationThreshold
+                )
                 {
-                    _emailSender.Send(user.Email, "Certificate expiration",
+                    _emailSender.Send(user.NotificationsEmail, "Certificate expiration",
                         BodyBuilder.BuildEmailBody(EmailType.CertificateIsAboutToExpire, monitor, user));
                 }
 

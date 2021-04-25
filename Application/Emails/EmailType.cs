@@ -4,7 +4,7 @@
     {
         CertificateIsAboutToExpire,
         CertificateChanged,
-        CertificateRenewalSucceded,
+        CertificateRenewalSucceeded,
         CertificateRenewalFailed,
     }
 }

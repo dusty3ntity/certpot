@@ -26,7 +26,7 @@ namespace Application.Emails
                     return $@"Dear {user.DisplayName},
                         \nThere are {daysBeforeExpiration} days left before the certificate of your monitor {monitor.DisplayName} expires.
                         \nPlease review the certificate in your cabinet: https://certpot.ohyr.dev/monitors/{monitor.Id}";
-                case EmailType.CertificateRenewalSucceded:
+                case EmailType.CertificateRenewalSucceeded:
                     return $@"Dear {user.DisplayName},
                         \nThe certificate in your monitor {monitor.DisplayName} has been successfully renewed.
                         \nYou can review the new certificate in your cabinet: https://certpot.ohyr.dev/monitors/{monitor.Id}";

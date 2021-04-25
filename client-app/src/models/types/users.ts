@@ -1,17 +1,24 @@
-export interface IUser {
+export type IUser = {
 	username: string;
 	displayName: string;
 	email: string;
+} & IUserSettings;
+
+export interface IUserSettings {
+	notificationsEmail: string;
+	notifyAboutCertificateChange: boolean;
+	notifyAboutExpiryIfRenewalEnabled: boolean;
+	expiryNotificationThreshold: boolean;
 }
 
-export interface IUserPayload {
+export type IUserPayload = {
 	username: string;
 	displayName: string;
 	email: string;
 
 	token: string;
 	refreshToken: string;
-}
+} & IUserSettings;
 
 export interface IRegisterUser {
 	email: string;

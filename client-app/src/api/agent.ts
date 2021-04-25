@@ -4,7 +4,7 @@ import { SLEEP_DURATION } from "./../constants/api";
 import { IMonitor, INewMonitor } from "../models/types/monitors";
 import { createNotification, injectErrorCode, isBadId } from "../utils";
 import { CustomError, ErrorType, NotificationType } from "../models/types/errors";
-import { ILoginUser, IRegisterUser, IUserPayload } from "../models/types";
+import { ILoginUser, IRegisterUser, IUserPayload, IUserSettings } from "../models/types";
 import { history } from "../config/history";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
@@ -156,4 +156,5 @@ export const Users = {
 	current: (): Promise<IUserPayload> => requests.get("/user"),
 	login: (user: ILoginUser): Promise<IUserPayload> => requests.post("/user/login", user),
 	register: (user: IRegisterUser): Promise<IUserPayload> => requests.post("/user/register", user),
+	updateSettings: (settings: IUserSettings): Promise<void> => requests.post("/user/settings", settings),
 };

@@ -11,6 +11,10 @@
 		align-items: flex-start;
 	}
 
+	.toggle-item {
+		flex-direction: row;
+	}
+
 	label {
 		display: flex;
 		align-items: center;

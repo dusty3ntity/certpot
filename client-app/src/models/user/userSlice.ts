@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Users } from "../../api/agent";
-import { ILoginUser, IRegisterUser, IUser, IUserPayload } from "../types/users";
+import { ILoginUser, IRegisterUser, IUser, IUserPayload, IUserSettings } from "../types/users";
 
 interface IUserState {
 	loading: "idle" | "pending" | "fulfilled" | "rejected";
@@ -48,6 +48,18 @@ export const fetchUser = createAsyncThunk<IUserPayload>("user/fetch", async (_, 
 	}
 });
 
+export const updateSettings = createAsyncThunk<void, IUserSettings>(
+	"user/updateSettings",
+	async (settings: IUserSettings, { dispatch, rejectWithValue }) => {
+		try {
+			await Users.updateSettings(settings);
+			dispatch(setSettings(settings));
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
 const userSlice = createSlice({
 	name: "user",
 	initialState,
@@ -57,6 +69,9 @@ const userSlice = createSlice({
 			window.localStorage.removeItem("jwt");
 			window.localStorage.removeItem("refreshToken");
 		},
+		setSettings: (state, action: PayloadAction<IUserSettings>) => {
+			state.user = { ...state.user!, ...action.payload };
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(loginUser.pending, (state) => {
@@ -64,7 +79,7 @@ const userSlice = createSlice({
 		});
 		builder.addCase(loginUser.fulfilled, (state, { payload }) => {
 			state.submitting = false;
-			state.user = { username: payload.username, displayName: payload.displayName, email: payload.email };
+			state.user = payload;
 			window.localStorage.setItem("jwt", payload.token);
 			window.localStorage.setItem("refreshToken", payload.refreshToken);
 		});
@@ -77,7 +92,7 @@ const userSlice = createSlice({
 		});
 		builder.addCase(registerUser.fulfilled, (state, { payload }) => {
 			state.submitting = false;
-			state.user = { username: payload.username, displayName: payload.displayName, email: payload.email };
+			state.user = payload;
 			window.localStorage.setItem("jwt", payload.token);
 			window.localStorage.setItem("refreshToken", payload.refreshToken);
 		});
@@ -90,14 +105,24 @@ const userSlice = createSlice({
 		});
 		builder.addCase(fetchUser.fulfilled, (state, { payload }) => {
 			state.loading = "fulfilled";
-			state.user = { username: payload.username, displayName: payload.displayName, email: payload.email };
+			state.user = payload;
 		});
 		builder.addCase(fetchUser.rejected, (state) => {
 			state.loading = "rejected";
 		});
+
+		builder.addCase(updateSettings.pending, (state) => {
+			state.submitting = true;
+		});
+		builder.addCase(updateSettings.fulfilled, (state, { payload }) => {
+			state.submitting = false;
+		});
+		builder.addCase(updateSettings.rejected, (state) => {
+			state.submitting = false;
+		});
 	},
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, setSettings } = userSlice.actions;
 
 export const { reducer: userReducer } = userSlice;
