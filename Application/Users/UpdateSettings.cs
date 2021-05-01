@@ -16,8 +16,9 @@ namespace Application.Users
         {
             public string NotificationsEmail { get; set; }
             public bool NotifyAboutCertificateChange { get; set; }
-            public int ExpiryNotificationThreshold { get; set; }
+            public int ExpiryNotificationThresholdDays { get; set; }
             public bool NotifyAboutExpiryIfRenewalConfigured { get; set; }
+            public int RenewalThresholdDays { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -32,7 +33,7 @@ namespace Application.Users
                     .NotNull();
                 RuleFor(s => s.NotifyAboutExpiryIfRenewalConfigured)
                     .NotNull();
-                RuleFor(s => s.ExpiryNotificationThreshold)
+                RuleFor(s => s.ExpiryNotificationThresholdDays)
                     .NotNull()
                     .InclusiveBetween(1, 7)
                     .WithMessage("Expiry notification threshold must be between 1 and 7 inclusively");
@@ -57,7 +58,8 @@ namespace Application.Users
                 user.NotificationsEmail = request.NotificationsEmail;
                 user.NotifyAboutCertificateChange = request.NotifyAboutCertificateChange;
                 user.NotifyAboutExpiryIfRenewalConfigured = request.NotifyAboutExpiryIfRenewalConfigured;
-                user.ExpiryNotificationThreshold = request.ExpiryNotificationThreshold;
+                user.ExpiryNotificationThresholdDays = request.ExpiryNotificationThresholdDays;
+                user.RenewalThresholdDays = request.RenewalThresholdDays;
 
                 var result = await _userManager.UpdateAsync(user);
 

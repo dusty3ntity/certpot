@@ -38,11 +38,12 @@ namespace Application.Users
 
                     Token = _jwtGenerator.CreateToken(user),
                     RefreshToken = user.RefreshToken,
-                    
+
                     NotificationsEmail = user.NotificationsEmail,
                     NotifyAboutCertificateChange = user.NotifyAboutCertificateChange,
-                    ExpiryNotificationThreshold = user.ExpiryNotificationThreshold,
+                    ExpiryNotificationThreshold = user.ExpiryNotificationThresholdDays,
                     NotifyAboutExpiryIfRenewalConfigured = user.NotifyAboutExpiryIfRenewalConfigured,
+                    RenewalThresholdDays = user.RenewalThresholdDays
                 };
             }
         }

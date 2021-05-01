@@ -69,8 +69,9 @@ namespace Application.Users
 
                         NotificationsEmail = user.NotificationsEmail,
                         NotifyAboutCertificateChange = user.NotifyAboutCertificateChange,
-                        ExpiryNotificationThreshold = user.ExpiryNotificationThreshold,
+                        ExpiryNotificationThreshold = user.ExpiryNotificationThresholdDays,
                         NotifyAboutExpiryIfRenewalConfigured = user.NotifyAboutExpiryIfRenewalConfigured,
+                        RenewalThresholdDays = user.RenewalThresholdDays
                     };
                 }
 

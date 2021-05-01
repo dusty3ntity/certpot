@@ -20,5 +20,25 @@ namespace Domain
 
         public bool AutoRenewalEnabled { get; set; }
         public DateTime LastCheckDate { get; set; }
+
+
+        public string SshHostname { get; set; }
+        public int SshPort { get; set; } = 22;
+        public string SshUsername { get; set; }
+        public string SshPrivateKey { get; set; }
+        public string SshPassword { get; set; }
+
+        public string PreRenewalScript { get; set; }
+        public string PostRenewalScript { get; set; }
+        public string RenewalScript { get; set; }
+
+        public bool IsRenewing { get; set; }
+        public bool IsInRenewalQueue { get; set; } 
+        
+        public DateTime LastRenewalDate { get; set; }
+        public string LastRenewalLogs { get; set; }
+
+        public bool? WasRenewalSuccessful { get; set; }
+        public int? RenewalErrorCode { get; set; }
     }
 }

@@ -10,6 +10,7 @@
         public bool NotifyAboutCertificateChange { get; set; }
         public int ExpiryNotificationThreshold { get; set; }
         public bool NotifyAboutExpiryIfRenewalConfigured { get; set; }
+        public int RenewalThresholdDays { get; set; }
 
         public string Token { get; set; }
         public string RefreshToken { get; set; }

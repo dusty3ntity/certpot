@@ -8,6 +8,8 @@ namespace Application.Monitors
         public MappingProfile()
         {
             CreateMap<Monitor, MonitorDto>();
+            CreateMap<Monitor, SshCredentialsDto>();
+            CreateMap<Monitor, SshScriptsDto>();
         }
     }
 }

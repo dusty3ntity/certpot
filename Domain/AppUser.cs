@@ -13,8 +13,9 @@ namespace Domain
             RegistrationDate = DateTime.Now;
             
             NotifyAboutCertificateChange = true;
-            ExpiryNotificationThreshold = 3;
+            ExpiryNotificationThresholdDays = 3;
             NotifyAboutExpiryIfRenewalConfigured = false;
+            RenewalThresholdDays = 3;
         }
 
         public string DisplayName { get; set; }
@@ -23,8 +24,9 @@ namespace Domain
 
         public string NotificationsEmail { get; set; }
         public bool NotifyAboutCertificateChange { get; set; }
-        public int ExpiryNotificationThreshold { get; set; }
+        public int ExpiryNotificationThresholdDays { get; set; }
         public bool NotifyAboutExpiryIfRenewalConfigured { get; set; }
+        public int RenewalThresholdDays { get; set; }
 
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpiry { get; set; }

@@ -30,14 +30,10 @@ namespace API
                     context.Database.Migrate();
                     Seeder.SeedData(context, userManager).Wait();
 
-                    var jobClient = services.GetRequiredService<IBackgroundJobClient>();
-                    var certificateParser = services.GetRequiredService<ICertificateParser>();
-                    var emailSender = services.GetRequiredService<IEmailSender>();
-                    var logger = services.GetRequiredService<ILogger<MonitorsChecker>>();
+                    var monitorChecker = services.GetRequiredService<IMonitorChecker>();
 
-                    var monitorsChecker =
-                        new MonitorsChecker(context, jobClient, certificateParser, emailSender, logger);
-                    monitorsChecker.ScheduleChecks();
+                    var scheduler = new MonitorsCheckScheduler(context, monitorChecker);
+                    scheduler.ScheduleChecks();
                 }
                 catch (Exception ex)
                 {

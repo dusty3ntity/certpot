@@ -54,6 +54,8 @@ namespace API.Extensions
 
             services.AddSingleton<ICertificateParser, CertificateParser>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IMonitorRenewer, MonitorRenewer>();
+            services.AddScoped<IMonitorChecker, MonitorChecker>();
 
             return services;
         }

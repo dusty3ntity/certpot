@@ -26,7 +26,7 @@ namespace Application.Ssh
         public void Connect(string hostname, int port = 22)
         {
             if (!_client.Connect(hostname, port))
-                throw new SshException(ErrorType.SshConnectionError);
+                throw new SshException(ErrorType.SshConnectionError, _client.LastErrorText);
         }
 
         public void AuthenticateWithPassword(string username, string password)
@@ -35,7 +35,7 @@ namespace Application.Ssh
                 throw new Exception("Client is not connected");
 
             if (!_client.AuthenticatePw(username, password))
-                throw new SshException(ErrorType.SshAuthenticationError);
+                throw new SshException(ErrorType.SshAuthenticationError, _client.LastErrorText);
 
             IsAuthenticated = true;
         }
@@ -51,10 +51,10 @@ namespace Application.Ssh
                 sshKey.Password = password;
 
             if (!sshKey.FromOpenSshPrivateKey(key))
-                throw new SshException(ErrorType.SshKeyParsingError);
+                throw new SshException(ErrorType.SshKeyParsingError, _client.LastErrorText);
 
             if (!_client.AuthenticatePk(username, sshKey))
-                throw new SshException(ErrorType.SshAuthenticationError);
+                throw new SshException(ErrorType.SshAuthenticationError, _client.LastErrorText);
 
             IsAuthenticated = true;
         }
@@ -68,13 +68,13 @@ namespace Application.Ssh
 
             var channelNum = _client.OpenSessionChannel();
             if (channelNum < 0)
-                throw new SshException(ErrorType.SshChannelOpeningError);
-            
+                throw new SshException(ErrorType.SshChannelOpeningError, _client.LastErrorText);
+
             if (!_client.SendReqExec(channelNum, command))
-                throw new SshException(ErrorType.SshCommandExecutionError);
-            
+                throw new SshException(ErrorType.SshCommandExecutionError, _client.LastErrorText);
+
             if (!_client.ChannelReceiveToClose(channelNum))
-                throw new SshException(ErrorType.SshChannelTimeout);
+                throw new SshException(ErrorType.SshChannelTimeout, _client.LastErrorText);
 
             var output = _client.GetReceivedText(channelNum, Encoding);
             return output;
