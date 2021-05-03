@@ -40,5 +40,7 @@ namespace Domain
 
         public bool? WasRenewalSuccessful { get; set; }
         public int? RenewalErrorCode { get; set; }
+
+        public DateTime LastSshConnectionCheckDate { get; set; }
     }
 }

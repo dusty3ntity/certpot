@@ -105,6 +105,8 @@ namespace Application.Monitors
             }
             finally
             {
+                sshBot.Disconnect();
+                
                 var joinedLogs = string.Join("\\\\\\\\", logs);
                 monitor.LastRenewalLogs = joinedLogs;
 

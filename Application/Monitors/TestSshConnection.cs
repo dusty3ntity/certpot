@@ -4,17 +4,20 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Interfaces;
 using Application.Validators;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
 {
-    public class SetSshCredentials
+    public class TestSshConnection
     {
-        public class Command : IRequest<Unit>
+        public class Command : IRequest<bool>
         {
             public Guid MonitorId { get; set; }
             public string Hostname { get; set; }
@@ -46,34 +49,44 @@ namespace Application.Monitors
             }
         }
 
-        public class Handler : IRequestHandler<Command, Unit>
+        public class Handler : IRequestHandler<Command, bool>
         {
             private readonly DataContext _context;
+            private readonly ISshConnectionTester _connectionTester;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, ISshConnectionTester connectionTester)
             {
                 _context = context;
+                _connectionTester = connectionTester;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
             {
-                var monitor = await _context.Monitors
-                    .Where(m => m.Id == request.MonitorId)
-                    .SingleOrDefaultAsync();
+                var monitor = await _context.Monitors.FindAsync(request.MonitorId);
 
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
-                monitor.SshHostname = request.Hostname;
-                monitor.SshPort = request.Port;
-                monitor.SshUsername = request.Username;
-                monitor.SshPrivateKey = request.PrivateKey;
-                monitor.SshPassword = request.Password;
+                if ((DateTime.Now - monitor.LastSshConnectionCheckDate).TotalMinutes < 5)
+                    throw new RestException(HttpStatusCode.BadRequest, ErrorType.SshConnectionTestingTimeout);
+
+                monitor.LastSshConnectionCheckDate = DateTime.Now;
+
+                bool result;
+                try
+                {
+                    result = _connectionTester.Test(request.Hostname, request.Port, request.Username, request.Password,
+                        request.PrivateKey);
+                }
+                catch (SshException e)
+                {
+                    throw new RestException(HttpStatusCode.BadRequest, e.ErrorCode);
+                }
 
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success)
-                    return Unit.Value;
+                    return result;
                 throw new RestException(HttpStatusCode.InternalServerError, ErrorType.SavingChangesError);
             }
         }

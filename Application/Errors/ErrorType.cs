@@ -31,6 +31,8 @@
         SshChannelOpeningError = 754,
         SshCommandExecutionError = 755,
         SshChannelTimeout = 756,
+        
+        SshConnectionTestingTimeout = 760,
 
         DuplicateEmailFound = 901,
         DuplicateUsernameFound = 902,

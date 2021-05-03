@@ -12,7 +12,7 @@ using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
 {
-    public class GetSshScripts
+    public class GetRenewalScripts
     {
         public class Query : IRequest<SshScriptsDto>
         {

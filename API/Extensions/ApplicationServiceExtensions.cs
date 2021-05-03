@@ -2,6 +2,7 @@
 using Application.Emails;
 using Application.Interfaces;
 using Application.Monitors;
+using Application.Ssh;
 using AutoMapper;
 using FluentEmail.Core;
 using FluentEmail.Mailgun;
@@ -56,6 +57,7 @@ namespace API.Extensions
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IMonitorRenewer, MonitorRenewer>();
             services.AddScoped<IMonitorChecker, MonitorChecker>();
+            services.AddTransient<ISshConnectionTester, SshConnectionTester>();
 
             return services;
         }

@@ -14,7 +14,7 @@ using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
 {
-    public class SetSshScripts
+    public class SetRenewalScripts
     {
         public class Command : IRequest<Unit>
         {

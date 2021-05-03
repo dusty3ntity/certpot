@@ -23,14 +23,14 @@ namespace API.Controllers
             return await Mediator.Send(new Details.Query {Id = monitorId});
         }
 
-        [HttpGet("{monitorId}")]
+        [HttpGet("{monitorId}/ssh-credentials")]
         [Authorize(Policy = "IsMonitorOwner")]
         public async Task<ActionResult<SshCredentialsDto>> GetSshCredentials(Guid monitorId)
         {
             return await Mediator.Send(new GetSshCredentials.Query {Id = monitorId});
         }
 
-        [HttpPost("{monitorId}")]
+        [HttpPost("{monitorId}/ssh-credentials")]
         [Authorize(Policy = "IsMonitorOwner")]
         public async Task<ActionResult<Unit>> SetSshCredentials(Guid monitorId, SetSshCredentials.Command command)
         {
@@ -38,22 +38,22 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpGet("{monitorId}")]
+        [HttpGet("{monitorId}/renewal-scripts")]
         [Authorize(Policy = "IsMonitorOwner")]
-        public async Task<ActionResult<SshScriptsDto>> GetSshScripts(Guid monitorId)
+        public async Task<ActionResult<SshScriptsDto>> GetRenewalScripts(Guid monitorId)
         {
-            return await Mediator.Send(new GetSshScripts.Query {Id = monitorId});
+            return await Mediator.Send(new GetRenewalScripts.Query {Id = monitorId});
         }
 
-        [HttpPost("{monitorId}")]
+        [HttpPost("{monitorId}/renewal-scripts")]
         [Authorize(Policy = "IsMonitorOwner")]
-        public async Task<ActionResult<Unit>> SetSshScripts(Guid monitorId, SetSshScripts.Command command)
+        public async Task<ActionResult<Unit>> SetRenewalScripts(Guid monitorId, SetRenewalScripts.Command command)
         {
             command.MonitorId = monitorId;
             return await Mediator.Send(command);
         }
 
-        [HttpPost("{monitorId}")]
+        [HttpPost("{monitorId}/renew")]
         [Authorize(Policy = "IsMonitorOwner")]
         public async Task<ActionResult<Unit>> ManualRenew(Guid monitorId)
         {
@@ -63,6 +63,14 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<MonitorDto>> Create(Create.Command command)
         {
+            return await Mediator.Send(command);
+        }
+
+        [HttpPost("{monitorId}/test-connection")]
+        [Authorize(Policy = "IsMonitorOwner")]
+        public async Task<ActionResult<bool>> TestSshConnection(Guid monitorId, TestSshConnection.Command command)
+        {
+            command.MonitorId = monitorId;
             return await Mediator.Send(command);
         }
 

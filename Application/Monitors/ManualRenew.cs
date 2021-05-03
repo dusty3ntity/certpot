@@ -33,10 +33,7 @@ namespace Application.Monitors
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var monitor = await _context.Monitors
-                    .Where(m => m.Id == request.Id)
-                    .Include(m => m.Certificate)
-                    .SingleOrDefaultAsync();
+                var monitor = await _context.Monitors.FindAsync(request.Id);
 
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
