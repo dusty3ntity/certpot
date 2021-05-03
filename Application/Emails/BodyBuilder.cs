@@ -10,30 +10,30 @@ namespace Application.Emails
             switch (emailType)
             {
                 case EmailType.CertificateChanged:
-                    return $@"Dear {user.DisplayName},
-                        \nThe certificate in your monitor {monitor.DisplayName} has been changed unexpectedly.
-                        \nPlease review the new certificate in your cabinet: https://certpot.ohyr.dev/monitors/{monitor.Id}";
+                    return $@"<h1>Dear {user.DisplayName},</h1>
+<p>The certificate of your monitor <strong>{monitor.DisplayName}</strong> has been changed unexpectedly.<br>
+Please review the new certificate in your cabinet: <a href='https://certpot.ohyr.dev/monitors/{monitor.Id}'>certpot.ohyr.dev/monitors/{monitor.Id}</a></p>";
                 case EmailType.CertificateIsAboutToExpire:
-                    var daysBeforeExpiration = (DateTime.Now - monitor.Certificate.ValidTo).TotalDays;
-                    if (daysBeforeExpiration < 0)
-                        daysBeforeExpiration = 0;
-                    
-                    if (daysBeforeExpiration == 0)
-                        return $@"Dear {user.DisplayName},
-                        \nThe certificate of your monitor {monitor.DisplayName} has expired.
-                        \nPlease review the certificate in your cabinet: https://certpot.ohyr.dev/monitors/{monitor.Id}";
-                    
-                    return $@"Dear {user.DisplayName},
-                        \nThere are {daysBeforeExpiration} days left before the certificate of your monitor {monitor.DisplayName} expires.
-                        \nPlease review the certificate in your cabinet: https://certpot.ohyr.dev/monitors/{monitor.Id}";
+                    var daysBeforeExpiry = (DateTime.Now - monitor.Certificate.ValidTo).TotalDays;
+                    if (daysBeforeExpiry < 0)
+                        daysBeforeExpiry = 0;
+
+                    if (daysBeforeExpiry == 0)
+                        return $@"<h1>Dear {user.DisplayName},</h1>
+<p>The certificate of your monitor <strong>{monitor.DisplayName}</strong> has expired.<br>
+Please review the certificate in your cabinet: <a href='https://certpot.ohyr.dev/monitors/{monitor.Id}'>certpot.ohyr.dev/monitors/{monitor.Id}</a></p>";
+
+                    return $@"<h1>Dear {user.DisplayName},</h1>
+<p>There are {daysBeforeExpiry} days left before the certificate of your monitor <strong>{monitor.DisplayName}</strong> expires.<br>
+Please review the certificate in your cabinet: <a href='https://certpot.ohyr.dev/monitors/{monitor.Id}'>certpot.ohyr.dev/monitors/{monitor.Id}</a></p>";
                 case EmailType.CertificateRenewalSucceeded:
-                    return $@"Dear {user.DisplayName},
-                        \nThe certificate in your monitor {monitor.DisplayName} has been successfully renewed.
-                        \nYou can review the new certificate in your cabinet: https://certpot.ohyr.dev/monitors/{monitor.Id}";
+                    return $@"<h1>Dear {user.DisplayName},</h1>
+<p>The certificate of your monitor <strong>{monitor.DisplayName}</strong> has been successfully renewed.<br>
+You can review the new certificate in your cabinet: <a href='https://certpot.ohyr.dev/monitors/{monitor.Id}'>certpot.ohyr.dev/monitors/{monitor.Id}</a></p>";
                 case EmailType.CertificateRenewalFailed:
-                    return $@"Dear {user.DisplayName},
-                        \nThe renewal of the certificate in your monitor {monitor.DisplayName} was unsuccessful.
-                        \nPlease review the renewal logs in your cabinet: https://certpot.ohyr.dev/monitors/{monitor.Id}";
+                    return $@"<h1>Dear {user.DisplayName},</h1>
+<p>The renewal of the certificate of your monitor <strong>{monitor.DisplayName}</strong> was unsuccessful.<br>
+Please review the renewal logs in your cabinet: <a href='https://certpot.ohyr.dev/monitors/{monitor.Id}'>certpot.ohyr.dev/monitors/{monitor.Id}</a></p>";
                 default:
                     return null;
             }

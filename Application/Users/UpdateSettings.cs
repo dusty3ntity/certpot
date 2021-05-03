@@ -36,7 +36,7 @@ namespace Application.Users
                 RuleFor(s => s.ExpiryNotificationThresholdDays)
                     .NotNull()
                     .InclusiveBetween(1, 7)
-                    .WithMessage("Expiry notification threshold must be between 1 and 7 inclusively");
+                    .WithMessage("Expiry notification threshold must be between 1 and 7 days inclusively.");
             }
         }
 

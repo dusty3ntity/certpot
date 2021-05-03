@@ -67,7 +67,7 @@ namespace Application.Monitors
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
-                if ((DateTime.Now - monitor.LastSshConnectionCheckDate).TotalMinutes < 5)
+                if ((DateTime.Now - monitor.LastSshConnectionCheckDate).TotalMinutes < 1)
                     throw new RestException(HttpStatusCode.BadRequest, ErrorType.SshConnectionTestingTimeout);
 
                 monitor.LastSshConnectionCheckDate = DateTime.Now;

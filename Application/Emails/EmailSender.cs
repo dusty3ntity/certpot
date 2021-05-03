@@ -15,7 +15,7 @@ namespace Application.Emails
 
         public void Send(string to, string subject, string body)
         {
-            var email = Email.From("noreply@certpot.ohyr.dev").To(to).Subject(subject).Body(body);
+            var email = Email.From("noreply@certpot.ohyr.dev", "CertPot").To(to).Subject(subject).Body(body, true);
 
             _sender.Send(email);
         }

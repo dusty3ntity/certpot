@@ -34,7 +34,7 @@ namespace API.Extensions
                     new PostgreSqlStorageOptions()));
 
             services
-                .AddFluentEmail("noreply@certpot.ohyr.dev")
+                .AddFluentEmail("noreply@certpot.ohyr.dev", "CertPot")
                 .AddMailGunSender(configuration["MailGun_Domain"], configuration["MailGun_ApiKey"]);
 
             services.AddCors(opt =>

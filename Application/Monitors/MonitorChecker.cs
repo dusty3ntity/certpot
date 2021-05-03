@@ -61,19 +61,24 @@ namespace Application.Monitors
                 {
                     monitor.Certificate = certificate;
 
+                    _logger.LogInformation($"Sending unexpected certificate change email for {monitor.Id}");
                     if (user.NotifyAboutCertificateChange)
                         _emailSender.Send(user.NotificationsEmail, "Unexpected certificate change",
                             BodyBuilder.BuildEmailBody(EmailType.CertificateChanged, monitor, user));
                 }
 
-                if (!(monitor.RenewalScript != null && user.NotifyAboutExpiryIfRenewalConfigured) &&
-                    (DateTime.Now - certificate.ValidTo).TotalDays <= user.ExpiryNotificationThresholdDays
-                )
-                    _emailSender.Send(user.NotificationsEmail, "Certificate expiration",
+                if (Math.Abs((DateTime.Now - certificate.ValidTo).TotalDays) <= user.ExpiryNotificationThresholdDays)
+                {
+                    if (!user.NotifyAboutExpiryIfRenewalConfigured && monitor.RenewalScript != null)
+                        return;
+                    
+                    _logger.LogInformation($"Sending certificate expiry email for {monitor.Id}");
+                    _emailSender.Send(user.NotificationsEmail, "Certificate expiry",
                         BodyBuilder.BuildEmailBody(EmailType.CertificateIsAboutToExpire, monitor, user));
+                }
 
                 if (monitor.RenewalScript != null && !monitor.IsInRenewalQueue &&
-                    (DateTime.Now - certificate.ValidTo).TotalDays <= user.RenewalThresholdDays
+                    Math.Abs((DateTime.Now - certificate.ValidTo).TotalDays) <= user.RenewalThresholdDays
                 )
                 {
                     monitor.IsInRenewalQueue = true;
@@ -112,12 +117,14 @@ namespace Application.Monitors
                 {
                     monitor.Certificate = certificate;
 
-                    _emailSender.Send(user.NotificationsEmail, "Certificate renewal succeeded",
+                    _logger.LogInformation($"Sending successful certificate renewal email for {monitor.Id}");
+                    _emailSender.Send(user.NotificationsEmail, "Certificate renewal",
                         BodyBuilder.BuildEmailBody(EmailType.CertificateRenewalSucceeded, monitor, user));
                 }
                 else
                 {
-                    _emailSender.Send(user.NotificationsEmail, "Certificate renewal failed",
+                    _logger.LogInformation($"Sending unsuccessful certificate renewal email for {monitor.Id}");
+                    _emailSender.Send(user.NotificationsEmail, "Certificate renewal",
                         BodyBuilder.BuildEmailBody(EmailType.CertificateRenewalFailed, monitor, user));
                 }
 
