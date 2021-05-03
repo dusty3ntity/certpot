@@ -20,31 +20,31 @@ namespace Application.Monitors
         public class Command : IRequest<bool>
         {
             public Guid MonitorId { get; set; }
-            public string Hostname { get; set; }
-            public int Port { get; set; } = 22;
-            public string Username { get; set; }
-            public string PrivateKey { get; set; }
-            public string Password { get; set; }
+            public string SshHostname { get; set; }
+            public int SshPort { get; set; }
+            public string SshUsername { get; set; }
+            public string SshPrivateKey { get; set; }
+            public string SshPassword { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(m => m.Hostname)
+                RuleFor(m => m.SshHostname)
                     .NotEmpty()
                     .Length(4, 30);
-                RuleFor(m => m.Username)
+                RuleFor(m => m.SshUsername)
                     .NotEmpty()
                     .Length(1, 30);
-                RuleFor(m => m.Port)
+                RuleFor(m => m.SshPort)
                     .InclusiveBetween(1, 65535)
                     .WithMessage("Please specify a valid port.");
-                RuleFor(m => m.PrivateKey)
+                RuleFor(m => m.SshPrivateKey)
                     .Length(100, 5000)
                     .Must(SshValidators.BeValidOpenSshPrivateKey)
                     .WithMessage("Please specify a valid private OpenSSH key.");
-                RuleFor(m => m.Password)
+                RuleFor(m => m.SshPassword)
                     .Length(1, 30);
             }
         }
@@ -75,8 +75,8 @@ namespace Application.Monitors
                 bool result;
                 try
                 {
-                    result = _connectionTester.Test(request.Hostname, request.Port, request.Username, request.Password,
-                        request.PrivateKey);
+                    result = _connectionTester.Test(request.SshHostname, request.SshPort, request.SshUsername,
+                        request.SshPassword, request.SshPrivateKey);
                 }
                 catch (SshException e)
                 {

@@ -14,13 +14,11 @@ using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
 {
-    public class SetRenewalScripts
+    public class SetRenewalScript
     {
         public class Command : IRequest<Unit>
         {
             public Guid MonitorId { get; set; }
-            public string PreRenewalScript { get; set; }
-            public string PostRenewalScript { get; set; }
             public string RenewalScript { get; set; }
         }
 
@@ -28,12 +26,8 @@ namespace Application.Monitors
         {
             public CommandValidator()
             {
-                RuleFor(m => m.PreRenewalScript)
-                    .Length(1, 10000);
                 RuleFor(m => m.RenewalScript)
                     .NotNull()
-                    .Length(1, 10000);
-                RuleFor(m => m.PostRenewalScript)
                     .Length(1, 10000);
             }
         }
@@ -49,16 +43,12 @@ namespace Application.Monitors
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var monitor = await _context.Monitors
-                    .Where(m => m.Id == request.MonitorId)
-                    .SingleOrDefaultAsync();
+                var monitor = await _context.Monitors.FindAsync(request.MonitorId);
 
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
-                monitor.PreRenewalScript = request.PreRenewalScript;
                 monitor.RenewalScript = request.RenewalScript;
-                monitor.PostRenewalScript = request.PostRenewalScript;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

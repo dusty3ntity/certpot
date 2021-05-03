@@ -98,10 +98,10 @@ export const RegisterPage: React.FC = () => {
 								required: "Username is required.",
 								validate: {
 									minLength: (value: string) => {
-										return minLength(value, 3) ? "Username must be at least 3 characters." : true;
+										return minLength(value, 3) ? "Username must be at least 3 characters long." : true;
 									},
 									maxLength: (value: string) => {
-										return maxLength(value, 20) ? "Username can be at most 20 characters." : true;
+										return maxLength(value, 20) ? "Username can be at most 20 characters long." : true;
 									},
 									username: (value: string) => {
 										const result = isValidUsername(value);
@@ -113,7 +113,7 @@ export const RegisterPage: React.FC = () => {
 						/>
 					</div>
 
-					<div className="displayName-input form-item">
+					<div className="password-input form-item">
 						<label htmlFor="password">
 							<span>Password</span>
 							<ValidationMessage inputName="password" errors={errors} />
@@ -130,10 +130,10 @@ export const RegisterPage: React.FC = () => {
 								required: "Password is required.",
 								validate: {
 									minLength: (value: string) => {
-										return minLength(value, 8) ? "Password must be at least 8 characters." : true;
+										return minLength(value, 8) ? "Password must be at least 8 characters long." : true;
 									},
 									maxLength: (value: string) => {
-										return maxLength(value, 20) ? "Password can be at most 20 characters." : true;
+										return maxLength(value, 20) ? "Password can be at most 20 characters long." : true;
 									},
 									password: (value: string) => {
 										return isValidPassword(value) ? "Password must contain at least one digit." : true;

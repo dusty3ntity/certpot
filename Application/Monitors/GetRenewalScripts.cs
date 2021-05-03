@@ -12,14 +12,14 @@ using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
 {
-    public class GetRenewalScripts
+    public class GetRenewalScript
     {
-        public class Query : IRequest<SshScriptsDto>
+        public class Query : IRequest<string>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, SshScriptsDto>
+        public class Handler : IRequestHandler<Query, string>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -30,18 +30,14 @@ namespace Application.Monitors
                 _mapper = mapper;
             }
 
-            public async Task<SshScriptsDto> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<string> Handle(Query request, CancellationToken cancellationToken)
             {
-                var monitor = await _context.Monitors
-                    .Where(m => m.Id == request.Id)
-                    .SingleOrDefaultAsync();
+                var monitor = await _context.Monitors.FindAsync(request.Id);
 
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
-                var scripts = _mapper.Map<Monitor, SshScriptsDto>(monitor);
-
-                return scripts;
+                return monitor.RenewalScript;
             }
         }
     }

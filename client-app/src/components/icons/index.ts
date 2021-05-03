@@ -10,3 +10,5 @@ export { SuccessIcon } from "./SuccessIcon";
 export { WarningIcon } from "./WarningIcon";
 export { CopyIcon } from "./CopyIcon";
 export { UserIcon } from "./UserIcon";
+export { LogsIcon } from "./LogsIcon";
+export { RemoteIcon } from "./RemoteIcon";

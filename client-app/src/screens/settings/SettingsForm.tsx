@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+
 import { Button, Switch, Tooltip, ValidationMessage } from "../../components";
 import { isValidEmail, isValidThreshold } from "../../features";
-
 import { IUser, IUserSettings } from "../../models";
 import { combineClassNames } from "../../utils";
 

@@ -17,31 +17,31 @@ namespace Application.Monitors
         public class Command : IRequest<Unit>
         {
             public Guid MonitorId { get; set; }
-            public string Hostname { get; set; }
-            public int Port { get; set; } = 22;
-            public string Username { get; set; }
-            public string PrivateKey { get; set; }
-            public string Password { get; set; }
+            public string SshHostname { get; set; }
+            public int? SshPort { get; set; }
+            public string SshUsername { get; set; }
+            public string SshPrivateKey { get; set; }
+            public string SshPassword { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(m => m.Hostname)
+                RuleFor(m => m.SshHostname)
                     .NotEmpty()
                     .Length(4, 30);
-                RuleFor(m => m.Username)
+                RuleFor(m => m.SshUsername)
                     .NotEmpty()
                     .Length(1, 30);
-                RuleFor(m => m.Port)
+                RuleFor(m => m.SshPort)
                     .InclusiveBetween(1, 65535)
                     .WithMessage("Please specify a valid port.");
-                RuleFor(m => m.PrivateKey)
+                RuleFor(m => m.SshPrivateKey)
                     .Length(100, 5000)
                     .Must(SshValidators.BeValidOpenSshPrivateKey)
                     .WithMessage("Please specify a valid private OpenSSH key.");
-                RuleFor(m => m.Password)
+                RuleFor(m => m.SshPassword)
                     .Length(1, 30);
             }
         }
@@ -64,11 +64,11 @@ namespace Application.Monitors
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
-                monitor.SshHostname = request.Hostname;
-                monitor.SshPort = request.Port;
-                monitor.SshUsername = request.Username;
-                monitor.SshPrivateKey = request.PrivateKey;
-                monitor.SshPassword = request.Password;
+                monitor.SshHostname = request.SshHostname;
+                monitor.SshPort = request.SshPort ?? 22;
+                monitor.SshUsername = request.SshUsername;
+                monitor.SshPrivateKey = request.SshPrivateKey;
+                monitor.SshPassword = request.SshPassword;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

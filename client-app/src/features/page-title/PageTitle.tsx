@@ -8,7 +8,7 @@ interface PageTitleProps {
 
 export const PageTitle: React.FC<PageTitleProps> = ({ title }) => {
 	useEffect(() => {
-		const pageTitle = title ? `${APP_TITLE} | ${title}` : APP_TITLE;
+		const pageTitle = title ? `${title} | ${APP_TITLE}` : APP_TITLE;
 		document.title = pageTitle;
 	}, [title]);
 

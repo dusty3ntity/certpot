@@ -38,16 +38,16 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpGet("{monitorId}/renewal-scripts")]
+        [HttpGet("{monitorId}/renewal-script")]
         [Authorize(Policy = "IsMonitorOwner")]
-        public async Task<ActionResult<SshScriptsDto>> GetRenewalScripts(Guid monitorId)
+        public async Task<ActionResult<string>> GetRenewalScript(Guid monitorId)
         {
-            return await Mediator.Send(new GetRenewalScripts.Query {Id = monitorId});
+            return await Mediator.Send(new GetRenewalScript.Query {Id = monitorId});
         }
 
-        [HttpPost("{monitorId}/renewal-scripts")]
+        [HttpPost("{monitorId}/renewal-script")]
         [Authorize(Policy = "IsMonitorOwner")]
-        public async Task<ActionResult<Unit>> SetRenewalScripts(Guid monitorId, SetRenewalScripts.Command command)
+        public async Task<ActionResult<Unit>> SetRenewalScripts(Guid monitorId, SetRenewalScript.Command command)
         {
             command.MonitorId = monitorId;
             return await Mediator.Send(command);

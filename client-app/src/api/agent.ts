@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 import { SLEEP_DURATION } from "./../constants/api";
-import { IMonitor, INewMonitor } from "../models/types/monitors";
+import { IMonitor, INewMonitor, ISshCredentials } from "../models/types/monitors";
 import { createNotification, injectErrorCode, isBadId } from "../utils";
 import { CustomError, ErrorType, NotificationType } from "../models/types/errors";
 import { ILoginUser, IRegisterUser, IUserPayload, IUserSettings } from "../models/types";
@@ -150,6 +150,11 @@ export const Monitors = {
 	details: (id: string): Promise<IMonitor> => requests.get(`/monitors/${id}`),
 	create: (data: INewMonitor): Promise<IMonitor> => requests.post("/monitors/", data),
 	delete: (id: string): Promise<void> => requests.del(`/monitors/${id}`),
+	getSshCredentials: (id: string): Promise<ISshCredentials> => requests.get(`/monitors/${id}/ssh-credentials`),
+	setSshCredentials: (id: string, data: ISshCredentials): Promise<void> =>
+		requests.post(`/monitors/${id}/ssh-credentials`, data),
+	testSshConnection: (id: string, data: ISshCredentials): Promise<boolean> =>
+		requests.post(`/monitors/${id}/test-connection`, data),
 };
 
 export const Users = {

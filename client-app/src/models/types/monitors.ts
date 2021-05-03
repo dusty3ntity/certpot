@@ -9,8 +9,9 @@ export interface IMonitor {
 	certificate: ICertificate;
 	autoRenewalEnabled?: boolean;
 	lastCheckDate?: Date;
-}
 
+	sshCredentials?: ISshCredentials;
+}
 export interface INewMonitor {
 	displayName: string;
 	domainName: string;
@@ -20,4 +21,12 @@ export interface INewMonitor {
 export enum AutoRenewalStatusEnum {
 	ACTIVE = "active",
 	DISABLED = "disabled",
+}
+
+export interface ISshCredentials {
+	sshHostname: string;
+	sshPort: number;
+	sshUsername: string;
+	sshPrivateKey?: string;
+	sshPassword?: string;
 }

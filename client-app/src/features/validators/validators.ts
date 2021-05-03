@@ -51,6 +51,25 @@ export const isValidDomainName = (value: string): string => {
 	return "";
 };
 
+export const isValidIpAddress = (value: string): string => {
+	const re = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
+	const result = re.test(value);
+
+	if (!result) {
+		return "IP address is not valid";
+	}
+
+	return "";
+};
+
+export const isValidHostName = (value: string): boolean => {
+	return !isValidDomainName(value) || !isValidIpAddress(value);
+};
+
+export const isValidPrivateKey = (value: string): boolean => {
+	return value.startsWith("-----BEGIN OPENSSH PRIVATE KEY-----") && value.endsWith("-----END OPENSSH PRIVATE KEY-----");
+};
+
 export const isValidEmail = (value: string): string => {
 	const re = /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@]+)*)|(.+))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	const result = re.test(value);

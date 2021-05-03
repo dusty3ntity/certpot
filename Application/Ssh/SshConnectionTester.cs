@@ -39,7 +39,7 @@ namespace Application.Ssh
             
             sshBot.Disconnect();
 
-            return sshBot.IsConnected && sshBot.IsAuthenticated;
+            return sshBot.IsAuthenticated;
         }
     }
 }

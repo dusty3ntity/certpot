@@ -9,7 +9,6 @@ namespace Application.Monitors
         {
             CreateMap<Monitor, MonitorDto>();
             CreateMap<Monitor, SshCredentialsDto>();
-            CreateMap<Monitor, SshScriptsDto>();
         }
     }
 }

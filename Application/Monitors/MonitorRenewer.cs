@@ -60,34 +60,12 @@ namespace Application.Monitors
                 else
                     sshBot.AuthenticateWithPassword(monitor.SshUsername, monitor.SshPassword);
 
-                if (monitor.PreRenewalScript != null)
-                {
-                    var preCommands = monitor.PreRenewalScript.Split("\n");
-                    foreach (var command in preCommands)
-                    {
-                        logs.Add(command);
-                        var output = sshBot.Execute(command);
-                        logs.Add(output);
-                    }
-                }
-
                 var commands = monitor.RenewalScript.Split("\n");
                 foreach (var command in commands)
                 {
                     logs.Add(command);
                     var output = sshBot.Execute(command);
                     logs.Add(output);
-                }
-
-                if (monitor.PostRenewalScript != null)
-                {
-                    var postCommands = monitor.PostRenewalScript.Split("\n");
-                    foreach (var command in postCommands)
-                    {
-                        logs.Add(command);
-                        var output = sshBot.Execute(command);
-                        logs.Add(output);
-                    }
                 }
 
                 monitor.WasRenewalSuccessful = true;
@@ -106,7 +84,7 @@ namespace Application.Monitors
             finally
             {
                 sshBot.Disconnect();
-                
+
                 var joinedLogs = string.Join("\\\\\\\\", logs);
                 monitor.LastRenewalLogs = joinedLogs;
 

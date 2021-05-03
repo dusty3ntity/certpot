@@ -28,8 +28,6 @@ namespace Domain
         public string SshPrivateKey { get; set; }
         public string SshPassword { get; set; }
 
-        public string PreRenewalScript { get; set; }
-        public string PostRenewalScript { get; set; }
         public string RenewalScript { get; set; }
 
         public bool IsRenewing { get; set; }
