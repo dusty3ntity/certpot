@@ -10,8 +10,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210107120509_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210411153437_AddMonitorProps")]
+    partial class AddMonitorProps
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,9 @@ namespace Persistence.Migrations
                     b.Property<string>("IssuerOrganization")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("MonitorId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("SerialNumber")
                         .HasColumnType("text");
 
@@ -53,6 +56,9 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MonitorId")
+                        .IsUnique();
+
                     b.ToTable("Certificates");
                 });
 
@@ -62,31 +68,45 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CertificateId")
+                    b.Property<bool>("AutoRenewalEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("CertificateId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("DisplayName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Domain")
+                    b.Property<string>("DomainName")
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("LastCheckDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Port")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CertificateId");
-
                     b.ToTable("Monitors");
+                });
+
+            modelBuilder.Entity("Domain.Certificate", b =>
+                {
+                    b.HasOne("Domain.Monitor", "Monitor")
+                        .WithOne("Certificate")
+                        .HasForeignKey("Domain.Certificate", "MonitorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Monitor");
                 });
 
             modelBuilder.Entity("Domain.Monitor", b =>
                 {
-                    b.HasOne("Domain.Certificate", "Certificate")
-                        .WithMany()
-                        .HasForeignKey("CertificateId");
-
                     b.Navigation("Certificate");
                 });
 #pragma warning restore 612, 618

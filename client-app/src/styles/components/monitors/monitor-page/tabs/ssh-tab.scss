@@ -1,0 +1,78 @@
+.ssh-tab {
+	#ssh-credentials-form {
+		height: 100%;
+
+		.host-container,
+		.user-container {
+			display: flex;
+			flex-grow: 1;
+			column-gap: 2rem;
+
+			.form-item {
+				flex-grow: 1;
+			}
+		}
+
+		.private-key {
+			resize: none;
+			height: 16rem;
+
+			font-weight: 400;
+		}
+
+		.actions-container {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.submit-btn {
+			padding: 0.5rem 1rem;
+			font-size: 1.2rem;
+			border-radius: 1rem;
+
+			color: $text-color-white;
+			background: $success-color;
+
+			&:hover {
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5), 0px 0px 6px rgba(0, 0, 0, 0.25);
+			}
+
+			&:active {
+				background: darken($success-color, 5%);
+			}
+
+			&:disabled {
+				background: lighten($success-color, 20%);
+			}
+
+			.icon {
+				width: 1.5rem;
+				height: 1.5rem;
+			}
+		}
+
+		.test-connection-btn {
+			padding: 0.5rem 1rem;
+			border-radius: 1rem;
+
+
+			&:hover {
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5), 0px 0px 6px rgba(0, 0, 0, 0.25);
+			}
+
+			&:active {
+				background: darken($normal-color, 5%);
+			}
+
+			&:disabled {
+				color: $text-color-grey;
+				background: $normal-color;
+			}
+
+			.icon {
+				width: 1.5rem;
+				height: 1.5rem;
+			}
+		}
+	}
+}

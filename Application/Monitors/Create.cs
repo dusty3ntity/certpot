@@ -1,43 +1,79 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Application.Interfaces;
+using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Persistence;
+using Application.Validators;
+using Microsoft.EntityFrameworkCore;
 using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
 {
     public class Create
     {
-        public class Command : IRequest<Monitor>
+        public class Command : IRequest<MonitorDto>
         {
             public string DisplayName { get; set; }
-            public string Domain { get; set; }
+            public string DomainName { get; set; }
             public int Port { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Monitor>
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(m => m.DisplayName)
+                    .NotEmpty()
+                    .Length(2, 30);
+                RuleFor(m => m.DomainName)
+                    .NotEmpty()
+                    .Length(4, 30)
+                    .Must(MonitorPathValidators.BeValidDomainName)
+                    .WithMessage("Please specify a valid domain name without protocol.");
+                RuleFor(m => m.Port)
+                    .InclusiveBetween(1, 65535)
+                    .WithMessage("Please specify a valid port.");
+            }
+        }
+
+        public class Handler : IRequestHandler<Command, MonitorDto>
         {
             private readonly DataContext _context;
             private readonly ICertificateParser _certificateParser;
+            private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, ICertificateParser certificateParser)
+            public Handler(DataContext context, ICertificateParser certificateParser, IMapper mapper,
+                IUserAccessor userAccessor)
             {
                 _context = context;
                 _certificateParser = certificateParser;
+                _mapper = mapper;
+                _userAccessor = userAccessor;
             }
 
-            public async Task<Monitor> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<MonitorDto> Handle(Command request, CancellationToken cancellationToken)
             {
-                var certificate = await _certificateParser.GetCertificateByDomainName(request.Domain);
+                var certificate = _certificateParser.GetCertificate(request.DomainName, request.Port);
+
+                var user = await _context.Users
+                    .SingleOrDefaultAsync(x => x.UserName.Equals(_userAccessor.GetCurrentUsername()));
 
                 var monitor = new Monitor
                 {
+                    User = user,
                     DisplayName = request.DisplayName,
-                    Domain = request.Domain,
+                    DomainName = request.DomainName,
                     Port = request.Port,
-                    Certificate = certificate
+                    CreationDate = DateTime.Now,
+                    Certificate = certificate,
+                    AutoRenewalEnabled = false,
+                    LastCheckDate = DateTime.Now
                 };
 
                 _context.Monitors.Add(monitor);
@@ -45,8 +81,8 @@ namespace Application.Monitors
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success)
-                    return monitor;
-                throw new Exception("Problem saving changes");
+                    return _mapper.Map<Monitor, MonitorDto>(monitor);
+                throw new RestException(HttpStatusCode.InternalServerError, ErrorType.SavingChangesError);
             }
         }
     }

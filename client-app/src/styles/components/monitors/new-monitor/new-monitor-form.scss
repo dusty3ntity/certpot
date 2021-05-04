@@ -1,0 +1,14 @@
+.new-monitor-form {
+	.host-block {
+		display: flex;
+		column-gap: 1rem;
+	}
+
+	.port-input {
+		width: 6rem;
+	}
+
+	.host-input {
+		flex-grow: 1;
+	}
+}

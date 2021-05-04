@@ -1,0 +1,99 @@
+button {
+	outline: none;
+	border: none;
+	cursor: pointer;
+}
+
+.btn {
+	background: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	border-radius: 0.5rem;
+	font-size: 1rem;
+	font-weight: 700;
+
+	transition: 0.2s;
+
+	.icon + span,
+	span + .icon {
+		margin-left: 8px;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+		box-shadow: none !important;
+	}
+
+	.loading-indicator-small {
+		fill: $text-color-white;
+	}
+}
+
+.btn.round {
+	border-radius: 50%;
+}
+
+.btn.primary {
+	height: 2.5rem;
+
+	background: $success-color;
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.08), 0px 0px 6px rgba(0, 0, 0, 0.05);
+
+	text-transform: uppercase;
+	color: $text-color-white;
+
+	.icon {
+		height: 1.5rem;
+		width: 1.5rem;
+		fill: $text-color-white;
+	}
+
+	&:hover {
+		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5), 0px 0px 6px rgba(0, 0, 0, 0.25) !important;
+	}
+
+	&:active,
+	&.active {
+		background: darken($success-color, 10%);
+	}
+
+	&:disabled {
+		background: lighten($success-color, 20%);
+	}
+}
+
+.btn-icon {
+	background: none;
+
+	border-radius: 50%;
+
+	.icon {
+		padding: 4px;
+	}
+
+	.loading-indicator-small {
+		fill: $primary-color;
+	}
+
+	&:hover {
+		background: #ddd;
+		box-shadow: 0 0 0 8px #ddd;
+	}
+
+	&:active {
+		background: #ddd;
+		box-shadow: 0 0 0 8px #ddd, 0 0 0 10px #afafaf;
+	}
+}
+
+a {
+	display: flex;
+	transition: none;
+	background: none;
+
+	&:hover {
+		color: unset;
+	}
+}

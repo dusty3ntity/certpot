@@ -1,0 +1,1 @@
+export const EXPIRY_UPDATE_INTERVAL = 60 * 1000;

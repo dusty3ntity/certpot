@@ -1,0 +1,69 @@
+.loading-indicator-small {
+	fill: $primary-color;
+
+	animation: loading 0.8s infinite linear;
+}
+
+@keyframes loading {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.loading-indicator-big {
+	div {
+		width: 3rem;
+		height: 3rem;
+		margin: 0 0.5rem;
+
+		border-radius: 100%;
+		display: inline-block;
+		animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+	}
+
+	.bounce1 {
+		animation-delay: -0.32s;
+	}
+
+	.bounce2 {
+		animation-delay: -0.16s;
+	}
+}
+
+@keyframes sk-bouncedelay {
+	0%,
+	80%,
+	100% {
+		transform: scale(0);
+
+		background: $success-color;
+		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.08), 0px 0px 6px rgba(0, 0, 0, 0.05);
+	}
+
+	40% {
+		transform: scale(1);
+
+		background: lighen($success-color, 5%);
+		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.08), 0px 0px 6px rgba(0, 0, 0, 0.05);
+	}
+}
+
+.loading-screen {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	.title {
+		font-size: 2rem;
+		font-weight: 600;
+		margin-top: 1.5rem;
+		color: $text-color-grey;
+	}
+}

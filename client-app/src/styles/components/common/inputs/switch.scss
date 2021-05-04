@@ -1,0 +1,45 @@
+.switch {
+	position: relative;
+	height: 20px;
+	width: 50px;
+	display: flex;
+
+	input {
+		@include visually-hidden;
+
+		&:checked + .track {
+			background: $success-color;
+
+			.thumb {
+				margin-left: calc(100% - 16px);
+				margin-right: 0 !important;
+			}
+		}
+	}
+
+	&.disabled .track {
+		cursor: not-allowed;
+	}
+
+	.track {
+		position: absolute;
+		display: flex;
+		height: 100%;
+		width: 100%;
+		padding: 4px 6px;
+		border-radius: 40px;
+		cursor: pointer;
+		transition: all 0.5s;
+
+		background: $body-background-darker;
+	}
+
+	.thumb {
+		height: 100%;
+		width: 16px;
+		border-radius: 40px;
+		transition: all 0.3s;
+
+		background: $body-background;
+	}
+}

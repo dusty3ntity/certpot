@@ -1,5 +1,11 @@
 using System;
+using Application.Interfaces;
+using Application.ScheduledTasks;
+using Domain;
+using FluentEmail.Core.Interfaces;
+using Hangfire;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,12 +26,19 @@ namespace API
                 try
                 {
                     var context = services.GetRequiredService<DataContext>();
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     context.Database.Migrate();
+                    Seeder.SeedData(context, userManager).Wait();
+
+                    var monitorChecker = services.GetRequiredService<IMonitorChecker>();
+
+                    var scheduler = new MonitorsCheckScheduler(context, monitorChecker);
+                    scheduler.ScheduleChecks();
                 }
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occured during migration");
+                    logger.LogError(ex, "An error occured during launch");
                 }
             }
 

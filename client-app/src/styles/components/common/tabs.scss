@@ -1,0 +1,56 @@
+.tabs {
+	display: flex;
+	flex-grow: 1;
+
+	.tabs-sidebar {
+		width: 16%;
+		min-width: 16%;
+	}
+
+	.tab-button {
+		margin-bottom: 1rem;
+		font-weight: 400;
+		padding: 0;
+
+		.icon {
+			fill: $primary-color;
+		}
+
+		&:hover {
+			color: $active-color;
+
+			.icon {
+				fill: $active-color;
+			}
+		}
+
+		&.active {
+			color: $active-color;
+			letter-spacing: 0.15em;
+			font-weight: 900;
+
+			.icon {
+				fill: $active-color;
+			}
+		}
+	}
+
+	.tabs-content {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		width: 1px;
+	}
+
+	.tab-title {
+		font-size: 1.2rem;
+		font-weight: 500;
+		color: $text-color-grey;
+		border-bottom: 1px solid $normal-color;
+		margin-bottom: 2rem;
+	}
+
+	.tab-content {
+		flex-grow: 1;
+	}
+}

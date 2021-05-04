@@ -1,0 +1,72 @@
+.monitors-table-item {
+	height: 4rem;
+	border-bottom: 1px solid $normal-color;
+	cursor: pointer;
+
+	td {
+		max-width: 1px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		padding-right: 16px;
+
+		overflow: hidden;
+
+		&:last-child {
+			padding: 0;
+		}
+	}
+
+	.name-val {
+		padding-left: 1.5rem;
+	}
+
+	.actions-val div {
+		display: flex;
+		justify-content: flex-end;
+		padding-right: 1.5rem;
+
+		.btn-icon {
+			padding: 0;
+		}
+	}
+
+	.expires-in-val {
+		&.expired-severity .badge {
+			border-color: $expired-color;
+			color: $expired-color;
+		}
+
+		&.high-severity .badge {
+			border-color: $warning-color;
+			color: $warning-color;
+		}
+
+		&.moderate-severity .badge {
+			border-color: $success-color;
+			color: $success-color;
+		}
+
+		&.low-severity .badge {
+			border-color: $active-color;
+			color: $active-color;
+		}
+
+		.badge {
+			border: 2px solid;
+			display: inline-block;
+			width: 10ch;
+			padding: 4px 8px;
+			border-radius: 0.5rem;
+			text-align: center;
+			font-weight: 600;
+		}
+	}
+
+	&:hover {
+		background: darken($text-color-white, 5%);
+	}
+
+	&:active {
+		background: darken($text-color-white, 8%);
+	}
+}

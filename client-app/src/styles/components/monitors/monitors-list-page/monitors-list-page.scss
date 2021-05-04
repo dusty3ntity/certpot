@@ -1,0 +1,84 @@
+@import "./monitors-table-item.scss";
+
+#monitors-list-page {
+	.top-panel {
+		display: flex;
+		align-items: center;
+		margin-bottom: 2rem;
+
+		.title {
+			font-size: 2rem;
+		}
+
+		.add-btn {
+			margin-left: auto;
+			padding: 0.5rem 1rem;
+		}
+	}
+
+	.table-wrapper {
+		flex-grow: 1;
+		position: relative;
+		overflow-y: scroll;
+		padding-right: 1rem;
+	}
+
+	.monitors-table {
+		width: 100%;
+		border-collapse: collapse;
+
+		thead {
+			position: sticky;
+			top: 0;
+			background: $body-background;
+
+			&::after {
+				position: absolute;
+				content: "";
+				background: $text-color-grey;
+				height: 1px;
+				width: 100%;
+			}
+		}
+
+		th {
+			text-align: left;
+			padding-bottom: 1rem;
+
+			color: $text-color-grey;
+			text-transform: uppercase;
+		}
+
+		.name-col {
+			width: 19%;
+			padding-left: 1.5rem;
+		}
+
+		.host-col {
+			width: 17%;
+		}
+
+		.subject-col {
+			width: 16%;
+		}
+
+		.issuer-col {
+			width: 18%;
+		}
+
+		.expires-in-col {
+			width: 12%;
+		}
+
+		.actions-col {
+			width: 8%;
+			color: transparent;
+		}
+	}
+}
+
+.subject-tooltip,
+.issuer-tooltip {
+	display: flex;
+	flex-direction: column;
+}

@@ -1,0 +1,24 @@
+.container {
+	width: 100%;
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+}
+
+@media (min-width: 1140px) {
+	.container {
+		width: 960px;
+	}
+}
+
+@media (min-width: 1320px) {
+	.container {
+		width: 1140px;
+	}
+}
+
+@media (min-width: 1600px) {
+	.container {
+		width: 1320px;
+	}
+}
