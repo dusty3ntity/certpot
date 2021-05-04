@@ -29,7 +29,7 @@ export const LogsTab: React.FC<ITabProps> = ({ data }) => {
 
 	useEffect(() => {
 		Prism.highlightAll();
-	}, [monitor.renewalLogs]);
+	});
 
 	if (loadingRenewalLogs) {
 		return <LoadingScreen size={2} />;

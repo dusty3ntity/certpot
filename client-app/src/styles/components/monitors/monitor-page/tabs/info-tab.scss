@@ -40,7 +40,7 @@
 			display: flex;
 			flex-direction: column;
 			margin-right: 1rem;
-	
+
 			&:last-child {
 				margin: 0;
 			}
@@ -145,10 +145,11 @@
 		}
 	}
 
-	.info-row {
+	.monitor-row,
+	.certificate-row {
 		.block {
 			flex-direction: column;
-			width: 33%;
+			width: 50%;
 		}
 	}
 }

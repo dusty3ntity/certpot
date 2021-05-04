@@ -3,7 +3,13 @@ import React, { useEffect, useState } from "react";
 import { CrossIcon, TickIcon, Tooltip } from "../../../../components";
 import { EXPIRY_UPDATE_INTERVAL } from "../../../../constants/time";
 import { IMonitor, ITabProps } from "../../../../models/types";
-import { getExpiresInTime, combineClassNames, normalizeDomainName, defaultFormat } from "../../../../utils";
+import {
+	getExpiresInTime,
+	combineClassNames,
+	normalizeDomainName,
+	defaultFormat,
+	describeSshErrorCode,
+} from "../../../../utils";
 
 export const InfoTab: React.FC<ITabProps> = ({ data }) => {
 	const monitor = data as IMonitor;
@@ -57,7 +63,7 @@ export const InfoTab: React.FC<ITabProps> = ({ data }) => {
 				</div>
 			</div>
 
-			<div className="row info-row">
+			<div className="row monitor-row">
 				<div className="block monitor-info-block">
 					<span className="block-title">Monitor</span>
 
@@ -76,6 +82,23 @@ export const InfoTab: React.FC<ITabProps> = ({ data }) => {
 					</div>
 				</div>
 
+				<div className="block renewal-block">
+					<span className="block-title">Renewal</span>
+
+					<div className="block-content">
+						<span>Last renewal attempt:</span>
+						<span>{monitor.lastRenewalDate ? defaultFormat(monitor.lastRenewalDate) : "-"}</span>
+
+						<span>Was renewal successful:</span>
+						<span>{monitor.wasRenewalSuccessful === null ? "-" : monitor.wasRenewalSuccessful ? "yes" : "no"}</span>
+
+						<span>Last renewal error:</span>
+						<span>{monitor.renewalErrorCode ? describeSshErrorCode(monitor.renewalErrorCode) : "-"}</span>
+					</div>
+				</div>
+			</div>
+
+			<div className="row certificate-row">
 				<div className="block certificate-subject-block">
 					<span className="block-title">Certificate Subject</span>
 

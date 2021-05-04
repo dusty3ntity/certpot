@@ -5,31 +5,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Validators;
-using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
 {
-    public class SetRenewalScript
+    public class SwitchAutoRenewal
     {
         public class Command : IRequest<Unit>
         {
             public Guid MonitorId { get; set; }
-            public string RenewalScript { get; set; }
-        }
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(m => m.RenewalScript)
-                    .NotNull()
-                    .Length(1, 10000);
-            }
         }
 
         public class Handler : IRequestHandler<Command, Unit>
@@ -48,8 +35,7 @@ namespace Application.Monitors
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
-                monitor.RenewalScript = request.RenewalScript;
-                monitor.RenewalConfigured = true;
+                monitor.AutoRenewalEnabled = !monitor.AutoRenewalEnabled;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

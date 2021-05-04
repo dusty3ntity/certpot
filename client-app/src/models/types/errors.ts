@@ -42,6 +42,8 @@ export enum ErrorType {
 
 	SshConnectionTestingTimeout = 760,
 
+	CertificateWasNotChanged = 777,
+
 	DuplicateEmailFound = 901,
 	DuplicateUsernameFound = 902,
 

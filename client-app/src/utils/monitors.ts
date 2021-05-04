@@ -1,3 +1,4 @@
+import { ErrorType } from "../models/types/errors";
 import { IMonitor, ISshLog, ISshLogs } from "../models/types/monitors";
 
 export const mapMonitorDates = (monitor: IMonitor): IMonitor => {
@@ -30,4 +31,25 @@ export const parseMonitorRenewalLogs = (logs: string): ISshLogs => {
 	}
 
 	return result;
+};
+
+export const describeSshErrorCode = (code: ErrorType): string => {
+	switch (code) {
+		case ErrorType.SshConnectionError:
+			return "SSH connection error";
+		case ErrorType.SshKeyParsingError:
+			return "SSH key parsing error";
+		case ErrorType.SshAuthenticationError:
+			return "SSH authentication error";
+		case ErrorType.SshChannelOpeningError:
+			return "Channel opening error";
+		case ErrorType.SshCommandExecutionError:
+			return "Command execution error";
+		case ErrorType.SshChannelTimeout:
+			return "Channel timeout";
+		case ErrorType.CertificateWasNotChanged:
+			return "Certificate wasn't changed";
+		default:
+			return "Unknown";
+	}
 };

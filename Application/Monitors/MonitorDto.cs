@@ -17,11 +17,14 @@ namespace Application.Monitors
 
         public bool AutoRenewalEnabled { get; set; }
         public DateTime LastCheckDate { get; set; }
+        
+        public bool SshConfigured { get; set; }
+        public bool RenewalConfigured { get; set; }
 
         public bool IsRenewing { get; set; }
         public bool IsInRenewalQueue { get; set; }
 
-        public DateTime LastRenewalDate { get; set; }
+        public DateTime? LastRenewalDate { get; set; }
 
         public bool? WasRenewalSuccessful { get; set; }
         public int? RenewalErrorCode { get; set; }

@@ -159,6 +159,8 @@ export const Monitors = {
 	setRenewalScript: (id: string, script: string): Promise<void> =>
 		requests.post(`/monitors/${id}/renewal-script`, { renewalScript: script }),
 	getLastRenewalLogs: (id: string): Promise<string> => requests.get(`/monitors/${id}/renewal-logs`),
+	switchAutoRenewal: (id: string): Promise<void> => requests.post(`/monitors/${id}/autorenewal`),
+	forceRenewal: (id: string): Promise<void> => requests.post(`/monitors/${id}/renew`),
 };
 
 export const Users = {

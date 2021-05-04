@@ -4,14 +4,15 @@ import { IComponentProps } from "../../models/types/components";
 import { combineClassNames } from "../../utils/";
 
 interface IStatusBadgeProps extends IComponentProps {
-	status: "active" | "disabled";
+	status: "active" | "disabled" | "in-progress" | "pending";
+	noText?: boolean;
 }
 
-export const StatusBadge: React.FC<IStatusBadgeProps> = ({ id, className, status }) => {
+export const StatusBadge: React.FC<IStatusBadgeProps> = ({ id, className, status, noText }) => {
 	return (
 		<span id={id} className={combineClassNames("status-badge", className)}>
 			<span className={combineClassNames("badge", status)} />
-			<span className="label">{status}</span>
+			{!noText && <span className="label">{status}</span>}
 		</span>
 	);
 };

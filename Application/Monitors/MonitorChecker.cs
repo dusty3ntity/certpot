@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Application.Emails;
+using Application.Errors;
 using Application.Interfaces;
 using Domain;
 using Hangfire;
@@ -71,7 +72,7 @@ namespace Application.Monitors
                 {
                     if (!user.NotifyAboutExpiryIfRenewalConfigured && monitor.RenewalScript != null)
                         return;
-                    
+
                     _logger.LogInformation($"Sending certificate expiry email for {monitor.Id}");
                     _emailSender.Send(user.NotificationsEmail, "Certificate expiry",
                         BodyBuilder.BuildEmailBody(EmailType.CertificateIsAboutToExpire, monitor, user));
@@ -120,12 +121,16 @@ namespace Application.Monitors
                     _logger.LogInformation($"Sending successful certificate renewal email for {monitor.Id}");
                     _emailSender.Send(user.NotificationsEmail, "Certificate renewal",
                         BodyBuilder.BuildEmailBody(EmailType.CertificateRenewalSucceeded, monitor, user));
+
+                    monitor.WasRenewalSuccessful = true;
                 }
                 else
                 {
+                    monitor.WasRenewalSuccessful = false;
                     _logger.LogInformation($"Sending unsuccessful certificate renewal email for {monitor.Id}");
                     _emailSender.Send(user.NotificationsEmail, "Certificate renewal",
                         BodyBuilder.BuildEmailBody(EmailType.CertificateRenewalFailed, monitor, user));
+                    monitor.RenewalErrorCode = (int) ErrorType.CertificateWasNotChanged;
                 }
 
                 var success = await _context.SaveChangesAsync() > 0;

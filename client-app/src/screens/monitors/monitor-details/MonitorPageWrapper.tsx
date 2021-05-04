@@ -4,7 +4,12 @@ import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 
 import { createConfirmationModal, LoadingScreen, Page } from "../../../components";
-import { fetchMonitorById, resetSelectedMonitor } from "../../../models/monitor/monitorSlice";
+import {
+	fetchMonitorById,
+	forceRenewal,
+	resetSelectedMonitor,
+	switchAutoRenewal,
+} from "../../../models/monitor/monitorSlice";
 import { deleteMonitor } from "../../../models/monitors/monitorsSlice";
 import { RootStateType } from "../../../models/rootReducer";
 import { useAppDispatch } from "../../../store";
@@ -14,7 +19,7 @@ import { createUnknownError } from "../../../utils";
 export const MonitorPageWrapper = () => {
 	const history = useHistory();
 	const { monitorId } = useParams<{ monitorId: string }>();
-	const { monitor, loading } = useSelector((state: RootStateType) => state.monitor);
+	const { monitor, loading, submittingAutoRenewal, renewing } = useSelector((state: RootStateType) => state.monitor);
 	const dispatch = useAppDispatch();
 
 	const { deleting, deleteTargetId } = useSelector((state: RootStateType) => state.monitors);
@@ -42,6 +47,22 @@ export const MonitorPageWrapper = () => {
 		createConfirmationModal(modalContent, "Delete", onOk);
 	};
 
+	const handleAutoRenewalChange = () => {
+		dispatch(switchAutoRenewal())
+			.then(unwrapResult)
+			.catch((err) => {
+				createUnknownError(err, "[monitorPage]~handleAutoRenewalChange");
+			});
+	};
+
+	const handleForceRenewal = () => {
+		dispatch(forceRenewal())
+			.then(unwrapResult)
+			.catch((err) => {
+				createUnknownError(err, "[monitorPage]~handleForceRenewal");
+			});
+	};
+
 	return (
 		<Page id="monitor-page">
 			{loading && <LoadingScreen size={2} />}
@@ -51,6 +72,10 @@ export const MonitorPageWrapper = () => {
 					monitor={monitor}
 					onDeleteClick={handleDeleteClick}
 					deleting={deleting && deleteTargetId === monitor.id}
+					onAutoRenewalChange={handleAutoRenewalChange}
+					onForceRenewal={handleForceRenewal}
+					submitting={submittingAutoRenewal}
+					renewing={renewing}
 				/>
 			)}
 		</Page>

@@ -53,6 +53,13 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
+        [HttpPost("{monitorId}/autorenewal")]
+        [Authorize(Policy = "IsMonitorOwner")]
+        public async Task<ActionResult<Unit>> SwitchAutoRenewal(Guid monitorId)
+        {
+            return await Mediator.Send(new SwitchAutoRenewal.Command {MonitorId = monitorId});
+        }
+
         [HttpGet("{monitorId}/renewal-logs")]
         [Authorize(Policy = "IsMonitorOwner")]
         public async Task<ActionResult<string>> GetLastRenewalLogs(Guid monitorId)

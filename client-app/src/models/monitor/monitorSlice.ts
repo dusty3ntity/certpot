@@ -15,6 +15,8 @@ interface IMonitorState {
 	loadingRenewalScript: boolean;
 	submittingRenewalScript: boolean;
 	loadingRenewalLogs: boolean;
+	submittingAutoRenewal: boolean;
+	renewing: boolean;
 }
 
 const initialState: IMonitorState = {
@@ -26,6 +28,8 @@ const initialState: IMonitorState = {
 	loadingRenewalScript: false,
 	submittingRenewalScript: false,
 	loadingRenewalLogs: false,
+	submittingAutoRenewal: false,
+	renewing: false,
 };
 
 export const fetchMonitorById = createAsyncThunk<IMonitor, string>(
@@ -66,7 +70,7 @@ export const fetchSshCredentials = createAsyncThunk<ISshCredentials, string>(
 	}
 );
 
-export const saveSshCredentials = createAsyncThunk<void, ISshCredentials>(
+export const saveSshCredentials = createAsyncThunk<ISshCredentials, ISshCredentials>(
 	"monitor/saveSshCredentials",
 	async (credentials: ISshCredentials, { getState, rejectWithValue }) => {
 		const {
@@ -74,6 +78,7 @@ export const saveSshCredentials = createAsyncThunk<void, ISshCredentials>(
 		} = getState() as RootStateType;
 		try {
 			await Monitors.setSshCredentials(monitor!.id, credentials);
+			return credentials;
 		} catch (err) {
 			return rejectWithValue(err);
 		}
@@ -147,6 +152,34 @@ export const fetchLastRenewalLogs = createAsyncThunk<ISshLogs | undefined, strin
 	}
 );
 
+export const switchAutoRenewal = createAsyncThunk<void, void>(
+	"monitor/switchAutoRenewal",
+	async (_, { getState, rejectWithValue }) => {
+		const {
+			monitor: { monitor },
+		} = getState() as RootStateType;
+		try {
+			await Monitors.switchAutoRenewal(monitor!.id);
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
+export const forceRenewal = createAsyncThunk<void, void>(
+	"monitor/forceRenewal",
+	async (_, { getState, rejectWithValue }) => {
+		const {
+			monitor: { monitor },
+		} = getState() as RootStateType;
+		try {
+			await Monitors.forceRenewal(monitor!.id);
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
 const monitorSlice = createSlice({
 	name: "monitor",
 	initialState,
@@ -184,8 +217,9 @@ const monitorSlice = createSlice({
 		builder.addCase(saveSshCredentials.pending, (state) => {
 			state.submittingSshCredentials = true;
 		});
-		builder.addCase(saveSshCredentials.fulfilled, (state) => {
+		builder.addCase(saveSshCredentials.fulfilled, (state, { payload }) => {
 			state.submittingSshCredentials = false;
+			state.monitor!.sshCredentials = payload;
 		});
 		builder.addCase(saveSshCredentials.rejected, (state) => {
 			state.submittingSshCredentials = false;
@@ -231,6 +265,28 @@ const monitorSlice = createSlice({
 		});
 		builder.addCase(fetchLastRenewalLogs.rejected, (state) => {
 			state.loadingRenewalLogs = false;
+		});
+
+		builder.addCase(switchAutoRenewal.pending, (state) => {
+			state.submittingAutoRenewal = true;
+		});
+		builder.addCase(switchAutoRenewal.fulfilled, (state) => {
+			state.submittingAutoRenewal = false;
+			state.monitor!.autoRenewalEnabled = !state.monitor!.autoRenewalEnabled;
+		});
+		builder.addCase(switchAutoRenewal.rejected, (state) => {
+			state.submittingAutoRenewal = false;
+		});
+
+		builder.addCase(forceRenewal.pending, (state) => {
+			state.renewing = true;
+		});
+		builder.addCase(forceRenewal.fulfilled, (state) => {
+			state.renewing = false;
+			state.monitor!.isInRenewalQueue = true;
+		});
+		builder.addCase(forceRenewal.rejected, (state) => {
+			state.renewing = false;
 		});
 	},
 });

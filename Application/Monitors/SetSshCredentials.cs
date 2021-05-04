@@ -57,9 +57,7 @@ namespace Application.Monitors
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var monitor = await _context.Monitors
-                    .Where(m => m.Id == request.MonitorId)
-                    .SingleOrDefaultAsync();
+                var monitor = await _context.Monitors.FindAsync(request.MonitorId);
 
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
@@ -69,6 +67,8 @@ namespace Application.Monitors
                 monitor.SshUsername = request.SshUsername;
                 monitor.SshPrivateKey = request.SshPrivateKey;
                 monitor.SshPassword = request.SshPassword;
+
+                monitor.SshConfigured = true;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

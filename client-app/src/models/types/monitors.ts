@@ -1,4 +1,5 @@
 import { ICertificate } from "./certificates";
+import { ErrorType } from "./errors";
 
 export interface IMonitor {
 	id: string;
@@ -15,11 +16,14 @@ export interface IMonitor {
 	isInRenewalQueue: boolean;
 
 	wasRenewalSuccessful?: boolean;
-	renewalErrorCode?: boolean;
+	renewalErrorCode?: ErrorType;
 
 	sshCredentials?: ISshCredentials;
 	renewalScript?: string;
 	renewalLogs?: ISshLogs;
+
+	sshConfigured: boolean;
+	renewalConfigured: boolean;
 }
 export interface INewMonitor {
 	displayName: string;
