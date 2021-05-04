@@ -91,7 +91,6 @@ export const RegisterPage: React.FC = () => {
 							name="username"
 							className={combineClassNames("text-input", { error: errors.email })}
 							type="text"
-							autoFocus
 							autoComplete="username"
 							maxLength={30}
 							ref={register({
@@ -107,6 +106,32 @@ export const RegisterPage: React.FC = () => {
 										const result = isValidUsername(value);
 										if (result) return result;
 										else return true;
+									},
+								},
+							})}
+						/>
+					</div>
+
+					<div className="displayName-input form-item">
+						<label htmlFor="displayName">
+							<span>Display name</span>
+							<ValidationMessage inputName="displayName" errors={errors} />
+						</label>
+
+						<input
+							id="displayName"
+							name="displayName"
+							className={combineClassNames("text-input", { error: errors.email })}
+							type="text"
+							maxLength={30}
+							ref={register({
+								required: "Display name is required.",
+								validate: {
+									minLength: (value: string) => {
+										return minLength(value, 3) ? "Display name must be at least 3 characters long." : true;
+									},
+									maxLength: (value: string) => {
+										return maxLength(value, 20) ? "Display name can be at most 20 characters long." : true;
 									},
 								},
 							})}
