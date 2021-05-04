@@ -52,6 +52,7 @@ namespace API
             {
                 endpoints.MapControllers();
                 endpoints.MapHangfireDashboard();
+                endpoints.MapFallbackToController("React", "Fallback");
             });
         }
     }
