@@ -47,7 +47,7 @@ namespace API.Controllers
 
         [HttpPost("{monitorId}/renewal-script")]
         [Authorize(Policy = "IsMonitorOwner")]
-        public async Task<ActionResult<Unit>> SetRenewalScripts(Guid monitorId, SetRenewalScript.Command command)
+        public async Task<ActionResult<Unit>> SetRenewalScript(Guid monitorId, SetRenewalScript.Command command)
         {
             command.MonitorId = monitorId;
             return await Mediator.Send(command);

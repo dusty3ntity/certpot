@@ -11,6 +11,7 @@ export interface IMonitor {
 	lastCheckDate?: Date;
 
 	sshCredentials?: ISshCredentials;
+	renewalScript?: string;
 }
 export interface INewMonitor {
 	displayName: string;
@@ -22,7 +23,6 @@ export enum AutoRenewalStatusEnum {
 	ACTIVE = "active",
 	DISABLED = "disabled",
 }
-
 export interface ISshCredentials {
 	sshHostname: string;
 	sshPort: number;

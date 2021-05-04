@@ -155,6 +155,9 @@ export const Monitors = {
 		requests.post(`/monitors/${id}/ssh-credentials`, data),
 	testSshConnection: (id: string, data: ISshCredentials): Promise<boolean> =>
 		requests.post(`/monitors/${id}/test-connection`, data),
+	getRenewalScript: (id: string): Promise<string> => requests.get(`/monitors/${id}/renewal-script`),
+	setRenewalScript: (id: string, script: string): Promise<void> =>
+		requests.post(`/monitors/${id}/renewal-script`, { renewalScript: script }),
 };
 
 export const Users = {

@@ -1,7 +1,7 @@
 import { InfoIcon, LogsIcon, RemoteIcon, RenewalIcon } from "../../../../components";
 import { ITabConfig } from "../../../../models/types";
 import { InfoTab } from "./InfoTab";
-import { RenewalTab } from "./RenewalTab";
+import { ScriptsTab } from "./ScriptsTab";
 import { SshTab } from "./SshTab";
 import { LogsTab } from "./LogsTab";
 
@@ -20,9 +20,9 @@ export const MONITOR_TABS_CONFIG: ITabConfig[] = [
 	},
 	{
 		id: 2,
-		name: "Renewal",
+		name: "Scripts",
 		icon: RenewalIcon,
-		component: RenewalTab,
+		component: ScriptsTab,
 	},
 	{
 		id: 3,

@@ -11,6 +11,8 @@ interface IMonitorState {
 	loadingSshCredentials: boolean;
 	submittingSshCredentials: boolean;
 	testingSshConnection: boolean;
+	loadingRenewalScript: boolean;
+	submittingRenewalScript: boolean;
 }
 
 const initialState: IMonitorState = {
@@ -19,6 +21,8 @@ const initialState: IMonitorState = {
 	loadingSshCredentials: false,
 	submittingSshCredentials: false,
 	testingSshConnection: false,
+	loadingRenewalScript: false,
+	submittingRenewalScript: false,
 };
 
 export const fetchMonitorById = createAsyncThunk<IMonitor, string>(
@@ -87,6 +91,37 @@ export const testSshConnection = createAsyncThunk<boolean, ISshCredentials>(
 	}
 );
 
+export const fetchRenewalScript = createAsyncThunk<string, string>(
+	"monitor/fetchRenewalScript",
+	async (id: string, { getState, dispatch, rejectWithValue }) => {
+		const { monitor } = getState() as RootStateType;
+		const script = monitor.monitor!.renewalScript;
+		if (script) {
+			return script;
+		}
+
+		try {
+			return await Monitors.getRenewalScript(id);
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
+export const saveRenewalScript = createAsyncThunk<void, string>(
+	"monitor/saveRenewalScript",
+	async (script: string, { getState, rejectWithValue }) => {
+		const {
+			monitor: { monitor },
+		} = getState() as RootStateType;
+		try {
+			await Monitors.setRenewalScript(monitor!.id, script);
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
 const monitorSlice = createSlice({
 	name: "monitor",
 	initialState,
@@ -96,9 +131,6 @@ const monitorSlice = createSlice({
 		},
 		resetSelectedMonitor: (state) => {
 			state.monitor = null;
-		},
-		setSshCredentials: (state, action: PayloadAction<ISshCredentials>) => {
-			state.monitor!.sshCredentials = action.payload;
 		},
 	},
 	extraReducers: (builder) => {
@@ -143,9 +175,30 @@ const monitorSlice = createSlice({
 		builder.addCase(testSshConnection.rejected, (state) => {
 			state.testingSshConnection = false;
 		});
+
+		builder.addCase(fetchRenewalScript.pending, (state) => {
+			state.loadingRenewalScript = true;
+		});
+		builder.addCase(fetchRenewalScript.fulfilled, (state, { payload }) => {
+			state.loadingRenewalScript = false;
+			state.monitor!.renewalScript = payload;
+		});
+		builder.addCase(fetchRenewalScript.rejected, (state) => {
+			state.loadingRenewalScript = false;
+		});
+
+		builder.addCase(saveRenewalScript.pending, (state) => {
+			state.submittingRenewalScript = true;
+		});
+		builder.addCase(saveRenewalScript.fulfilled, (state) => {
+			state.submittingRenewalScript = false;
+		});
+		builder.addCase(saveRenewalScript.rejected, (state) => {
+			state.submittingRenewalScript = false;
+		});
 	},
 });
 
-export const { setSelectedMonitor, resetSelectedMonitor, setSshCredentials } = monitorSlice.actions;
+export const { setSelectedMonitor, resetSelectedMonitor } = monitorSlice.actions;
 
 export const { reducer: monitorReducer } = monitorSlice;
