@@ -12,7 +12,7 @@ using Monitor = Domain.Monitor;
 
 namespace Application.Monitors
 {
-    public class GetRenewalScript
+    public class GetLastRenewalLogs
     {
         public class Query : IRequest<string>
         {
@@ -35,7 +35,7 @@ namespace Application.Monitors
                 if (monitor == null)
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
-                return monitor.RenewalScript;
+                return monitor.LastRenewalLogs;
             }
         }
     }

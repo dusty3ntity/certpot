@@ -20,6 +20,9 @@ export const monitors: IMonitor[] = [
 		},
 		autoRenewalEnabled: true,
 		lastCheckDate: new Date("2021-03-14T17:51:32"),
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "2186b051-eca6-4f33-9abb-5b8544c28f1f",
@@ -39,6 +42,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "28D8E4A2DA03BB7AED8894D6EA4F8BCE",
 		},
 		autoRenewalEnabled: false,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "c1e83cab-196d-411c-9b40-171cc8cc019a",
@@ -58,6 +64,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: false,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "1292e6a2-68db-4062-9830-052ef76ec16c",
@@ -76,6 +85,9 @@ export const monitors: IMonitor[] = [
 			version: 3,
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "432f746c-bed3-4700-be61-86333eccf098",
@@ -95,6 +107,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: true,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "285f1fe6-fb02-4f7e-9f05-d1936d350ead",
@@ -114,6 +129,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: false,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "fbdd5916-4404-415f-a3b5-7143168b33dd",
@@ -133,6 +151,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: false,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "e2b325df-111f-4f47-a753-ca57c785cc97",
@@ -152,6 +173,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: true,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "4753963d-82be-4586-be80-508546469bf7",
@@ -171,6 +195,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: true,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "7cc6c713-f073-4434-a0b1-51d3b219a59d",
@@ -190,6 +217,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: false,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "7ec49c2c-60f3-4d97-a2af-b397464cb322",
@@ -209,6 +239,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: false,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "1e89ce52-ec0c-46f1-bad5-b9eea25790a9",
@@ -228,6 +261,9 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: true,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 	{
 		id: "0100474f-d2ec-4642-b853-0d87c4a7a05d",
@@ -247,5 +283,8 @@ export const monitors: IMonitor[] = [
 			serialNumber: "009AA92508FA1B7FA90500000000874A26",
 		},
 		autoRenewalEnabled: false,
+
+		isRenewing: false,
+		isInRenewalQueue: false,
 	},
 ];

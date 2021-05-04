@@ -9,9 +9,17 @@ export interface IMonitor {
 	certificate: ICertificate;
 	autoRenewalEnabled?: boolean;
 	lastCheckDate?: Date;
+	lastRenewalDate?: Date;
+
+	isRenewing: boolean;
+	isInRenewalQueue: boolean;
+
+	wasRenewalSuccessful?: boolean;
+	renewalErrorCode?: boolean;
 
 	sshCredentials?: ISshCredentials;
 	renewalScript?: string;
+	renewalLogs?: ISshLogs;
 }
 export interface INewMonitor {
 	displayName: string;
@@ -30,3 +38,6 @@ export interface ISshCredentials {
 	sshPrivateKey?: string;
 	sshPassword?: string;
 }
+
+export type ISshLog = { type: "input" | "output"; text: string };
+export type ISshLogs = ISshLog[];

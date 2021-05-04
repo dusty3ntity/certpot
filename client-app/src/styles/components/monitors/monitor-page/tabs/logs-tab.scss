@@ -1,0 +1,41 @@
+.logs-tab {
+	display: flex;
+	flex-direction: column;
+
+	.top-panel {
+		margin-bottom: 1rem !important;
+	}
+
+	.last-renewal-title {
+		font-size: 1.2rem;
+		color: $text-color-grey;
+		font-weight: 500;
+	}
+
+	.last-renewal-date {
+		font-size: 1.1rem;
+		font-weight: 600;
+		margin-left: 0.5rem;
+	}
+
+	.logs-content {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		height: 1px;
+		padding: 4px 8px;
+		background-color: #263238;
+		overflow-y: auto;
+		border-radius: 0.5rem;
+
+		.input,
+		.output {
+			background-color: #263238;
+		}
+
+		.output {
+			color: #eeffff;
+			padding: 2px 0;
+		}
+	}
+}

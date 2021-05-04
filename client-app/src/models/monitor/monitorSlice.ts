@@ -2,8 +2,9 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { IMonitor, ISshCredentials } from "../index";
 import { Monitors } from "../../api/agent";
-import { mapMonitorDates } from "../../utils/index";
+import { mapMonitorDates, parseMonitorRenewalLogs } from "../../utils/index";
 import { RootStateType } from "../rootReducer";
+import { ISshLogs } from "../types";
 
 interface IMonitorState {
 	loading: boolean;
@@ -13,6 +14,7 @@ interface IMonitorState {
 	testingSshConnection: boolean;
 	loadingRenewalScript: boolean;
 	submittingRenewalScript: boolean;
+	loadingRenewalLogs: boolean;
 }
 
 const initialState: IMonitorState = {
@@ -23,6 +25,7 @@ const initialState: IMonitorState = {
 	testingSshConnection: false,
 	loadingRenewalScript: false,
 	submittingRenewalScript: false,
+	loadingRenewalLogs: false,
 };
 
 export const fetchMonitorById = createAsyncThunk<IMonitor, string>(
@@ -48,7 +51,7 @@ export const fetchMonitorById = createAsyncThunk<IMonitor, string>(
 
 export const fetchSshCredentials = createAsyncThunk<ISshCredentials, string>(
 	"monitor/fetchSshCredentials",
-	async (id: string, { getState, dispatch, rejectWithValue }) => {
+	async (id: string, { getState, rejectWithValue }) => {
 		const { monitor } = getState() as RootStateType;
 		const credentials = monitor.monitor!.sshCredentials;
 		if (credentials) {
@@ -93,7 +96,7 @@ export const testSshConnection = createAsyncThunk<boolean, ISshCredentials>(
 
 export const fetchRenewalScript = createAsyncThunk<string, string>(
 	"monitor/fetchRenewalScript",
-	async (id: string, { getState, dispatch, rejectWithValue }) => {
+	async (id: string, { getState, rejectWithValue }) => {
 		const { monitor } = getState() as RootStateType;
 		const script = monitor.monitor!.renewalScript;
 		if (script) {
@@ -116,6 +119,28 @@ export const saveRenewalScript = createAsyncThunk<void, string>(
 		} = getState() as RootStateType;
 		try {
 			await Monitors.setRenewalScript(monitor!.id, script);
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
+export const fetchLastRenewalLogs = createAsyncThunk<ISshLogs | undefined, string>(
+	"monitor/fetchLastRenewalLogs",
+	async (id: string, { getState, rejectWithValue }) => {
+		const { monitor } = getState() as RootStateType;
+		const logs = monitor.monitor!.renewalLogs;
+		if (logs) {
+			return logs;
+		}
+
+		try {
+			const logs = await Monitors.getLastRenewalLogs(id);
+			if (!logs) {
+				return undefined;
+			}
+
+			return parseMonitorRenewalLogs(await Monitors.getLastRenewalLogs(id));
 		} catch (err) {
 			return rejectWithValue(err);
 		}
@@ -195,6 +220,17 @@ const monitorSlice = createSlice({
 		});
 		builder.addCase(saveRenewalScript.rejected, (state) => {
 			state.submittingRenewalScript = false;
+		});
+
+		builder.addCase(fetchLastRenewalLogs.pending, (state) => {
+			state.loadingRenewalLogs = true;
+		});
+		builder.addCase(fetchLastRenewalLogs.fulfilled, (state, { payload }) => {
+			state.loadingRenewalLogs = false;
+			state.monitor!.renewalLogs = payload;
+		});
+		builder.addCase(fetchLastRenewalLogs.rejected, (state) => {
+			state.loadingRenewalLogs = false;
 		});
 	},
 });
