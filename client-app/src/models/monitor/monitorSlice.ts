@@ -5,6 +5,7 @@ import { Monitors } from "../../api/agent";
 import { mapMonitorDates, parseMonitorRenewalLogs } from "../../utils/index";
 import { RootStateType } from "../rootReducer";
 import { ISshLogs } from "../types";
+import { switchMonitorAutoRenewal } from "../monitors/monitorsSlice";
 
 interface IMonitorState {
 	loading: boolean;
@@ -154,12 +155,13 @@ export const fetchLastRenewalLogs = createAsyncThunk<ISshLogs | undefined, strin
 
 export const switchAutoRenewal = createAsyncThunk<void, void>(
 	"monitor/switchAutoRenewal",
-	async (_, { getState, rejectWithValue }) => {
+	async (_, { getState, dispatch, rejectWithValue }) => {
 		const {
 			monitor: { monitor },
 		} = getState() as RootStateType;
 		try {
 			await Monitors.switchAutoRenewal(monitor!.id);
+			dispatch(switchMonitorAutoRenewal(monitor!.id));
 		} catch (err) {
 			return rejectWithValue(err);
 		}

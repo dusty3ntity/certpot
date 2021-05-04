@@ -61,6 +61,12 @@ const monitorsSlice = createSlice({
 		removeMonitor: (state, action: PayloadAction<string>) => {
 			state.monitors = state.monitors.filter((m) => m.id !== action.payload);
 		},
+		switchMonitorAutoRenewal: (state, action: PayloadAction<string>) => {
+			const monitor = state.monitors.find((m) => m.id === action.payload);
+			if (monitor) {
+				monitor.autoRenewalEnabled = !monitor.autoRenewalEnabled;
+			}
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchMonitors.pending, (state) => {
@@ -100,6 +106,6 @@ const monitorsSlice = createSlice({
 	},
 });
 
-const { removeMonitor } = monitorsSlice.actions;
+export const { removeMonitor, switchMonitorAutoRenewal } = monitorsSlice.actions;
 
 export const { reducer: monitorsReducer } = monitorsSlice;

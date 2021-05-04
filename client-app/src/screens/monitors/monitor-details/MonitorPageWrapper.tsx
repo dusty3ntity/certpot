@@ -28,6 +28,7 @@ export const MonitorPageWrapper = () => {
 		dispatch(fetchMonitorById(monitorId)).catch((err) => {
 			createUnknownError(err, "[monitorPage]~fetchMonitorById");
 		});
+
 		return () => {
 			dispatch(resetSelectedMonitor());
 		};

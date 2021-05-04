@@ -1,0 +1,16 @@
+#home-page {
+	margin-top: 2rem;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	h1 {
+		font-size: 3rem;
+	}
+
+	h3 {
+		margin-top: auto;
+	}
+}

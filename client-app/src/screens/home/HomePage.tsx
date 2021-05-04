@@ -7,7 +7,9 @@ export const HomePage = () => {
 		<div id="home-page">
 			<PageTitle title="Home" />
 
-			<span>Home</span>
+			<h1>Курсова робота Вадима Огира</h1>
+			<h2>Веб-застосунок для моніторингу і оновлення SSL-сертифікатів сервера</h2>
+			<h3>2021</h3>
 		</div>
 	);
 };
