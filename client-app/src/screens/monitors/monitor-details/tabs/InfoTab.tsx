@@ -8,6 +8,7 @@ import {
 	combineClassNames,
 	normalizeDomainName,
 	defaultFormat,
+	defaultFormatWithTime,
 	describeSshErrorCode,
 } from "../../../../utils";
 
@@ -78,7 +79,7 @@ export const InfoTab: React.FC<ITabProps> = ({ data }) => {
 						<span>{monitor.port}</span>
 
 						<span>Last check:</span>
-						<span>{monitor.lastCheckDate ? defaultFormat(monitor.lastCheckDate) : "-"}</span>
+						<span>{monitor.lastCheckDate ? defaultFormatWithTime(monitor.lastCheckDate) : "-"}</span>
 					</div>
 				</div>
 
@@ -87,7 +88,7 @@ export const InfoTab: React.FC<ITabProps> = ({ data }) => {
 
 					<div className="block-content">
 						<span>Last renewal attempt:</span>
-						<span>{monitor.lastRenewalDate ? defaultFormat(monitor.lastRenewalDate) : "-"}</span>
+						<span>{monitor.lastRenewalDate ? defaultFormatWithTime(monitor.lastRenewalDate) : "-"}</span>
 
 						<span>Was renewal successful:</span>
 						<span>{monitor.wasRenewalSuccessful === null ? "-" : monitor.wasRenewalSuccessful ? "yes" : "no"}</span>

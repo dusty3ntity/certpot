@@ -222,6 +222,7 @@ const monitorSlice = createSlice({
 		builder.addCase(saveSshCredentials.fulfilled, (state, { payload }) => {
 			state.submittingSshCredentials = false;
 			state.monitor!.sshCredentials = payload;
+			state.monitor!.sshConfigured = true;
 		});
 		builder.addCase(saveSshCredentials.rejected, (state) => {
 			state.submittingSshCredentials = false;
@@ -253,6 +254,7 @@ const monitorSlice = createSlice({
 		});
 		builder.addCase(saveRenewalScript.fulfilled, (state) => {
 			state.submittingRenewalScript = false;
+			state.monitor!.renewalConfigured = true;
 		});
 		builder.addCase(saveRenewalScript.rejected, (state) => {
 			state.submittingRenewalScript = false;

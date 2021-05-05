@@ -1,5 +1,5 @@
 export { combineClassNames } from "./classNames";
-export { defaultFormat } from "./dates";
+export { defaultFormat, defaultFormatWithTime } from "./dates";
 export { normalizeDomainName, getExpiresInValue, getExpiresInTime } from "./certificates";
 export { createModal } from "./modals";
 export { mapMonitorDates, parseMonitorRenewalLogs, describeSshErrorCode } from "./monitors";
