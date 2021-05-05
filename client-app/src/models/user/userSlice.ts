@@ -76,28 +76,34 @@ const userSlice = createSlice({
 	extraReducers: (builder) => {
 		builder.addCase(loginUser.pending, (state) => {
 			state.submitting = true;
+			state.loading = "pending";
 		});
 		builder.addCase(loginUser.fulfilled, (state, { payload }) => {
 			state.submitting = false;
+			state.loading = "fulfilled";
 			state.user = payload;
 			window.localStorage.setItem("jwt", payload.token);
 			window.localStorage.setItem("refreshToken", payload.refreshToken);
 		});
 		builder.addCase(loginUser.rejected, (state) => {
 			state.submitting = false;
+			state.loading = "rejected";
 		});
 
 		builder.addCase(registerUser.pending, (state) => {
 			state.submitting = true;
+			state.loading = "pending";
 		});
 		builder.addCase(registerUser.fulfilled, (state, { payload }) => {
 			state.submitting = false;
+			state.loading = "fulfilled";
 			state.user = payload;
 			window.localStorage.setItem("jwt", payload.token);
 			window.localStorage.setItem("refreshToken", payload.refreshToken);
 		});
 		builder.addCase(registerUser.rejected, (state) => {
 			state.submitting = false;
+			state.loading = "rejected";
 		});
 
 		builder.addCase(fetchUser.pending, (state) => {

@@ -11,7 +11,7 @@ import { IMonitor, ITabProps } from "../../../../models";
 import { useAppDispatch } from "../../../../store";
 import { RootStateType } from "../../../../models/rootReducer";
 import { fetchLastRenewalLogs } from "../../../../models/monitor/monitorSlice";
-import { createUnknownError, defaultFormat } from "../../../../utils";
+import { createUnknownError, defaultFormatWithTime } from "../../../../utils";
 
 export const LogsTab: React.FC<ITabProps> = ({ data }) => {
 	const monitor = data as IMonitor;
@@ -40,7 +40,7 @@ export const LogsTab: React.FC<ITabProps> = ({ data }) => {
 			<div className="top-panel">
 				<span className="last-renewal-title">Last renewal attempt:</span>
 				<span className="last-renewal-date">
-					{monitor.lastRenewalDate ? defaultFormat(monitor.lastRenewalDate) : "-"}
+					{monitor.lastRenewalDate ? defaultFormatWithTime(monitor.lastRenewalDate) : "-"}
 				</span>
 			</div>
 
