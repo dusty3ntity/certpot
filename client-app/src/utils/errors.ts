@@ -6,8 +6,9 @@ import { getErrorDate } from "./dates";
 
 export const isBadId = (error: any) => {
 	const errorBody = error.data.errors;
+	console.log(error)
 
-	return errorBody.hasOwnProperty("monitorId");
+	return errorBody.hasOwnProperty("monitorId") || errorBody.code === ErrorType.BadId;
 };
 
 export const injectErrorCode = (error: any, code: ErrorType) => {
