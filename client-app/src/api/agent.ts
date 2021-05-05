@@ -87,7 +87,10 @@ axios.interceptors.response.use(undefined, (error) => {
 			title: "Authorization error!",
 			message: "An authorization error occurred. Please, refresh the page or contact the administrator.",
 		});
-	} else if (error.response.status === 400 && !error.response.data.errors.code) {
+	} else if (
+		error.response.status === 400 &&
+		(!error.response.data?.errors?.code || error.response.data.errors.code === ErrorType.BadId)
+	) {
 		if (isBadId(error.response)) {
 			injectErrorCode(error.response, ErrorType.BadId);
 			history.push("/not-found");

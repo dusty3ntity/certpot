@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { Page } from "../../components";
 import { PageTitle } from "../../features";
 
 export const NotFoundPage: React.FC = () => {
+	useEffect(() => {
+		console.log('kek')
+	}, [])
+
 	return (
 		<>
 			<PageTitle title="Not Found" />

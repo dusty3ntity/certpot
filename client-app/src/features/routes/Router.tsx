@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
 import { MonitorPageWrapper } from "../../screens/monitors/monitor-details/MonitorPageWrapper";
 import { MonitorsListPage } from "../../screens/monitors/monitors-list";
@@ -27,6 +27,10 @@ export const Router: React.FC = () => {
 			</PrivateRoute>
 
 			<Route path="/not-found" component={NotFoundPage} />
+
+			<Route>
+				<Redirect to="/not-found" />
+			</Route>
 		</Switch>
 	);
 };
