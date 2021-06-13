@@ -71,7 +71,7 @@ namespace Application.Monitors
 
                 if (Math.Abs((DateTime.Now - certificate.ValidTo).TotalDays) <= user.ExpiryNotificationThresholdDays)
                 {
-                    if (!user.NotifyAboutExpiryIfRenewalConfigured && monitor.RenewalScript != null)
+                    if (!user.NotifyAboutExpiryIfRenewalConfigured && monitor.AutoRenewalEnabled)
                         return;
 
                     _logger.LogInformation($"Sending certificate expiry email for {monitor.Id}");
