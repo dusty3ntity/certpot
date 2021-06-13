@@ -51,7 +51,7 @@ export const SettingsForm: React.FC<ISettingsFormProps> = ({ user, onSubmit, sub
 			</div>
 
 			<div className="threshold-input form-item">
-				<label htmlFor="expiryNotificationThreshold">
+				<label htmlFor="expiryNotificationThresholdDays">
 					<Tooltip text="When should we start notify you about certificate expiries (in days)?" position="top-start">
 						<span>Expiry notifications threshold</span>
 					</Tooltip>
@@ -59,9 +59,9 @@ export const SettingsForm: React.FC<ISettingsFormProps> = ({ user, onSubmit, sub
 				</label>
 
 				<input
-					id="expiryNotificationThreshold"
-					name="expiryNotificationThreshold"
-					className={combineClassNames("text-input threshold", { error: errors.expiryNotificationThreshold })}
+					id="expiryNotificationThresholdDays"
+					name="expiryNotificationThresholdDays"
+					className={combineClassNames("text-input threshold", { error: errors.expiryNotificationThresholdDays })}
 					type="text"
 					autoComplete="off"
 					maxLength={3}
@@ -88,15 +88,15 @@ export const SettingsForm: React.FC<ISettingsFormProps> = ({ user, onSubmit, sub
 				<Switch name="notifyAboutCertificateChange" id="notifyAboutCertificateChange" ref={register} />
 			</div>
 
-			<div className="notifyAboutExpiryIfRenewalEnabled-input toggle-item form-item">
+			<div className="notifyAboutExpiryIfRenewalConfigured-input toggle-item form-item">
 				<Tooltip
 					text="Do you need to get notified about certificate expiry if you have autorenewal configured?"
 					position="top-start"
 				>
-					<label htmlFor="notifyAboutExpiryIfRenewalEnabled">Notify if renewal configured:</label>
+					<label htmlFor="notifyAboutExpiryIfRenewalConfigured">Notify if renewal configured:</label>
 				</Tooltip>
 
-				<Switch name="notifyAboutExpiryIfRenewalEnabled" id="notifyAboutExpiryIfRenewalEnabled" ref={register} />
+				<Switch name="notifyAboutExpiryIfRenewalConfigured" id="notifyAboutExpiryIfRenewalConfigured" ref={register} />
 			</div>
 
 			<div className="actions-container">

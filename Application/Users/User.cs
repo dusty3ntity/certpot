@@ -8,7 +8,7 @@
         
         public string NotificationsEmail { get; set; }
         public bool NotifyAboutCertificateChange { get; set; }
-        public int ExpiryNotificationThreshold { get; set; }
+        public int ExpiryNotificationThresholdDays { get; set; }
         public bool NotifyAboutExpiryIfRenewalConfigured { get; set; }
         public int RenewalThresholdDays { get; set; }
 
