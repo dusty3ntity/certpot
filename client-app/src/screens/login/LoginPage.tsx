@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Button, Page, ValidationMessage } from "../../components";
 import { PageTitle } from "../../features";
@@ -13,7 +14,6 @@ import { useAppDispatch } from "../../store";
 import { loginUser } from "../../models/user/userSlice";
 import { history } from "../../config/history";
 import { ErrorType, NotificationType } from "../../models/types/errors";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 export const LoginPage: React.FC = () => {
 	const validationSchema: Yup.SchemaOf<ILoginUser> = Yup.object().shape({

@@ -1,7 +1,7 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Button, Switch, Tooltip, ValidationMessage } from "../../components";
 import { isValidThreshold } from "../../features";

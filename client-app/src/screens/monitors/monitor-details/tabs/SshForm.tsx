@@ -1,19 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { combineClassNames } from "../../../../utils/classNames";
 import { ISshCredentials } from "../../../../models/types";
 import { Tooltip, ValidationMessage, Button } from "../../../../components";
 import {
 	fullTrim,
+	isValidDomainName,
 	isValidHostName,
 	isValidPort,
 	isValidPrivateKey,
 	USERNAME_CONTAINS_ONLY_ALPHANUMERIC_REGEX,
 } from "../../../../features";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect } from "react";
 
 interface ISshFormProps {
 	credentials?: ISshCredentials;
@@ -30,10 +30,6 @@ export const SshForm: React.FC<ISshFormProps> = ({
 	onTestConnection,
 	testingConnection,
 }) => {
-	useEffect(() => {
-		console.log(credentials);
-	});
-
 	const validationSchema: Yup.SchemaOf<ISshCredentials> = Yup.object().shape({
 		sshHostname: Yup.string()
 			.required("Hostname is required.")
@@ -48,10 +44,7 @@ export const SshForm: React.FC<ISshFormProps> = ({
 			.typeError("Port must be a number.")
 			.required("Port is required.")
 			.test("is-valid-port", "Port must be in range: 1-65535.", isValidPort),
-		sshPassword: Yup.string()
-			.notRequired()
-			.min(1, "Password must be at least 1 character long.")
-			.max(30, "Password can be at most 30 characters long."),
+		sshPassword: Yup.string().notRequired(),
 		sshPrivateKey: Yup.string()
 			.notRequired()
 			.test("is-valid-private-key", "The private key is not valid.", isValidPrivateKey),

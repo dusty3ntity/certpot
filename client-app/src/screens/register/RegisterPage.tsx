@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Button, Page, ValidationMessage } from "../../components";
 import {
@@ -19,7 +20,6 @@ import { history } from "../../config/history";
 import { useAppDispatch } from "../../store";
 import { registerUser } from "../../models/user/userSlice";
 import { ErrorType, NotificationType } from "../../models/types/errors";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 export const RegisterPage: React.FC = () => {
 	const validationSchema: Yup.SchemaOf<IRegisterUser> = Yup.object().shape({
