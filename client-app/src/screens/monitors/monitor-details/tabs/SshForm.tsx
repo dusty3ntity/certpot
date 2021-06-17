@@ -1,13 +1,22 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import * as Yup from "yup";
 
 import { combineClassNames } from "../../../../utils/classNames";
 import { ISshCredentials } from "../../../../models/types";
 import { Tooltip, ValidationMessage, Button } from "../../../../components";
-import { fullTrim, isValidHostName, isValidPort, isValidPrivateKey, maxLength, minLength } from "../../../../features";
+import {
+	fullTrim,
+	isValidHostName,
+	isValidPort,
+	isValidPrivateKey,
+	USERNAME_CONTAINS_ONLY_ALPHANUMERIC_REGEX,
+} from "../../../../features";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 
 interface ISshFormProps {
-	credentials: ISshCredentials;
+	credentials?: ISshCredentials;
 	onSubmit: (data: ISshCredentials) => void;
 	onTestConnection: (data: ISshCredentials) => void;
 	submitting: boolean;
@@ -21,15 +30,42 @@ export const SshForm: React.FC<ISshFormProps> = ({
 	onTestConnection,
 	testingConnection,
 }) => {
+	useEffect(() => {
+		console.log(credentials);
+	});
+
+	const validationSchema: Yup.SchemaOf<ISshCredentials> = Yup.object().shape({
+		sshHostname: Yup.string()
+			.required("Hostname is required.")
+			.test("is-valid-hostname", "The hostname is not valid.", isValidHostName),
+		sshUsername: Yup.string()
+			.required("Username is required.")
+			.transform(fullTrim)
+			.min(1, "Username must be at least 1 character long.")
+			.max(20, "Username can be at most 20 characters long.")
+			.matches(USERNAME_CONTAINS_ONLY_ALPHANUMERIC_REGEX, "Username must contain only alphanumeric."),
+		sshPort: Yup.number()
+			.typeError("Port must be a number.")
+			.required("Port is required.")
+			.test("is-valid-port", "Port must be in range: 1-65535.", isValidPort),
+		sshPassword: Yup.string()
+			.notRequired()
+			.min(1, "Password must be at least 1 character long.")
+			.max(30, "Password can be at most 30 characters long."),
+		sshPrivateKey: Yup.string()
+			.notRequired()
+			.test("is-valid-private-key", "The private key is not valid.", isValidPrivateKey),
+	});
+
 	const {
 		register,
 		handleSubmit,
 		getValues,
-		errors,
-		formState: { isDirty, isValid },
+		formState: { errors, isDirty, isValid },
 	} = useForm<ISshCredentials>({
 		defaultValues: credentials,
 		mode: "onChange",
+		resolver: yupResolver(validationSchema),
 	});
 
 	const processFormData = (data: ISshCredentials) => {
@@ -58,20 +94,12 @@ export const SshForm: React.FC<ISshFormProps> = ({
 
 					<input
 						id="ssh-hostname"
-						name="sshHostname"
 						className={combineClassNames("text-input", { error: errors.sshHostname })}
 						type="text"
 						autoFocus
 						autoComplete="off"
 						maxLength={30}
-						ref={register({
-							required: "Hostname is required.",
-							validate: {
-								hostname: (value: string) => {
-									return isValidHostName(value) ? true : "The hostname is not valid.";
-								},
-							},
-						})}
+						{...register("sshHostname")}
 					/>
 				</div>
 
@@ -83,24 +111,12 @@ export const SshForm: React.FC<ISshFormProps> = ({
 
 					<input
 						id="ssh-port"
-						name="sshPort"
 						className={combineClassNames("text-input port", { error: errors.sshPort })}
-						type="text"
+						type="string"
 						autoComplete="off"
 						maxLength={5}
 						defaultValue={22}
-						ref={register({
-							required: "Port is required.",
-							validate: {
-								validatePort: (value: string) => {
-									if (isValidPort(value)) {
-										return "Port must be in range: 1-65535.";
-									}
-
-									return true;
-								},
-							},
-						})}
+						{...register("sshPort")}
 					/>
 				</div>
 			</div>
@@ -114,28 +130,11 @@ export const SshForm: React.FC<ISshFormProps> = ({
 
 					<input
 						id="ssh-username"
-						name="sshUsername"
 						className={combineClassNames("text-input", { error: errors.sshUsername })}
 						type="text"
 						autoComplete="off"
 						maxLength={30}
-						ref={register({
-							required: "Username is required.",
-							validate: {
-								username: (value: string) => {
-									const trimValue = fullTrim(value);
-
-									if (minLength(trimValue, 1)) {
-										return "Username must be at least 1 character long.";
-									}
-									if (maxLength(trimValue, 20)) {
-										return "Username can be at most 20 characters long.";
-									}
-
-									return true;
-								},
-							},
-						})}
+						{...register("sshUsername")}
 					/>
 				</div>
 
@@ -147,26 +146,10 @@ export const SshForm: React.FC<ISshFormProps> = ({
 
 					<input
 						id="ssh-password"
-						name="sshPassword"
 						className={combineClassNames("text-input", { error: errors.sshPassword })}
 						type="password"
 						maxLength={40}
-						ref={register({
-							validate: (value: string) => {
-								if (value.length === 0) {
-									return true;
-								}
-
-								if (minLength(value, 1)) {
-									return "Password must be at least 1 character long.";
-								}
-								if (maxLength(value, 30)) {
-									return "Password can be at most 30 characters long.";
-								}
-
-								return true;
-							},
-						})}
+						{...register("sshPassword")}
 					/>
 				</div>
 			</div>
@@ -182,21 +165,10 @@ export const SshForm: React.FC<ISshFormProps> = ({
 
 				<textarea
 					id="private-key"
-					name="sshPrivateKey"
 					className={combineClassNames("text-input text-area private-key", { error: errors.sshPrivateKey })}
 					autoComplete="off"
 					rows={20}
-					ref={register({
-						validate: {
-							privateKey: (value: string) => {
-								if (value.length === 0) {
-									return true;
-								}
-
-								return isValidPrivateKey(value);
-							},
-						},
-					})}
+					{...register("sshPrivateKey")}
 				/>
 			</div>
 
