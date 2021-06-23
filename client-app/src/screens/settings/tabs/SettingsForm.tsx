@@ -1,10 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { Button, Switch, Tooltip, ValidationMessage } from "../../components";
-import { isValidEmail, isValidThreshold } from "../../features";
-import { IUser, IUserSettings } from "../../models";
-import { combineClassNames } from "../../utils";
+import { Button, Switch, Tooltip, ValidationMessage } from "../../../components";
+import { isValidEmail, isValidThreshold } from "../../../features";
+import { IUser, IUserSettings } from "../../../models";
+import { combineClassNames } from "../../../utils";
 
 interface ISettingsFormProps {
 	onSubmit: (data: IUserSettings) => void;
@@ -16,8 +16,7 @@ export const SettingsForm: React.FC<ISettingsFormProps> = ({ user, onSubmit, sub
 	const {
 		register,
 		handleSubmit,
-		errors,
-		formState: { isDirty, isValid },
+		formState: { isDirty, isValid, errors },
 	} = useForm<IUserSettings>({
 		defaultValues: user,
 		mode: "onChange",
