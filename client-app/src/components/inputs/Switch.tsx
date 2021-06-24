@@ -5,13 +5,13 @@ import { combineClassNames } from "../../utils";
 
 interface ISwitchProps extends IComponentProps {
 	name?: string;
-	checked?: boolean;
+	value?: boolean;
 	onChange?: (value: boolean) => void;
 	disabled?: boolean;
 }
 
 export const Switch = React.forwardRef<HTMLInputElement, ISwitchProps>(
-	({ id, className, name, checked, onChange, disabled, ...props }, ref) => {
+	({ id, className, name, value, onChange, disabled, ...props }, ref) => {
 		const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 			if (onChange) {
 				onChange(e.target.checked);
@@ -25,7 +25,7 @@ export const Switch = React.forwardRef<HTMLInputElement, ISwitchProps>(
 				{...props}
 				onClick={(e) => e.stopPropagation()}
 			>
-				<input type="checkbox" name={name} ref={ref} checked={checked} onChange={handleChange} disabled={disabled} />
+				<input type="checkbox" name={name} ref={ref} checked={value} onChange={handleChange} disabled={disabled} />
 				<span className="track">
 					<span className="thumb" />
 				</span>
