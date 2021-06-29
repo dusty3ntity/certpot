@@ -41,7 +41,7 @@ namespace Application.Monitors
 
                 var credentials = _mapper.Map<Monitor, SshCredentialsDto>(monitor);
 
-                return credentials;
+                return credentials.SshHostname == null ? null : credentials;
             }
         }
     }

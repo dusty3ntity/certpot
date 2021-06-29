@@ -82,7 +82,7 @@ export const SshTab: React.FC<ITabProps> = ({ data }) => {
 				<LoadingScreen size={2} />
 			) : (
 				<SshForm
-					credentials={monitor.sshCredentials!}
+					credentials={monitor.sshCredentials}
 					onSubmit={handleSubmit}
 					submitting={submittingSshCredentials}
 					onTestConnection={handleTestConnection}

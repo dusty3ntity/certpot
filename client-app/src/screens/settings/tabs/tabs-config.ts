@@ -8,7 +8,7 @@ export const SETTINGS_TABS_CONFIG: ITabConfig[] = [
 		id: 0,
 		name: "User settings",
 		icon: SettingsIcon,
-		component: () => null,
+		component: SettingsTab,
 	},
 	{
 		id: 1,

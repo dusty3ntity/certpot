@@ -8,7 +8,7 @@ export interface IUserSettings {
 	notificationsEmail: string;
 	notifyAboutCertificateChange: boolean;
 	notifyAboutExpiryIfRenewalConfigured: boolean;
-	expiryNotificationThresholdDays: boolean;
+	expiryNotificationThresholdDays: number;
 }
 
 export type IUserPayload = {
