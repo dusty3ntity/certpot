@@ -31,3 +31,17 @@ export interface ILoginUser {
 	email: string;
 	password: string;
 }
+
+export interface IUserSecret {
+	id: string;
+	name: string;
+}
+
+export interface INewUserSecret {
+	name: string;
+	value: string;
+}
+
+export interface IEditUserSecret {
+	value: string;
+}

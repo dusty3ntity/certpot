@@ -23,7 +23,6 @@ export const isValidPort = (value?: number): boolean => {
 };
 
 export const isValidThreshold = (value?: number): boolean => {
-	console.log("threshold", value);
 	if (!value) {
 		return false;
 	}
