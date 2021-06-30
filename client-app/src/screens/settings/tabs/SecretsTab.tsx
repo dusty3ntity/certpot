@@ -1,11 +1,21 @@
 import React from "react";
 
 import { ITabProps } from "../../../models";
-import { Button } from "../../../components";
+import { Button, DeleteIcon, EditIcon } from "../../../components";
 import { defaultFormatWithTime } from "../../../utils";
 
 const secrets = [
 	{ id: "id1", key: "VPS_USERNAME", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
+	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
 	{ id: "id2", key: "VPS_PASSWORD", lastUpdatedDate: new Date() },
 ];
 
@@ -17,8 +27,15 @@ export const SecretsTab: React.FC<ITabProps> = () => {
 					<div className="secret-container" key={secret.id}>
 						<span className="secret-key">{secret.key}</span>
 						<span className="updated-on">Updated on {defaultFormatWithTime(secret.lastUpdatedDate)}</span>
-						<Button className="update-btn" text="Update" onClick={() => console.log("Updating ", secret.id)} />
-						<Button className="remove-btn" text="Remove" onClick={() => console.log("Removing ", secret.id)} />
+
+						<div className="actions-container">
+							<Button className="update-btn" icon={<EditIcon />} onClick={() => console.log("Updating ", secret.id)} />
+							<Button
+								className="remove-btn"
+								icon={<DeleteIcon />}
+								onClick={() => console.log("Removing ", secret.id)}
+							/>
+						</div>
 					</div>
 				))}
 			</div>

@@ -14,3 +14,4 @@ export { LogsIcon } from "./LogsIcon";
 export { RemoteIcon } from "./RemoteIcon";
 export { SecurityIcon } from "./SecurityIcon";
 export { SettingsIcon } from "./SettingsIcon";
+export { EditIcon } from "./EditIcon";
