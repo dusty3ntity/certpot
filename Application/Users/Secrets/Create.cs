@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,6 +66,7 @@ namespace Application.Users.Secrets
                 {
                     Name = request.Name,
                     Value = request.Value,
+                    LastEditDate = DateTime.Now,
                     User = user
                 };
 

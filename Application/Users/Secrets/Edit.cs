@@ -44,6 +44,7 @@ namespace Application.Users.Secrets
                     throw new RestException(HttpStatusCode.NotFound, ErrorType.UserSecretNotFound);
 
                 secret.Value = request.Value;
+                secret.LastEditDate = DateTime.Now;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

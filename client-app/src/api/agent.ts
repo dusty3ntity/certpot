@@ -182,7 +182,7 @@ export const Users = {
 	register: (user: IRegisterUser): Promise<IUserPayload> => requests.post("/user/register", user),
 	updateSettings: (settings: IUserSettings): Promise<void> => requests.post("/user/settings", settings),
 	secretsList: (): Promise<IUserSecret[]> => requests.get("/user/secrets"),
-	createSecret: (secret: INewUserSecret): Promise<IUserSecret> => requests.post("/user/secrets"),
+	createSecret: (secret: INewUserSecret): Promise<IUserSecret> => requests.post("/user/secrets", secret),
 	editSecret: (id: string, secret: IEditUserSecret): Promise<void> => requests.put(`/user/secrets/${id}`, secret),
 	deleteSecret: (id: string): Promise<void> => requests.del(`/user/secrets/${id}`),
 };

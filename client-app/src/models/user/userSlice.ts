@@ -17,7 +17,7 @@ interface IUserState {
 	submitting: boolean;
 	user: IUser | null;
 	secrets?: IUserSecret[];
-	loadingSecrets: boolean;
+	loadingSecrets: "idle" | "pending" | "fulfilled" | "rejected";
 	creatingSecret: boolean;
 	editingSecret: boolean;
 	editingSecretId: string | null;
@@ -29,7 +29,7 @@ const initialState: IUserState = {
 	loading: "idle",
 	submitting: false,
 	user: null,
-	loadingSecrets: false,
+	loadingSecrets: "idle",
 	creatingSecret: false,
 	editingSecret: false,
 	editingSecretId: null,
@@ -191,14 +191,15 @@ const userSlice = createSlice({
 		});
 
 		builder.addCase(fetchSecrets.pending, (state) => {
-			state.loadingSecrets = true;
+			state.loadingSecrets = "pending";
 		});
 		builder.addCase(fetchSecrets.fulfilled, (state, { payload }) => {
-			state.loadingSecrets = false;
-			state.secrets = payload;
+			state.loadingSecrets = "fulfilled";
+			const secrets = payload.map((s) => ({ ...s, lastEditDate: new Date(s.lastEditDate) }));
+			state.secrets = secrets;
 		});
 		builder.addCase(fetchSecrets.rejected, (state) => {
-			state.loadingSecrets = false;
+			state.loadingSecrets = "rejected";
 		});
 
 		builder.addCase(createSecret.pending, (state) => {
@@ -216,9 +217,10 @@ const userSlice = createSlice({
 			state.editingSecret = true;
 			state.editingSecretId = meta.arg.id;
 		});
-		builder.addCase(editSecret.fulfilled, (state) => {
+		builder.addCase(editSecret.fulfilled, (state, { meta }) => {
 			state.editingSecret = false;
 			state.editingSecretId = null;
+			state.secrets!.find((s) => s.id === meta.arg.id)!.lastEditDate = new Date();
 		});
 		builder.addCase(editSecret.rejected, (state) => {
 			state.editingSecret = false;
@@ -229,9 +231,10 @@ const userSlice = createSlice({
 			state.deletingSecret = true;
 			state.deletingSecretId = meta.arg;
 		});
-		builder.addCase(deleteSecret.fulfilled, (state) => {
+		builder.addCase(deleteSecret.fulfilled, (state, { meta }) => {
 			state.deletingSecret = false;
 			state.deletingSecretId = null;
+			state.secrets = state.secrets!.filter((s) => s.id !== meta.arg);
 		});
 		builder.addCase(deleteSecret.rejected, (state) => {
 			state.deletingSecret = false;

@@ -35,6 +35,7 @@ export interface ILoginUser {
 export interface IUserSecret {
 	id: string;
 	name: string;
+	lastEditDate: Date;
 }
 
 export interface INewUserSecret {

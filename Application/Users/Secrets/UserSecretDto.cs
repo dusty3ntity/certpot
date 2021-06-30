@@ -6,5 +6,6 @@ namespace Application.Users.Secrets
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public DateTime LastEditDate { get; set; }
     }
 }
