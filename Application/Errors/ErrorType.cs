@@ -7,6 +7,7 @@
 
         DefaultNotFound = 11,
         MonitorNotFound = 12,
+        UserSecretNotFound = 13,
 
         DefaultServerError = 51,
         SavingChangesError = 52,
@@ -38,6 +39,7 @@
 
         DuplicateEmailFound = 901,
         DuplicateUsernameFound = 902,
+        DuplicateUserSecretNameFound = 903,
 
         Unknown = 9999,
     }
