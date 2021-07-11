@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 import { ITabProps } from "../../../models";
-import { Button, createConfirmationModal, DeleteIcon, EditIcon, LoadingScreen } from "../../../components";
+import { Button, createConfirmationModal, DeleteIcon, EditIcon, Empty, LoadingScreen } from "../../../components";
 import { createUnknownError, defaultFormatWithTime } from "../../../utils";
 import { useAppDispatch } from "../../../store";
 import { RootStateType } from "../../../models/rootReducer";
@@ -68,6 +68,8 @@ export const SecretsTab: React.FC<ITabProps> = () => {
 						</div>
 					</div>
 				))}
+
+				{!secrets!.length && <Empty />}
 			</div>
 
 			<div className="new-secret-container">
