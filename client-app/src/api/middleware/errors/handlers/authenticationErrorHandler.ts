@@ -1,36 +1,19 @@
 import axios, { AxiosError } from "axios";
 
-import { ErrorType, NotificationType } from "../../../../models/types/errors";
+import { AuthenticationError, ErrorType, NotificationType } from "../../../../models/types/errors";
 import { createNotification } from "../../../../utils";
 import { history } from "../../../../config";
 import { AxiosRequest } from "../../../types";
 
 export const handleAuthenticationError = (error: AxiosError, request: AxiosRequest) => {
-	if (error.response.status === 401 && error.response.data?.errors?.code === ErrorType.RefreshTokenExpired) {
-		window.localStorage.removeItem("jwt");
-		window.localStorage.removeItem("refreshToken");
-		history.push("/login");
+	const response = error.response!;
+	const errorCode = response.data?.errors?.code;
 
-		createNotification(NotificationType.Error, {
-			title: "Authentication error!",
-			message: "Your session has expired! Please, log in again.",
-			error: error.response,
-		});
-	} else if (error.response.status === 401 && error.response.data?.errors?.code === ErrorType.InvalidEmail) {
-		createNotification(NotificationType.Error, {
-			title: "Authentication error!",
-			message: "Could not find a user with this email. Check your credentials and try again.",
-		});
-	} else if (error.response.status === 401 && error.response.data?.errors?.code === ErrorType.InvalidPassword) {
-		createNotification(NotificationType.Error, {
-			title: "Authentication error!",
-			message: "The password is incorrect. Check your credentials and try again.",
-		});
-	} else if (
-		error.response.status === 401 &&
-		error.response.headers["www-authenticate"].includes('Bearer error="invalid_token"') &&
-		!request._retry
-	) {
+	if (response.status !== 401) {
+		return;
+	}
+
+	if (response.headers["www-authenticate"].includes('Bearer error="invalid_token"') && !request._retry) {
 		request._retry = true;
 
 		return axios
@@ -44,10 +27,37 @@ export const handleAuthenticationError = (error: AxiosError, request: AxiosReque
 				axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
 				return axios(request);
 			});
-	} else if (error.response.status === 401) {
+	}
+
+	if (errorCode === ErrorType.RefreshTokenExpired) {
+		window.localStorage.removeItem("jwt");
+		window.localStorage.removeItem("refreshToken");
+		history.push("/login");
+
+		createNotification(NotificationType.Error, {
+			title: "Authentication error!",
+			message: "Your session has expired! Please, log in again.",
+			error: response,
+		});
+	} else if (errorCode === ErrorType.InvalidEmail) {
+		createNotification(NotificationType.Error, {
+			title: "Authentication error!",
+			message: "Could not find a user with this email. Check your credentials and try again.",
+			error: response,
+		});
+	} else if (errorCode === ErrorType.InvalidPassword) {
+		createNotification(NotificationType.Error, {
+			title: "Authentication error!",
+			message: "The password is incorrect. Check your credentials and try again.",
+			error: response,
+		});
+	} else {
 		createNotification(NotificationType.Error, {
 			title: "Authentication error!",
 			message: "An authentication error occurred. Please, refresh the page or contact the administrator.",
+			error: response,
 		});
 	}
+
+	throw new AuthenticationError(error, errorCode);
 };

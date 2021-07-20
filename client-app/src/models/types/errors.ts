@@ -1,17 +1,9 @@
-export class CustomError extends Error {
-	body: any;
-	code: number | undefined;
+import { AxiosError } from "axios";
 
-	constructor(body: any, code?: number) {
-		super();
-		this.body = body;
-		this.code = code;
-	}
-}
+import { injectErrorCode } from "../../utils";
 
 export enum ErrorType {
-	DefaultErrorsBlockStart = 0,
-	ConnectionRefused = 1,
+	DefaultNetworkError = 1,
 
 	DefaultNotFound = 11,
 	MonitorNotFound = 12,
@@ -22,13 +14,12 @@ export enum ErrorType {
 	DefaultValidationError = 101,
 	BadId = 102,
 
-	Unauthorized = 161,
-	InvalidEmail = 162,
-	InvalidPassword = 163,
+	DefaultAuthenticationError = 161,
+	Unauthorized = 162,
+	InvalidEmail = 163,
+	InvalidPassword = 164,
 
 	RefreshTokenExpired = 171,
-
-	DefaultErrorsBlockEnd = 199,
 
 	HostConnectionTimeout = 701,
 	CertificateParsingError = 702,
@@ -48,6 +39,57 @@ export enum ErrorType {
 	DuplicateUsernameFound = 902,
 
 	Unknown = 9999,
+}
+
+export class ApiError extends Error {
+	originalError: AxiosError;
+	errorCode: number | undefined;
+	wasHandled: boolean;
+
+	constructor(originalError: AxiosError, errorCode?: number, wasHandled?: boolean) {
+		super();
+		this.errorCode = errorCode ?? ErrorType.Unknown;
+		this.wasHandled = wasHandled ?? false;
+
+		if (!originalError.request!.data.errors.code) {
+			injectErrorCode(originalError, this.errorCode);
+		}
+		this.originalError = originalError;
+	}
+
+	public getErrorBody() {
+		return this.originalError.response;
+	}
+}
+
+export class NetworkError extends ApiError {
+	constructor(originalError: AxiosError) {
+		super(originalError, ErrorType.DefaultNetworkError, true);
+	}
+}
+
+export class ServerError extends ApiError {
+	constructor(originalError: AxiosError, errorCode?: number) {
+		super(originalError, errorCode ?? ErrorType.DefaultServerError, true);
+	}
+}
+
+export class AuthenticationError extends ApiError {
+	constructor(originalError: AxiosError, errorCode?: number) {
+		super(originalError, errorCode ?? ErrorType.DefaultAuthenticationError, true);
+	}
+}
+
+export class ValidationError extends ApiError {
+	constructor(originalError: AxiosError, errorCode?: number) {
+		super(originalError, errorCode ?? ErrorType.DefaultValidationError, true);
+	}
+}
+
+export class NotFoundError extends ApiError {
+	constructor(originalError: AxiosError, errorCode?: number) {
+		super(originalError, errorCode ?? ErrorType.DefaultNotFound, true);
+	}
 }
 
 export enum NotificationType {

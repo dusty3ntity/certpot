@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 
-import { CustomError, ErrorType } from "../../../models/types/errors";
+import { ApiError } from "../../../models/types/errors";
 import {
 	handleAuthenticationError,
 	handleNetworkError,
@@ -22,5 +22,5 @@ export const handleAPIError = (error: AxiosError) => {
 	handleValidationError(error);
 	handleNotFoundError(error);
 
-	throw new CustomError(error.response, error.response?.data?.errors?.code ?? ErrorType.Unknown);
+	throw new ApiError(error, error.response?.data?.errors?.code);
 };

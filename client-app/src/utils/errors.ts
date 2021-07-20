@@ -1,6 +1,7 @@
+import { AxiosError } from "axios";
 import jwt from "jsonwebtoken";
-import { createNotification } from ".";
 
+import { createNotification } from "./notifications";
 import { ErrorType, NotificationType } from "../models/types/errors";
 import { getErrorDate } from "./dates";
 
@@ -11,15 +12,15 @@ export const isBadId = (error: any) => {
 	return errorBody.hasOwnProperty("monitorId") || errorBody.code === ErrorType.BadId;
 };
 
-export const injectErrorCode = (error: any, code: ErrorType) => {
-	const body = error.data.errors;
-	error.data.errors = {
+export const injectErrorCode = (error: AxiosError, code: ErrorType) => {
+	const body = error.response!.data.errors;
+	error.response!.data.errors = {
 		code: code,
 		body: body,
 	};
 };
 
-export const createCustomError = (error: any) => {
+export const createErrorToCopy = (error: any) => {
 	const status = error.status;
 	const errorCode = error.data?.errors.code;
 	const errorBody = error.data?.errors.body;
@@ -51,7 +52,7 @@ export const createCustomError = (error: any) => {
 	return customError;
 };
 
-export const createUnknownError = (error: any, origin: string) => {
+export const createUnknownErrorNotification = (error: any, origin: string) => {
 	if (error.code < ErrorType.DefaultErrorsBlockEnd) {
 		return;
 	}
