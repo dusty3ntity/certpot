@@ -8,7 +8,7 @@ import { combineClassNames, createNotification } from "../../utils";
 import { MonitorForm } from "../new-monitor-form";
 import { useSelector } from "react-redux";
 import { RootStateType } from "../../models/rootReducer";
-import { ErrorType, NotificationType } from "../../models/types/errors";
+import { ApiError, ErrorType, NotificationType } from "../../models/types/errors";
 
 export const NewMonitorModal: React.FC<IConcreteModalProps> = ({ onOk, onCancel }) => {
 	const [animating, setAnimating] = useState(false);
@@ -32,8 +32,8 @@ export const NewMonitorModal: React.FC<IConcreteModalProps> = ({ onOk, onCancel 
 			.then(unwrapResult)
 			.then(onOk)
 			.then(() => createNotification(NotificationType.Success, { message: "Monitor created successfully!" }))
-			.catch((err) => {
-				if (err.code < ErrorType.DefaultErrorsBlockEnd) {
+			.catch((err: ApiError) => {
+				if (err.wasHandled) {
 					return;
 				}
 
@@ -43,7 +43,7 @@ export const NewMonitorModal: React.FC<IConcreteModalProps> = ({ onOk, onCancel 
 					});
 				} else {
 					createNotification(NotificationType.UnknownError, {
-						error: err.body,
+						error: err.getResponse(),
 						errorOrigin: "[newMonitorModal]~createMonitor",
 					});
 				}

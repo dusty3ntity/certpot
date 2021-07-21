@@ -20,13 +20,15 @@ export const handleValidationError = (error: AxiosError) => {
 			error: response,
 		});
 
-		throw new ValidationError(error, ErrorType.BadId);
-	} else {
+		throw new ValidationError(error, true, ErrorType.BadId);
+	} else if (!errorCode) {
 		createNotification(NotificationType.UnknownError, {
 			title: "Validation error!",
 			error: response,
 		});
+
+		throw new ValidationError(error, true);
 	}
 
-	throw new ValidationError(error, errorCode);
+	throw new ValidationError(error, false, errorCode);
 };

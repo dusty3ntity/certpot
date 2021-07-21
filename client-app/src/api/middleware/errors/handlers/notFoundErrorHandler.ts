@@ -12,7 +12,13 @@ export const handleNotFoundError = (error: AxiosError) => {
 		return;
 	}
 
-	if (errorCode === ErrorType.MonitorNotFound) {
+	if (errorCode === ErrorType.UserNotFound) {
+		createNotification(NotificationType.Error, {
+			title: "Not found!",
+			message: "User not found! Please, refresh the page or contact the administrator.",
+			error: response,
+		});
+	} else if (errorCode === ErrorType.MonitorNotFound) {
 		createNotification(NotificationType.Error, {
 			title: "Not found!",
 			message: "Monitor not found! Please, check the id in the address bar or contact the administrator.",
@@ -26,5 +32,5 @@ export const handleNotFoundError = (error: AxiosError) => {
 	}
 	history.push("/not-found");
 
-	throw new NotFoundError(error, errorCode);
+	throw new NotFoundError(error, true, errorCode);
 };

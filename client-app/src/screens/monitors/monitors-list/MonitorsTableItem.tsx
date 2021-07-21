@@ -15,8 +15,9 @@ import {
 	combineClassNames,
 	defaultFormat,
 	defaultFormatWithTime,
-	createUnknownError,
+	createUnknownErrorNotification,
 } from "../../../utils";
+import { ApiError } from "../../../models/types/errors";
 
 interface IMonitorsTableItemProps {
 	monitor: IMonitor;
@@ -46,7 +47,7 @@ export const MonitorsTableItem: React.FC<IMonitorsTableItemProps> = ({ monitor }
 		const onOk = () => {
 			dispatch(deleteMonitor(monitor.id))
 				.then(unwrapResult)
-				.catch((err) => createUnknownError(err, "[monitorsTable]~deleteMonitor"));
+				.catch((err: ApiError) => createUnknownErrorNotification(err, "[monitorsTable]~deleteMonitor"));
 		};
 
 		const modalContent = <span>Are you sure you want to delete this monitor?</span>;

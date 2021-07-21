@@ -16,7 +16,7 @@ export const handleAuthenticationError = (error: AxiosError, request: AxiosReque
 	if (response.headers["www-authenticate"].includes('Bearer error="invalid_token"') && !request._retry) {
 		request._retry = true;
 
-		return axios
+		axios
 			.post("/user/refresh", {
 				token: window.localStorage.getItem("jwt"),
 				refreshToken: window.localStorage.getItem("refreshToken"),
@@ -27,6 +27,8 @@ export const handleAuthenticationError = (error: AxiosError, request: AxiosReque
 				axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
 				return axios(request);
 			});
+
+		throw new AuthenticationError(error, true, ErrorType.TokenExpired);
 	}
 
 	if (errorCode === ErrorType.RefreshTokenExpired) {
@@ -39,25 +41,17 @@ export const handleAuthenticationError = (error: AxiosError, request: AxiosReque
 			message: "Your session has expired! Please, log in again.",
 			error: response,
 		});
-	} else if (errorCode === ErrorType.InvalidEmail) {
-		createNotification(NotificationType.Error, {
-			title: "Authentication error!",
-			message: "Could not find a user with this email. Check your credentials and try again.",
-			error: response,
-		});
-	} else if (errorCode === ErrorType.InvalidPassword) {
-		createNotification(NotificationType.Error, {
-			title: "Authentication error!",
-			message: "The password is incorrect. Check your credentials and try again.",
-			error: response,
-		});
-	} else {
+		
+		throw new AuthenticationError(error, true, errorCode);
+	} else if (!errorCode) {
 		createNotification(NotificationType.Error, {
 			title: "Authentication error!",
 			message: "An authentication error occurred. Please, refresh the page or contact the administrator.",
 			error: response,
 		});
+
+		throw new AuthenticationError(error, true);
 	}
 
-	throw new AuthenticationError(error, errorCode);
+	throw new AuthenticationError(error, false, errorCode);
 };

@@ -13,5 +13,5 @@ export const handleNetworkError = (error: AxiosError) => {
 		message: "The server isn't responding... Check your internet connection or contact the administrator.",
 	});
 	
-	throw new NetworkError(error);
+	throw new NetworkError(error, true);
 };

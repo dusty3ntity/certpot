@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
 
 import { Header, Router } from "./features";
 import { Container } from "./components";
 import { useAppDispatch } from "./store";
-import { createUnknownError } from "./utils";
+import { createUnknownErrorNotification } from "./utils";
 import { fetchUser } from "./models/user/userSlice";
-import { useSelector } from "react-redux";
 import { RootStateType } from "./models/rootReducer";
 import { fetchMonitors } from "./models/monitors/monitorsSlice";
+import { ApiError } from "./models/types/errors";
 
 export const App: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -21,12 +22,12 @@ export const App: React.FC = () => {
 			return;
 		}
 
-		dispatch(fetchUser()).catch((err) => createUnknownError(err, "[app]~initialLoad"));
+		dispatch(fetchUser()).catch((err: ApiError) => createUnknownErrorNotification(err, "[app]~initialLoad"));
 	}, [dispatch]);
 
 	useEffect(() => {
 		if (user) {
-			dispatch(fetchMonitors()).catch((err) => createUnknownError(err, "[monitorsList]~fetchMonitors"));
+			dispatch(fetchMonitors()).catch((err: ApiError) => createUnknownErrorNotification(err, "[monitorsList]~fetchMonitors"));
 		}
 	}, [dispatch, user]);
 

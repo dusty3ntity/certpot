@@ -1,25 +1,25 @@
 import { AxiosError } from "axios";
 
-import { injectErrorCode } from "../../utils";
-
 export enum ErrorType {
-	DefaultNetworkError = 1,
+	UnknownNetworkError = 1,
 
-	DefaultNotFound = 11,
-	MonitorNotFound = 12,
+	UnknownNotFound = 11,
+	UserNotFound = 12,
+	MonitorNotFound = 13,
 
-	DefaultServerError = 51,
+	UnknownServerError = 51,
 	SavingChangesError = 52,
 
-	DefaultValidationError = 101,
+	UnknownValidationError = 101,
 	BadId = 102,
 
-	DefaultAuthenticationError = 161,
+	UnknownAuthenticationError = 161,
 	Unauthorized = 162,
 	InvalidEmail = 163,
 	InvalidPassword = 164,
 
-	RefreshTokenExpired = 171,
+	TokenExpired = 171,
+	RefreshTokenExpired = 172,
 
 	HostConnectionTimeout = 701,
 	CertificateParsingError = 702,
@@ -43,52 +43,64 @@ export enum ErrorType {
 
 export class ApiError extends Error {
 	originalError: AxiosError;
-	errorCode: number | undefined;
+	code: number | undefined;
+	isUnknown: boolean;
 	wasHandled: boolean;
 
-	constructor(originalError: AxiosError, errorCode?: number, wasHandled?: boolean) {
+	constructor(originalError: AxiosError, code: number, isUnknown: boolean, wasHandled: boolean) {
 		super();
-		this.errorCode = errorCode ?? ErrorType.Unknown;
-		this.wasHandled = wasHandled ?? false;
+		this.code = code;
+		this.isUnknown = isUnknown;
+		this.wasHandled = wasHandled;
 
-		if (!originalError.request!.data.errors.code) {
-			injectErrorCode(originalError, this.errorCode);
+		const request = originalError.request;
+
+		if (request && !request.data.errors.code) {
+			this.injectCode(originalError, code);
 		}
 		this.originalError = originalError;
 	}
 
-	public getErrorBody() {
+	public getResponse() {
 		return this.originalError.response;
 	}
+
+	private injectCode = (error: AxiosError, code: ErrorType) => {
+		const body = error.response!.data.errors;
+		error.response!.data.errors = {
+			code: code,
+			body: body,
+		};
+	};
 }
 
 export class NetworkError extends ApiError {
-	constructor(originalError: AxiosError) {
-		super(originalError, ErrorType.DefaultNetworkError, true);
+	constructor(originalError: AxiosError, wasHandled: boolean) {
+		super(originalError, ErrorType.UnknownNetworkError, true, wasHandled);
 	}
 }
 
 export class ServerError extends ApiError {
-	constructor(originalError: AxiosError, errorCode?: number) {
-		super(originalError, errorCode ?? ErrorType.DefaultServerError, true);
+	constructor(originalError: AxiosError, wasHandled: boolean, code?: number) {
+		super(originalError, code ?? ErrorType.UnknownServerError, !code, wasHandled);
 	}
 }
 
 export class AuthenticationError extends ApiError {
-	constructor(originalError: AxiosError, errorCode?: number) {
-		super(originalError, errorCode ?? ErrorType.DefaultAuthenticationError, true);
+	constructor(originalError: AxiosError, wasHandled: boolean, code?: number) {
+		super(originalError, code ?? ErrorType.UnknownAuthenticationError, !code, wasHandled);
 	}
 }
 
 export class ValidationError extends ApiError {
-	constructor(originalError: AxiosError, errorCode?: number) {
-		super(originalError, errorCode ?? ErrorType.DefaultValidationError, true);
+	constructor(originalError: AxiosError, wasHandled: boolean, code?: number) {
+		super(originalError, code ?? ErrorType.UnknownValidationError, !code, wasHandled);
 	}
 }
 
 export class NotFoundError extends ApiError {
-	constructor(originalError: AxiosError, errorCode?: number) {
-		super(originalError, errorCode ?? ErrorType.DefaultNotFound, true);
+	constructor(originalError: AxiosError, wasHandled: boolean, code?: number) {
+		super(originalError, code ?? ErrorType.UnknownNotFound, !code, wasHandled);
 	}
 }
 

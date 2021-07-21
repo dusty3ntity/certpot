@@ -2,25 +2,25 @@
 {
     public enum ErrorType
     {
-        DefaultErrorsBlockStart = 0,
-        ConnectionRefused = 1,
+        UnknownNetworkError = 1,
 
-        DefaultNotFound = 11,
-        MonitorNotFound = 12,
+        UnknownNotFound = 11,
+        UserNotFound = 12,
+        MonitorNotFound = 13,
 
-        DefaultServerError = 51,
+        UnknownServerError = 51,
         SavingChangesError = 52,
 
-        DefaultValidationError = 101,
+        UnknownValidationError = 101,
         BadId = 102,
 
-        Unauthorized = 161,
-        InvalidEmail = 162,
-        InvalidPassword = 163,
+        UnknownAuthenticationError = 161,
+        Unauthorized = 162,
+        InvalidEmail = 163,
+        InvalidPassword = 164,
 
-        RefreshTokenExpired = 171,
-
-        DefaultErrorsBlockEnd = 199,
+        TokenExpired = 171,
+        RefreshTokenExpired = 172,
 
         HostConnectionTimeout = 701,
         CertificateParsingError = 702,

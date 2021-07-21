@@ -16,5 +16,5 @@ export const handleServerError = (error: AxiosError) => {
 		message: "A server error occurred. Please, refresh the page or contact the administrator!",
 	});
 
-	throw new ServerError(error, errorCode);
+	throw new ServerError(error, true, errorCode);
 };
