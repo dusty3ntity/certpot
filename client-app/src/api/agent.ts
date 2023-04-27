@@ -4,7 +4,15 @@ import { SLEEP_DURATION } from "./../constants/api";
 import { IMonitor, INewMonitor, ISshCredentials } from "../models/types/monitors";
 import { createNotification, injectErrorCode, isBadId } from "../utils";
 import { CustomError, ErrorType, NotificationType } from "../models/types/errors";
-import { ILoginUser, IRegisterUser, IUserPayload, IUserSettings } from "../models/types";
+import {
+	IEditUserSecret,
+	ILoginUser,
+	INewUserSecret,
+	IRegisterUser,
+	IUserPayload,
+	IUserSecret,
+	IUserSettings,
+} from "../models/types";
 import { history } from "../config/history";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
@@ -133,13 +141,15 @@ axios.interceptors.response.use(undefined, (error) => {
 
 const responseBody = (response: AxiosResponse): any => response.data;
 
-const sleep = () => (response: AxiosResponse): Promise<AxiosResponse> => {
-	return new Promise<AxiosResponse>((resolve) => {
-		process.env.REACT_APP_ENV === "DEVELOPMENT"
-			? setTimeout(() => resolve(response), SLEEP_DURATION)
-			: resolve(response);
-	});
-};
+const sleep =
+	() =>
+	(response: AxiosResponse): Promise<AxiosResponse> => {
+		return new Promise<AxiosResponse>((resolve) => {
+			process.env.REACT_APP_ENV === "DEVELOPMENT"
+				? setTimeout(() => resolve(response), SLEEP_DURATION)
+				: resolve(response);
+		});
+	};
 
 const requests = {
 	get: (url: string): Promise<any> => axios.get(url).then(sleep()).then(responseBody),
@@ -171,4 +181,8 @@ export const Users = {
 	login: (user: ILoginUser): Promise<IUserPayload> => requests.post("/user/login", user),
 	register: (user: IRegisterUser): Promise<IUserPayload> => requests.post("/user/register", user),
 	updateSettings: (settings: IUserSettings): Promise<void> => requests.post("/user/settings", settings),
+	secretsList: (): Promise<IUserSecret[]> => requests.get("/user/secrets"),
+	createSecret: (secret: INewUserSecret): Promise<IUserSecret> => requests.post("/user/secrets", secret),
+	editSecret: (id: string, secret: IEditUserSecret): Promise<void> => requests.put(`/user/secrets/${id}`, secret),
+	deleteSecret: (id: string): Promise<void> => requests.del(`/user/secrets/${id}`),
 };

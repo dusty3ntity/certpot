@@ -31,3 +31,18 @@ export interface ILoginUser {
 	email: string;
 	password: string;
 }
+
+export interface IUserSecret {
+	id: string;
+	name: string;
+	lastEditDate: Date;
+}
+
+export interface INewUserSecret {
+	name: string;
+	value: string;
+}
+
+export interface IEditUserSecret {
+	value: string;
+}

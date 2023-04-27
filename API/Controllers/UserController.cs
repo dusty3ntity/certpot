@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Users;
+using Application.Users.Secrets;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -78,6 +80,33 @@ namespace API.Controllers
         public async Task<ActionResult<Unit>> UpdateSettings(UpdateSettings.Command command)
         {
             return await Mediator.Send(command);
+        }
+
+        [HttpGet("secrets")]
+        public async Task<ActionResult<List<UserSecretDto>>> SecretsList()
+        {
+            return await Mediator.Send(new List.Query());
+        }
+
+        [HttpPost("secrets")]
+        public async Task<ActionResult<UserSecretDto>> CreateSecret(Create.Command command)
+        {
+            return await Mediator.Send(command);
+        }
+
+        [HttpPut("secrets/{secretId}")]
+        [Authorize(Policy = "IsUserSecretOwner")]
+        public async Task<ActionResult<Unit>> EditSecret(Guid secretId, Edit.Command command)
+        {
+            command.Id = secretId;
+            return await Mediator.Send(command);
+        }
+
+        [HttpDelete("secrets/{secretId}")]
+        [Authorize(Policy = "IsUserSecretOwner")]
+        public async Task<ActionResult<Unit>> DeleteSecret(Guid secretId)
+        {
+            return await Mediator.Send(new Delete.Command {Id = secretId});
         }
     }
 }

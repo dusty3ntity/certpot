@@ -45,24 +45,17 @@ namespace API.Extensions
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero
                     };
-                    // opt.Events = new JwtBearerEvents
-                    // {
-                    //     OnMessageReceived = context =>
-                    //     {
-                    //         var accessToken = context.Request.Query["access_token"];
-                    //         if (!string.IsNullOrEmpty(accessToken))
-                    //             context.Token = accessToken;
-                    //         return Task.CompletedTask;
-                    //     }
-                    // };
                 });
 
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("IsMonitorOwner",
                     policy => { policy.Requirements.Add(new IsMonitorOwnerRequirement()); });
+                opt.AddPolicy("IsUserSecretOwner",
+                    policy => { policy.Requirements.Add(new IsUserSecretOwnerRequirement()); });
             });
             services.AddTransient<IAuthorizationHandler, IsMonitorOwnerRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, IsUserSecretOwnerRequirementHandler>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
 

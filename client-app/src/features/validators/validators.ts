@@ -10,6 +10,10 @@ export const USERNAME_CONTAINS_ONLY_ALPHANUMERIC_REGEX = /^[a-zA-Z0-9]{2,}$/;
 export const PORT_MIN_VALUE = 1;
 export const PORT_MAX_VALUE = 65535;
 
+export const SECRET_NAME_BEGINS_WITH_ALPHANUMERIC_REGEX = /^[a-zA-Z0-9]/;
+export const SECRET_NAME_ENDS_WITH_ALPHANUMERIC_REGEX = /[a-zA-Z0-9]$/;
+export const SECRET_NAME_CONTAINS_ALPHANUMERIC_OR_UNDERSCORES = /[a-zA-Z0-9_]*$/;
+
 export const fullTrim = (_: string, originalValue: string): string => {
 	return originalValue.replace(/\s+/g, " ").trim();
 };
@@ -23,7 +27,6 @@ export const isValidPort = (value?: number): boolean => {
 };
 
 export const isValidThreshold = (value?: number): boolean => {
-	console.log("threshold", value);
 	if (!value) {
 		return false;
 	}

@@ -1,18 +1,40 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Users } from "../../api/agent";
-import { ILoginUser, IRegisterUser, IUser, IUserPayload, IUserSettings } from "../types/users";
+import {
+	IEditUserSecret,
+	ILoginUser,
+	INewUserSecret,
+	IRegisterUser,
+	IUser,
+	IUserPayload,
+	IUserSecret,
+	IUserSettings,
+} from "../types/users";
 
 interface IUserState {
 	loading: "idle" | "pending" | "fulfilled" | "rejected";
 	submitting: boolean;
 	user: IUser | null;
+	secrets?: IUserSecret[];
+	loadingSecrets: "idle" | "pending" | "fulfilled" | "rejected";
+	creatingSecret: boolean;
+	editingSecret: boolean;
+	editingSecretId: string | null;
+	deletingSecret: boolean;
+	deletingSecretId: string | null;
 }
 
 const initialState: IUserState = {
 	loading: "idle",
 	submitting: false,
 	user: null,
+	loadingSecrets: "idle",
+	creatingSecret: false,
+	editingSecret: false,
+	editingSecretId: null,
+	deletingSecret: false,
+	deletingSecretId: null,
 };
 
 export const loginUser = createAsyncThunk<IUserPayload, ILoginUser>(
@@ -54,6 +76,47 @@ export const updateSettings = createAsyncThunk<void, IUserSettings>(
 		try {
 			await Users.updateSettings(settings);
 			dispatch(setSettings(settings));
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
+export const fetchSecrets = createAsyncThunk<IUserSecret[]>("user/fetchSecrets", async (_, { rejectWithValue }) => {
+	try {
+		return await Users.secretsList();
+	} catch (err) {
+		return rejectWithValue(err);
+	}
+});
+
+export const createSecret = createAsyncThunk<IUserSecret, INewUserSecret>(
+	"user/createSecret",
+	async (secret: INewUserSecret, { rejectWithValue }) => {
+		try {
+			return await Users.createSecret(secret);
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
+export const editSecret = createAsyncThunk<void, { id: string; secret: IEditUserSecret }>(
+	"user/editSecret",
+	async (data, { rejectWithValue }) => {
+		try {
+			await Users.editSecret(data.id, data.secret);
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
+export const deleteSecret = createAsyncThunk<void, string>(
+	"user/deleteSecret",
+	async (id: string, { dispatch, rejectWithValue }) => {
+		try {
+			await Users.deleteSecret(id);
 		} catch (err) {
 			return rejectWithValue(err);
 		}
@@ -125,6 +188,57 @@ const userSlice = createSlice({
 		});
 		builder.addCase(updateSettings.rejected, (state) => {
 			state.submitting = false;
+		});
+
+		builder.addCase(fetchSecrets.pending, (state) => {
+			state.loadingSecrets = "pending";
+		});
+		builder.addCase(fetchSecrets.fulfilled, (state, { payload }) => {
+			state.loadingSecrets = "fulfilled";
+			const secrets = payload.map((s) => ({ ...s, lastEditDate: new Date(s.lastEditDate) }));
+			state.secrets = secrets;
+		});
+		builder.addCase(fetchSecrets.rejected, (state) => {
+			state.loadingSecrets = "rejected";
+		});
+
+		builder.addCase(createSecret.pending, (state) => {
+			state.creatingSecret = true;
+		});
+		builder.addCase(createSecret.fulfilled, (state, { payload }) => {
+			state.creatingSecret = false;
+			state.secrets!.push(payload);
+		});
+		builder.addCase(createSecret.rejected, (state) => {
+			state.creatingSecret = false;
+		});
+
+		builder.addCase(editSecret.pending, (state, { meta }) => {
+			state.editingSecret = true;
+			state.editingSecretId = meta.arg.id;
+		});
+		builder.addCase(editSecret.fulfilled, (state, { meta }) => {
+			state.editingSecret = false;
+			state.editingSecretId = null;
+			state.secrets!.find((s) => s.id === meta.arg.id)!.lastEditDate = new Date();
+		});
+		builder.addCase(editSecret.rejected, (state) => {
+			state.editingSecret = false;
+			state.editingSecretId = null;
+		});
+
+		builder.addCase(deleteSecret.pending, (state, { meta }) => {
+			state.deletingSecret = true;
+			state.deletingSecretId = meta.arg;
+		});
+		builder.addCase(deleteSecret.fulfilled, (state, { meta }) => {
+			state.deletingSecret = false;
+			state.deletingSecretId = null;
+			state.secrets = state.secrets!.filter((s) => s.id !== meta.arg);
+		});
+		builder.addCase(deleteSecret.rejected, (state) => {
+			state.deletingSecret = false;
+			state.deletingSecretId = null;
 		});
 	},
 });

@@ -9,9 +9,9 @@ namespace Domain
         public AppUser()
         {
             Monitors = new List<Monitor>();
-            
+
             RegistrationDate = DateTime.Now;
-            
+
             NotifyAboutCertificateChange = true;
             ExpiryNotificationThresholdDays = 3;
             NotifyAboutExpiryIfRenewalConfigured = false;
@@ -32,5 +32,6 @@ namespace Domain
         public DateTime RefreshTokenExpiry { get; set; }
 
         public ICollection<Monitor> Monitors { get; set; }
+        public ICollection<UserSecret> Secrets { get; set; }
     }
 }

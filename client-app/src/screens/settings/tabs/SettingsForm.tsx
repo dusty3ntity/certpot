@@ -3,10 +3,10 @@ import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Button, Switch, Tooltip, ValidationMessage } from "../../components";
-import { isValidThreshold } from "../../features";
-import { IUser, IUserSettings } from "../../models";
-import { combineClassNames } from "../../utils";
+import { IUser, IUserSettings } from "../../../models";
+import { ValidationMessage, Button, Tooltip, Switch } from "../../../components";
+import { isValidThreshold } from "../../../features";
+import { combineClassNames } from "../../../utils";
 
 interface ISettingsFormProps {
 	onSubmit: (data: IUserSettings) => void;

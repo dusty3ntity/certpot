@@ -8,7 +8,6 @@ import { ISshCredentials } from "../../../../models/types";
 import { Tooltip, ValidationMessage, Button } from "../../../../components";
 import {
 	fullTrim,
-	isValidDomainName,
 	isValidHostName,
 	isValidPort,
 	isValidPrivateKey,

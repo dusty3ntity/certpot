@@ -68,7 +68,7 @@ export const ScriptsTab: React.FC<ITabProps> = ({ data }) => {
 					theme: "material",
 					lineNumbers: true,
 				}}
-				onBeforeChange={(_, __, value) => {
+				onBeforeChange={(_: any, __: any, value: string) => {
 					setScript(value);
 				}}
 			/>
