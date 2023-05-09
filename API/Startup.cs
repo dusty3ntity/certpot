@@ -50,6 +50,12 @@ namespace API
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "CertPot API v1");
+            });
 
             app.UseEndpoints(endpoints =>
             {
