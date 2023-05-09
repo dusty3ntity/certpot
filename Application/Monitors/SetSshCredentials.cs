@@ -16,11 +16,40 @@ namespace Application.Monitors
     {
         public class Command : IRequest<Unit>
         {
+            /// <summary>
+            /// Id of the monitor test SSH connection for.
+            /// </summary>
             public Guid MonitorId { get; set; }
+            
+            /// <summary>
+            /// IP address of the host to connect to.
+            /// </summary>
+            /// <example>217.160.41.147</example>
             public string SshHostname { get; set; }
+            
+            /// <summary>
+            /// SSH port of the host.
+            /// Defaults to 22.
+            /// </summary>
+            /// <example>22</example>
             public int? SshPort { get; set; }
+            
+            /// <summary>
+            /// Username of the user to connect to over SSH.
+            /// </summary>
+            /// <example>root</example>
             public string SshUsername { get; set; }
+            
+            /// <summary>
+            /// SSH private key.
+            /// </summary>
+            /// <example>-----BEGIN OPENSSH PRIVATE KEY-----test=-----END OPENSSH PRIVATE KEY-----</example>
             public string SshPrivateKey { get; set; }
+            
+            /// <summary>
+            /// Password of the SSH user (optional).
+            /// </summary>
+            /// <example>123asd123</example>
             public string SshPassword { get; set; }
         }
 

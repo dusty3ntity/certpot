@@ -18,8 +18,23 @@ namespace Application.Monitors
     {
         public class Command : IRequest<MonitorDto>
         {
+            /// <summary>
+            /// Monitor name to be displayed to the user.
+            /// </summary>
+            /// <example>CertPot</example>
             public string DisplayName { get; set; }
+            
+            /// <summary>
+            /// Domain name (without https://) or IP address of the host.
+            /// Supports punycode (IDN) domain names.
+            /// </summary>
+            /// <example>certpot.ohyr.dev</example>
             public string DomainName { get; set; }
+            
+            /// <summary>
+            /// Port of the desired application.
+            /// </summary>
+            /// <example>443</example>
             public int Port { get; set; }
         }
 

@@ -22,28 +22,55 @@ namespace API.Controllers
             _config = config;
         }
 
+        /// <summary>
+        /// Logs in the user.
+        /// </summary>
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<User>> Login(Login.Query query)
+        public async Task<ActionResult<UserDto>> Login(Login.Query query)
         {
             return await Mediator.Send(query);
         }
 
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<User>> Register(Resigter.Command command)
+        public async Task<ActionResult<UserDto>> Register(Resigter.Command command)
         {
             return await Mediator.Send(command);
         }
 
+        /// <summary>
+        /// Generates a new JWT token for the user.
+        /// </summary>
         [HttpPost("refresh")]
         [AllowAnonymous]
-        public async Task<ActionResult<User>> Refresh(RefreshToken.Query query)
+        public async Task<ActionResult<UserDto>> Refresh(RefreshToken.Query query)
         {
             var principal = GetPrincipalFromExpiredToken(query.Token);
             query.Username = principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
             return await Mediator.Send(query);
+        }
+        
+        /// <summary>
+        /// Returns the user data by the JWT token provided.
+        /// </summary>
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> CurrentUser()
+        {
+            return await Mediator.Send(new CurrentUser.Query());
+        }
+
+        /// <summary>
+        /// Updates the user settings with the data provided.
+        /// </summary>
+        [HttpPost("settings")]
+        public async Task<ActionResult<Unit>> UpdateSettings(UpdateSettings.Command command)
+        {
+            return await Mediator.Send(command);
         }
 
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
@@ -66,18 +93,6 @@ namespace API.Controllers
                 throw new SecurityTokenException("Invalid Token");
 
             return principal;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<User>> CurrentUser()
-        {
-            return await Mediator.Send(new CurrentUser.Query());
-        }
-
-        [HttpPost("settings")]
-        public async Task<ActionResult<Unit>> UpdateSettings(UpdateSettings.Command command)
-        {
-            return await Mediator.Send(command);
         }
     }
 }

@@ -13,9 +13,18 @@ namespace Application.Users
 {
     public class Login
     {
-        public class Query : IRequest<User>
+        public class Query : IRequest<UserDto>
         {
+            /// <summary>
+            /// Email of the user.
+            /// </summary>
+            /// <example>dusty3ntity@gmail.com</example>
             public string Email { get; set; }
+            
+            /// <summary>
+            /// Password of the user.
+            /// </summary>
+            /// <example>123asd123</example>
             public string Password { get; set; }
         }
 
@@ -28,7 +37,7 @@ namespace Application.Users
             }
         }
 
-        public class Handler : IRequestHandler<Query, User>
+        public class Handler : IRequestHandler<Query, UserDto>
         {
             private readonly UserManager<AppUser> _userManager;
             private readonly SignInManager<AppUser> _signInManager;
@@ -42,7 +51,7 @@ namespace Application.Users
                 _jwtGenerator = jwtGenerator;
             }
 
-            public async Task<User> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<UserDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.FindByEmailAsync(request.Email);
 
@@ -58,7 +67,7 @@ namespace Application.Users
 
                     await _userManager.UpdateAsync(user);
 
-                    return new User
+                    return new UserDto
                     {
                         Username = user.UserName,
                         Email = user.Email,

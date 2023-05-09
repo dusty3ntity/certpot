@@ -17,11 +17,30 @@ namespace Application.Users
 {
     public class Resigter
     {
-        public class Command : IRequest<User>
+        public class Command : IRequest<UserDto>
         {
+            /// <summary>
+            /// Display name of the user.
+            /// </summary>
+            /// <example>Vadym Ohyr</example>
             public string DisplayName { get; set; }
+            
+            /// <summary>
+            /// Username of the user.
+            /// </summary>
+            /// <example>dusty3ntity</example>
             public string Username { get; set; }
+            
+            /// <summary>
+            /// Email of the user.
+            /// </summary>
+            /// <example>dusty3ntity@gmail.com</example>
             public string Email { get; set; }
+            
+            /// <summary>
+            /// Password of the user.
+            /// </summary>
+            /// <example>123asd123</example>
             public string Password { get; set; }
         }
 
@@ -38,7 +57,7 @@ namespace Application.Users
             }
         }
 
-        public class Handler : IRequestHandler<Command, User>
+        public class Handler : IRequestHandler<Command, UserDto>
         {
             private readonly DataContext _context;
             private readonly UserManager<AppUser> _userManager;
@@ -51,7 +70,7 @@ namespace Application.Users
                 _jwtGenerator = jwtGenerator;
             }
 
-            public async Task<User> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<UserDto> Handle(Command request, CancellationToken cancellationToken)
             {
                 var normalizedEmail = request.Email.ToUpper();
                 var normalizedUsername = request.Username.ToUpper();
@@ -78,7 +97,7 @@ namespace Application.Users
 
                 if (result.Succeeded)
                 {
-                    return new User
+                    return new UserDto
                     {
                         DisplayName = user.DisplayName,
                         Email = user.Email,

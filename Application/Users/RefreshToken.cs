@@ -13,10 +13,23 @@ namespace Application.Users
 {
     public class RefreshToken
     {
-        public class Query : IRequest<User>
+        public class Query : IRequest<UserDto>
         {
+            /// <summary>
+            /// Username of the user.
+            /// </summary>
+            /// <example>dusty3ntity</example>
             public string Username { get; set; }
+            
+            /// <summary>
+            /// Current or expired JWT token of the user.
+            /// </summary>
             public string Token { get; set; }
+            
+            /// <summary>
+            /// Current refresh token of the user.
+            /// </summary>
+            /// <example>j/VLnujhhdyionsu5sKtd8RhYjTtS2wfLCFH7z8FEyw=</example>
             public string RefreshToken { get; set; }
         }
 
@@ -29,7 +42,7 @@ namespace Application.Users
             }
         }
 
-        public class Handler : IRequestHandler<Query, User>
+        public class Handler : IRequestHandler<Query, UserDto>
         {
             private readonly UserManager<AppUser> _userManager;
             private readonly IJwtGenerator _jwtGenerator;
@@ -40,7 +53,7 @@ namespace Application.Users
                 _jwtGenerator = jwtGenerator;
             }
 
-            public async Task<User> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<UserDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
 
@@ -54,7 +67,7 @@ namespace Application.Users
                 user.RefreshTokenExpiry = DateTime.Now.AddDays(30);
                 await _userManager.UpdateAsync(user);
 
-                return new User
+                return new UserDto
                 {
                     DisplayName = user.DisplayName,
                     Email = user.Email,
