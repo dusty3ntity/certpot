@@ -37,8 +37,18 @@ namespace Application.Users
         {
             public QueryValidator()
             {
-                RuleFor(x => x.Token).NotEmpty();
-                RuleFor(x => x.RefreshToken).NotEmpty();
+                RuleFor(x => x.Username)
+                    .NotEmpty()
+                    .MinimumLength(3)
+                    .MaximumLength(20);
+                RuleFor(x => x.Token)
+                    .NotEmpty()
+                    .MinimumLength(3)
+                    .MaximumLength(300);
+                RuleFor(x => x.RefreshToken)
+                    .NotEmpty()
+                    .MinimumLength(3)
+                    .MaximumLength(100);
             }
         }
 

@@ -48,11 +48,24 @@ namespace Application.Users
         {
             public CommandValidator()
             {
-                RuleFor(u => u.DisplayName).NotEmpty().MinimumLength(3).MaximumLength(20);
-                RuleFor(u => u.Username).NotEmpty().MinimumLength(3).MaximumLength(20)
+                RuleFor(u => u.DisplayName)
+                    .NotEmpty()
+                    .MinimumLength(3)
+                    .MaximumLength(20);
+                RuleFor(u => u.Username)
+                    .NotEmpty()
+                    .MinimumLength(3)
+                    .MaximumLength(20)
                     .Matches("^[A-Za-z][a-zA-Z0-9]{2,}$");
-                RuleFor(u => u.Email).NotEmpty().EmailAddress().MaximumLength(30);
-                RuleFor(u => u.Password).NotEmpty().MinimumLength(8).MaximumLength(20).Matches("[0-9]")
+                RuleFor(u => u.Email)
+                    .NotEmpty()
+                    .EmailAddress()
+                    .MaximumLength(30);
+                RuleFor(u => u.Password)
+                    .NotEmpty()
+                    .MinimumLength(8)
+                    .MaximumLength(20)
+                    .Matches("[0-9]")
                     .WithMessage("Password must contain a digit");
             }
         }

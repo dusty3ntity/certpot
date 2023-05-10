@@ -57,6 +57,7 @@ namespace API.Extensions
 
             services.AddSwaggerGen(options =>
             {
+                options.EnableAnnotations();
                 options.UseInlineDefinitionsForEnums();
                 options.SupportNonNullableReferenceTypes();
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "CertPot API", Version = "v1" });

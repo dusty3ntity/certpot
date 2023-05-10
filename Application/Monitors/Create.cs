@@ -51,6 +51,7 @@ namespace Application.Monitors
                     .Must(MonitorPathValidators.BeValidDomainName)
                     .WithMessage("Please specify a valid domain name without protocol.");
                 RuleFor(m => m.Port)
+                    .NotNull()
                     .InclusiveBetween(1, 65535)
                     .WithMessage("Please specify a valid port.");
             }

@@ -32,8 +32,14 @@ namespace Application.Users
         {
             public QueryValidator()
             {
-                RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(30);
-                RuleFor(x => x.Password).NotEmpty().MinimumLength(8).MaximumLength(20);
+                RuleFor(x => x.Email)
+                    .NotEmpty()
+                    .EmailAddress()
+                    .MaximumLength(30);
+                RuleFor(x => x.Password)
+                    .NotEmpty()
+                    .MinimumLength(8)
+                    .MaximumLength(20);
             }
         }
 

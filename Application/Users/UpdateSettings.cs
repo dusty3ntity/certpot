@@ -65,6 +65,10 @@ namespace Application.Users
                     .NotNull()
                     .InclusiveBetween(1, 7)
                     .WithMessage("Expiry notification threshold must be between 1 and 7 days inclusively.");
+                RuleFor(s => s.RenewalThresholdDays)
+                    .NotNull()
+                    .InclusiveBetween(1, 7)
+                    .WithMessage("Renewal threshold must be between 1 and 7 days inclusively.");
             }
         }
 

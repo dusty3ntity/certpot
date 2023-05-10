@@ -29,7 +29,6 @@ namespace Application.Monitors
             
             /// <summary>
             /// SSH port of the host.
-            /// Defaults to 22.
             /// </summary>
             /// <example>22</example>
             public int? SshPort { get; set; }
@@ -41,7 +40,7 @@ namespace Application.Monitors
             public string SshUsername { get; set; }
             
             /// <summary>
-            /// SSH private key.
+            /// SSH private key (optional).
             /// </summary>
             /// <example>-----BEGIN OPENSSH PRIVATE KEY-----test=-----END OPENSSH PRIVATE KEY-----</example>
             public string SshPrivateKey { get; set; }
@@ -64,6 +63,7 @@ namespace Application.Monitors
                     .NotEmpty()
                     .Length(1, 30);
                 RuleFor(m => m.SshPort)
+                    .NotNull()
                     .InclusiveBetween(1, 65535)
                     .WithMessage("Please specify a valid port.");
                 RuleFor(m => m.SshPrivateKey)
