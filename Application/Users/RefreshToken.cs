@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interfaces;
+using Application.Swagger;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -19,6 +20,7 @@ namespace Application.Users
             /// Username of the user.
             /// </summary>
             /// <example>dusty3ntity</example>
+            [SwaggerExclude]
             public string Username { get; set; }
             
             /// <summary>
@@ -37,10 +39,6 @@ namespace Application.Users
         {
             public QueryValidator()
             {
-                RuleFor(x => x.Username)
-                    .NotEmpty()
-                    .MinimumLength(3)
-                    .MaximumLength(20);
                 RuleFor(x => x.Token)
                     .NotEmpty()
                     .MinimumLength(3)

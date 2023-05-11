@@ -90,6 +90,8 @@ namespace Application.Users
                     };
                 }
 
+                // Sending a generic error doesn't make sense as it's pretty easy to find out
+                // whether a user with the given email address exists just by registering one
                 throw new RestException(HttpStatusCode.Unauthorized, ErrorType.InvalidPassword);
             }
         }

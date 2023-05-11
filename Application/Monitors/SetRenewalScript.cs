@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Swagger;
 using Application.Validators;
 using AutoMapper;
 using FluentValidation;
@@ -21,6 +22,7 @@ namespace Application.Monitors
             /// <summary>
             /// Id of the monitor to set renewal script for.
             /// </summary>
+            [SwaggerExclude]
             public Guid MonitorId { get; set; }
             
             /// <summary>

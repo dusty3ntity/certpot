@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interfaces;
+using Application.Swagger;
 using Application.Validators;
 using AutoMapper;
 using FluentValidation;
@@ -22,6 +23,7 @@ namespace Application.Monitors
             /// <summary>
             /// Id of the monitor test SSH connection for.
             /// </summary>
+            [SwaggerExclude]
             public Guid MonitorId { get; set; }
             
             /// <summary>
@@ -31,7 +33,8 @@ namespace Application.Monitors
             public string SshHostname { get; set; }
             
             /// <summary>
-            /// SSH port of the host.
+            /// SSH port of the host (optional).
+            /// Defaults to 22.
             /// </summary>
             /// <example>22</example>
             public int? SshPort { get; set; }
@@ -66,7 +69,6 @@ namespace Application.Monitors
                     .NotEmpty()
                     .Length(1, 30);
                 RuleFor(m => m.SshPort)
-                    .NotNull()
                     .InclusiveBetween(1, 65535)
                     .WithMessage("Please specify a valid port.");
                 RuleFor(m => m.SshPrivateKey)

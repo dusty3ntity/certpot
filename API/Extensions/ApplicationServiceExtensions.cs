@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using API.Swagger;
 using Application.Certificates;
 using Application.Emails;
 using Application.Interfaces;
@@ -57,11 +58,14 @@ namespace API.Extensions
 
             services.AddSwaggerGen(options =>
             {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "CertPot API", Version = "v1" });
+
                 options.EnableAnnotations();
                 options.UseInlineDefinitionsForEnums();
                 options.SupportNonNullableReferenceTypes();
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "CertPot API", Version = "v1" });
-                options.CustomSchemaIds(type => type.ToString());
+                options.CustomSchemaIds(type => type.FullName?.Replace("+", "_"));
+                options.OperationFilter<AuthOperationFilter>();
+                options.SchemaFilter<SwaggerExcludeSchemaFilter>();
 
                 // Set the comments path for Swagger JSON and UI.
                 var allowedAssemblies = new[] { "API", "Application" };
@@ -85,20 +89,6 @@ namespace API.Extensions
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
-                });
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new string[] { }
-                    }
                 });
             });
 

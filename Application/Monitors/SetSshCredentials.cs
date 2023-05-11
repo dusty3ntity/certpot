@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Swagger;
 using Application.Validators;
 using FluentValidation;
 using MediatR;
@@ -19,6 +20,7 @@ namespace Application.Monitors
             /// <summary>
             /// Id of the monitor test SSH connection for.
             /// </summary>
+            [SwaggerExclude]
             public Guid MonitorId { get; set; }
             
             /// <summary>

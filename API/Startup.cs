@@ -60,6 +60,7 @@ namespace API
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
+                options.DocumentTitle = "CertPot Swagger UI";
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "CertPot API v1");
             });
 
