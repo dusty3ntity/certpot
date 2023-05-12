@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interfaces;
+using Application.Swagger;
 using Application.Validators;
 using AutoMapper;
 using FluentValidation;
@@ -19,11 +20,41 @@ namespace Application.Monitors
     {
         public class Command : IRequest<bool>
         {
+            /// <summary>
+            /// Id of the monitor test SSH connection for.
+            /// </summary>
+            [SwaggerExclude]
             public Guid MonitorId { get; set; }
+            
+            /// <summary>
+            /// IP address of the host to connect to.
+            /// </summary>
+            /// <example>217.160.41.147</example>
             public string SshHostname { get; set; }
-            public int SshPort { get; set; }
+            
+            /// <summary>
+            /// SSH port of the host (optional).
+            /// Defaults to 22.
+            /// </summary>
+            /// <example>22</example>
+            public int? SshPort { get; set; }
+            
+            /// <summary>
+            /// Username of the user to connect to over SSH.
+            /// </summary>
+            /// <example>root</example>
             public string SshUsername { get; set; }
+            
+            /// <summary>
+            /// SSH private key (optional).
+            /// </summary>
+            /// <example>-----BEGIN OPENSSH PRIVATE KEY-----test=-----END OPENSSH PRIVATE KEY-----</example>
             public string SshPrivateKey { get; set; }
+            
+            /// <summary>
+            /// Password of the SSH user (optional).
+            /// </summary>
+            /// <example>123asd123</example>
             public string SshPassword { get; set; }
         }
 
@@ -75,7 +106,7 @@ namespace Application.Monitors
                 bool result;
                 try
                 {
-                    result = _connectionTester.Test(request.SshHostname, request.SshPort, request.SshUsername,
+                    result = _connectionTester.Test(request.SshHostname, request.SshPort ?? 22, request.SshUsername,
                         request.SshPassword, request.SshPrivateKey);
                 }
                 catch (SshException e)

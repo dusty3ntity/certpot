@@ -16,6 +16,9 @@ namespace Application.Monitors
     {
         public class Query : IRequest<MonitorDto>
         {
+            /// <summary>
+            /// Id of the monitor to get details of.
+            /// </summary>
             public Guid Id { get; set; }
         }
 

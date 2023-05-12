@@ -3,6 +3,7 @@ using API.Middleware;
 using Application.Monitors;
 using FluentValidation.AspNetCore;
 using Hangfire;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,11 @@ namespace API
 
             services.AddApplicationServices(_configuration);
             services.AddIdentityServices(_configuration);
+            
+            services.AddFluentValidationRulesToSwagger(options =>
+            {
+                options.SetNotNullableIfMinLengthGreaterThenZero = true;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -50,6 +56,13 @@ namespace API
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.DocumentTitle = "CertPot Swagger UI";
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "CertPot API v1");
+            });
 
             app.UseEndpoints(endpoints =>
             {

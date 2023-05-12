@@ -16,6 +16,9 @@ namespace Application.Monitors
     {
         public class Command : IRequest<Unit>
         {
+            /// <summary>
+            /// Id of the monitor to switch auto renewal value for.
+            /// </summary>
             public Guid MonitorId { get; set; }
         }
 

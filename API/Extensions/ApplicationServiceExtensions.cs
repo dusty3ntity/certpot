@@ -1,17 +1,20 @@
-﻿using Application.Certificates;
+﻿using System;
+using System.IO;
+using System.Linq;
+using API.Swagger;
+using Application.Certificates;
 using Application.Emails;
 using Application.Interfaces;
 using Application.Monitors;
 using Application.Ssh;
 using AutoMapper;
-using FluentEmail.Core;
-using FluentEmail.Mailgun;
 using Hangfire;
 using Hangfire.PostgreSql;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Persistence;
 
 namespace API.Extensions
@@ -52,6 +55,42 @@ namespace API.Extensions
 
             services.AddMediatR(typeof(List));
             services.AddAutoMapper(typeof(List));
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "CertPot API", Version = "v1" });
+
+                options.EnableAnnotations();
+                options.UseInlineDefinitionsForEnums();
+                options.SupportNonNullableReferenceTypes();
+                options.CustomSchemaIds(type => type.FullName?.Replace("+", "_"));
+                options.OperationFilter<AuthOperationFilter>();
+                options.SchemaFilter<SwaggerExcludeSchemaFilter>();
+
+                // Set the comments path for Swagger JSON and UI.
+                var allowedAssemblies = new[] { "API", "Application" };
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(x => allowedAssemblies.Contains(x.GetName().Name));
+
+                foreach (var assembly in assemblies)
+                {
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{assembly.GetName().Name}.xml");
+                    if (File.Exists(xmlPath))
+                    {
+                        options.IncludeXmlComments(xmlPath);
+                    }
+                }
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+            });
 
             services.AddSingleton<ICertificateParser, CertificateParser>();
             services.AddScoped<IEmailSender, EmailSender>();
