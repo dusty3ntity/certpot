@@ -12,6 +12,9 @@ namespace Application.Monitors
     {
         public class Command : IRequest<Unit>
         {
+            /// <summary>
+            /// Id of the monitor to delete.
+            /// </summary>
             public Guid Id { get; set; }
         }
 

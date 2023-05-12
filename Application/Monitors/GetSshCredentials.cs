@@ -16,6 +16,9 @@ namespace Application.Monitors
     {
         public class Query : IRequest<SshCredentialsDto>
         {
+            /// <summary>
+            /// Id of the monitor to get SSH credentials of.
+            /// </summary>
             public Guid Id { get; set; }
         }
 
@@ -41,7 +44,7 @@ namespace Application.Monitors
 
                 var credentials = _mapper.Map<Monitor, SshCredentialsDto>(monitor);
 
-                return credentials;
+                return credentials.SshHostname == null ? null : credentials;
             }
         }
     }

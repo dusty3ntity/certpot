@@ -31,7 +31,8 @@ namespace Infrastructure.Security
         {
             var username = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (username == null) return Task.CompletedTask;
+            if (username == null)
+                throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
 
             try
             {
@@ -42,13 +43,17 @@ namespace Infrastructure.Security
 
                 var monitor = user?.Monitors.SingleOrDefault(m => m.Id == monitorId);
 
-                if (monitor != null) context.Succeed(requirement);
+                if (monitor != null)
+                    context.Succeed(requirement);
             }
             catch (Exception)
             {
                 throw new RestException(HttpStatusCode.BadRequest, ErrorType.BadId);
             }
-
+            
+            if (!context.HasSucceeded)
+                throw new RestException(HttpStatusCode.NotFound, ErrorType.MonitorNotFound);
+            
             return Task.CompletedTask;
         }
     }

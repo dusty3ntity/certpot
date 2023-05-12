@@ -2,9 +2,17 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Button, Page, ValidationMessage } from "../../components";
-import { isValidEmail, isValidPassword, isValidUsername, maxLength, minLength, PageTitle } from "../../features";
+import {
+	fullTrim,
+	PageTitle,
+	PASSWORD_CONTAINS_NUMERIC_REGEX,
+	USERNAME_BEGINS_WITH_A_LETTER_REGEX,
+	USERNAME_CONTAINS_ONLY_ALPHANUMERIC_REGEX,
+} from "../../features";
 import { IRegisterUser } from "../../models";
 import { combineClassNames, createNotification } from "../../utils";
 import { RootStateType } from "../../models/rootReducer";
@@ -14,9 +22,35 @@ import { registerUser } from "../../models/user/userSlice";
 import { ErrorType, NotificationType } from "../../models/types/errors";
 
 export const RegisterPage: React.FC = () => {
+	const validationSchema: Yup.SchemaOf<IRegisterUser> = Yup.object().shape({
+		email: Yup.string().required("Email is required.").email("The email is not valid."),
+		username: Yup.string()
+			.required("Username is required")
+			.min(3, "Username must be at least 3 characters long.")
+			.max(20, "Username can be at most 20 characters long.")
+			.matches(USERNAME_BEGINS_WITH_A_LETTER_REGEX, "Username must begin with a letter.")
+			.matches(USERNAME_CONTAINS_ONLY_ALPHANUMERIC_REGEX, "Username must contain only alphanumeric."),
+		displayName: Yup.string()
+			.required("Display name is required")
+			.transform(fullTrim)
+			.min(3, "Display name must be at least 3 characters long.")
+			.max(20, "Display name can be at most 20 characters long.")
+			.matches(USERNAME_BEGINS_WITH_A_LETTER_REGEX, "Display name must begin with a letter."),
+		password: Yup.string()
+			.required("Password is required.")
+			.min(8, "Password must be at least 8 characters long.")
+			.max(20, "Username can be at most 20 characters long.")
+			.matches(PASSWORD_CONTAINS_NUMERIC_REGEX, "Password must contain at least one digit."),
+	});
+
 	const dispatch = useAppDispatch();
-	const { register, handleSubmit, errors, formState } = useForm<IRegisterUser>();
 	const { submitting } = useSelector((state: RootStateType) => state.user);
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isDirty, isValid, submitCount },
+	} = useForm<IRegisterUser>({ resolver: yupResolver(validationSchema) });
 
 	const onSubmit = async (newUser: IRegisterUser) => {
 		await dispatch(registerUser(newUser))
@@ -64,19 +98,11 @@ export const RegisterPage: React.FC = () => {
 
 						<input
 							id="email"
-							name="email"
 							className={combineClassNames("text-input", { error: errors.email })}
 							type="text"
 							autoFocus
 							maxLength={30}
-							ref={register({
-								required: "Email is required.",
-								validate: {
-									email: (value: string) => {
-										return isValidEmail(value) ? "Your email is not valid." : true;
-									},
-								},
-							})}
+							{...register("email")}
 						/>
 					</div>
 
@@ -88,27 +114,11 @@ export const RegisterPage: React.FC = () => {
 
 						<input
 							id="username"
-							name="username"
 							className={combineClassNames("text-input", { error: errors.email })}
 							type="text"
 							autoComplete="username"
 							maxLength={30}
-							ref={register({
-								required: "Username is required.",
-								validate: {
-									minLength: (value: string) => {
-										return minLength(value, 3) ? "Username must be at least 3 characters long." : true;
-									},
-									maxLength: (value: string) => {
-										return maxLength(value, 20) ? "Username can be at most 20 characters long." : true;
-									},
-									username: (value: string) => {
-										const result = isValidUsername(value);
-										if (result) return result;
-										else return true;
-									},
-								},
-							})}
+							{...register("username")}
 						/>
 					</div>
 
@@ -120,21 +130,10 @@ export const RegisterPage: React.FC = () => {
 
 						<input
 							id="displayName"
-							name="displayName"
 							className={combineClassNames("text-input", { error: errors.email })}
 							type="text"
 							maxLength={30}
-							ref={register({
-								required: "Display name is required.",
-								validate: {
-									minLength: (value: string) => {
-										return minLength(value, 3) ? "Display name must be at least 3 characters long." : true;
-									},
-									maxLength: (value: string) => {
-										return maxLength(value, 20) ? "Display name can be at most 20 characters long." : true;
-									},
-								},
-							})}
+							{...register("displayName")}
 						/>
 					</div>
 
@@ -146,25 +145,11 @@ export const RegisterPage: React.FC = () => {
 
 						<input
 							id="password"
-							name="password"
 							className={combineClassNames("text-input", { error: errors.password })}
 							type="password"
 							autoComplete="current-password"
 							maxLength={30}
-							ref={register({
-								required: "Password is required.",
-								validate: {
-									minLength: (value: string) => {
-										return minLength(value, 8) ? "Password must be at least 8 characters long." : true;
-									},
-									maxLength: (value: string) => {
-										return maxLength(value, 20) ? "Password can be at most 20 characters long." : true;
-									},
-									password: (value: string) => {
-										return isValidPassword(value) ? "Password must contain at least one digit." : true;
-									},
-								},
-							})}
+							{...register("password")}
 						/>
 					</div>
 
@@ -181,7 +166,7 @@ export const RegisterPage: React.FC = () => {
 							className="register-btn"
 							text="Register"
 							type="submit"
-							disabled={!formState.isDirty || (formState.submitCount > 0 && !formState.isValid)}
+							disabled={!isDirty || (submitCount > 0 && !isValid)}
 							loading={submitting}
 						/>
 					</div>

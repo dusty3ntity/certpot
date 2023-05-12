@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Swagger;
 using Application.Validators;
 using AutoMapper;
 using FluentValidation;
@@ -18,7 +19,16 @@ namespace Application.Monitors
     {
         public class Command : IRequest<Unit>
         {
+            /// <summary>
+            /// Id of the monitor to set renewal script for.
+            /// </summary>
+            [SwaggerExclude]
             public Guid MonitorId { get; set; }
+            
+            /// <summary>
+            /// Renewal script to run on the host machine in order to renew the SSL certificate.
+            /// </summary>
+            /// <example>certbot certonly -d certpot.ohyr.dev -m dusty3ntity@gmail.com</example>
             public string RenewalScript { get; set; }
         }
 

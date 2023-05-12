@@ -16,6 +16,9 @@ namespace Application.Monitors
     {
         public class Query : IRequest<string>
         {
+            /// <summary>
+            /// Id of the monitor to get renewal logs of.
+            /// </summary>
             public Guid Id { get; set; }
         }
 

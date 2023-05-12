@@ -14,7 +14,7 @@ export const ValidationMessage: React.FC<IValidationMessageProps> = ({ errors, i
 		<ErrorMessage
 			errors={errors}
 			name={inputName}
-			render={({ message }) => (
+			render={({ message }: { message: string }) => (
 				<Tooltip className="validation-error" theme="light" text={message} position="top" {...props}>
 					<ErrorIcon />
 				</Tooltip>

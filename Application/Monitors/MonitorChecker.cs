@@ -60,6 +60,7 @@ namespace Application.Monitors
 
                 if (!certificate.SerialNumber.Equals(monitor.Certificate.SerialNumber))
                 {
+                    _context.Certificates.Remove(monitor.Certificate);
                     monitor.Certificate = certificate;
 
                     _logger.LogInformation($"Sending unexpected certificate change email for {monitor.Id}");
@@ -70,7 +71,7 @@ namespace Application.Monitors
 
                 if (Math.Abs((DateTime.Now - certificate.ValidTo).TotalDays) <= user.ExpiryNotificationThresholdDays)
                 {
-                    if (!user.NotifyAboutExpiryIfRenewalConfigured && monitor.RenewalScript != null)
+                    if (!user.NotifyAboutExpiryIfRenewalConfigured && monitor.AutoRenewalEnabled)
                         return;
 
                     _logger.LogInformation($"Sending certificate expiry email for {monitor.Id}");
@@ -116,6 +117,7 @@ namespace Application.Monitors
 
                 if (!certificate.SerialNumber.Equals(monitor.Certificate.SerialNumber))
                 {
+                    _context.Certificates.Remove(monitor.Certificate);
                     monitor.Certificate = certificate;
 
                     _logger.LogInformation($"Sending successful certificate renewal email for {monitor.Id}");

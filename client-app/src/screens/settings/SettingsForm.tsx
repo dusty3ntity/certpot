@@ -1,8 +1,10 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Button, Switch, Tooltip, ValidationMessage } from "../../components";
-import { isValidEmail, isValidThreshold } from "../../features";
+import { isValidThreshold } from "../../features";
 import { IUser, IUserSettings } from "../../models";
 import { combineClassNames } from "../../utils";
 
@@ -13,14 +15,27 @@ interface ISettingsFormProps {
 }
 
 export const SettingsForm: React.FC<ISettingsFormProps> = ({ user, onSubmit, submitting }) => {
+	const validationSchema: Yup.SchemaOf<IUserSettings> = Yup.object().shape({
+		notificationsEmail: Yup.string()
+			.required("Notifications email is required.")
+			.email("The notifications email is not valid."),
+		expiryNotificationThresholdDays: Yup.number()
+			.typeError("Expiry notifications threshold must be a number.")
+			.required("Expiry notifications threshold is required.")
+			.test("is-valid-threshold", "Expiry notifications threshold must be between 1 and 7 days.", isValidThreshold),
+		notifyAboutCertificateChange: Yup.boolean().required(),
+		notifyAboutExpiryIfRenewalConfigured: Yup.boolean().required(),
+	});
+
 	const {
 		register,
 		handleSubmit,
-		errors,
-		formState: { isDirty, isValid },
+		control,
+		formState: { errors, isDirty, isValid },
 	} = useForm<IUserSettings>({
 		defaultValues: user,
 		mode: "onChange",
+		resolver: yupResolver(validationSchema),
 	});
 
 	return (
@@ -33,50 +48,30 @@ export const SettingsForm: React.FC<ISettingsFormProps> = ({ user, onSubmit, sub
 
 				<input
 					id="notificationsEmail"
-					name="notificationsEmail"
 					className={combineClassNames("text-input", { error: errors.notificationsEmail })}
 					type="text"
 					autoFocus
 					autoComplete="off"
 					maxLength={30}
-					ref={register({
-						required: "Email is required.",
-						validate: {
-							email: (value: string) => {
-								return isValidEmail(value) ? "The email is not valid." : true;
-							},
-						},
-					})}
+					{...register("notificationsEmail")}
 				/>
 			</div>
 
 			<div className="threshold-input form-item">
-				<label htmlFor="expiryNotificationThreshold">
+				<label htmlFor="expiryNotificationThresholdDays">
 					<Tooltip text="When should we start notify you about certificate expiries (in days)?" position="top-start">
 						<span>Expiry notifications threshold</span>
 					</Tooltip>
-					<ValidationMessage inputName="expiryNotificationThreshold" errors={errors} />
+					<ValidationMessage inputName="expiryNotificationThresholdDays" errors={errors} />
 				</label>
 
 				<input
-					id="expiryNotificationThreshold"
-					name="expiryNotificationThreshold"
-					className={combineClassNames("text-input threshold", { error: errors.expiryNotificationThreshold })}
+					id="expiryNotificationThresholdDays"
+					className={combineClassNames("text-input threshold", { error: errors.expiryNotificationThresholdDays })}
 					type="text"
 					autoComplete="off"
 					maxLength={3}
-					ref={register({
-						required: "Expiry notifications threshold is required.",
-						validate: {
-							threshold: (value: string) => {
-								if (isValidThreshold(value)) {
-									return "Expiry notifications threshold must be in range: 1-7.";
-								}
-
-								return true;
-							},
-						},
-					})}
+					{...register("expiryNotificationThresholdDays")}
 				/>
 			</div>
 
@@ -85,18 +80,28 @@ export const SettingsForm: React.FC<ISettingsFormProps> = ({ user, onSubmit, sub
 					<label htmlFor="notifyAboutCertificateChange">Notify about certificate changes:</label>
 				</Tooltip>
 
-				<Switch name="notifyAboutCertificateChange" id="notifyAboutCertificateChange" ref={register} />
+				<Controller
+					name="notifyAboutCertificateChange"
+					control={control}
+					defaultValue={user.notifyAboutCertificateChange}
+					render={({ field }) => <Switch id="notifyAboutCertificateChange" {...field} />}
+				/>
 			</div>
 
-			<div className="notifyAboutExpiryIfRenewalEnabled-input toggle-item form-item">
+			<div className="notifyAboutExpiryIfRenewalConfigured-input toggle-item form-item">
 				<Tooltip
 					text="Do you need to get notified about certificate expiry if you have autorenewal configured?"
 					position="top-start"
 				>
-					<label htmlFor="notifyAboutExpiryIfRenewalEnabled">Notify if renewal configured:</label>
+					<label htmlFor="notifyAboutExpiryIfRenewalConfigured">Notify if renewal configured:</label>
 				</Tooltip>
 
-				<Switch name="notifyAboutExpiryIfRenewalEnabled" id="notifyAboutExpiryIfRenewalEnabled" ref={register} />
+				<Controller
+					name="notifyAboutExpiryIfRenewalConfigured"
+					control={control}
+					defaultValue={user.notifyAboutExpiryIfRenewalConfigured}
+					render={({ field }) => <Switch id="notifyAboutExpiryIfRenewalConfigured" {...field} />}
+				/>
 			</div>
 
 			<div className="actions-container">

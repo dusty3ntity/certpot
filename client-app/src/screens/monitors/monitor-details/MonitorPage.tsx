@@ -47,7 +47,7 @@ export const MonitorPage: React.FC<IMonitorPageProps> = ({
 
 								<Switch
 									id="autorenewal-switch"
-									checked={monitor.autoRenewalEnabled}
+									value={monitor.autoRenewalEnabled}
 									onChange={onAutoRenewalChange}
 									disabled={!monitor.sshConfigured || !monitor.renewalConfigured || deleting || submitting || renewing}
 								/>

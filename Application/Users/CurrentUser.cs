@@ -9,11 +9,11 @@ namespace Application.Users
 {
     public class CurrentUser
     {
-        public class Query : IRequest<User>
+        public class Query : IRequest<UserDto>
         {
         }
 
-        public class Handler : IRequestHandler<Query, User>
+        public class Handler : IRequestHandler<Query, UserDto>
         {
             private readonly UserManager<AppUser> _userManager;
             private readonly IJwtGenerator _jwtGenerator;
@@ -26,11 +26,11 @@ namespace Application.Users
                 _userAccessor = userAccessor;
             }
 
-            public async Task<User> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<UserDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
 
-                return new User
+                return new UserDto
                 {
                     DisplayName = user.DisplayName,
                     Username = user.UserName,
@@ -41,7 +41,7 @@ namespace Application.Users
 
                     NotificationsEmail = user.NotificationsEmail,
                     NotifyAboutCertificateChange = user.NotifyAboutCertificateChange,
-                    ExpiryNotificationThreshold = user.ExpiryNotificationThresholdDays,
+                    ExpiryNotificationThresholdDays = user.ExpiryNotificationThresholdDays,
                     NotifyAboutExpiryIfRenewalConfigured = user.NotifyAboutExpiryIfRenewalConfigured,
                     RenewalThresholdDays = user.RenewalThresholdDays
                 };
