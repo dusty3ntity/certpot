@@ -6,14 +6,14 @@ import "codemirror/theme/material.css";
 import "codemirror/mode/shell/shell";
 
 import { Button, LoadingScreen, ValidationMessage } from "../../../../components";
-import { combineClassNames, createNotification, createUnknownError } from "../../../../utils";
+import { combineClassNames, createNotification, createUnknownErrorNotification } from "../../../../utils";
 import { IMonitor, ITabProps } from "../../../../models";
 import { useAppDispatch } from "../../../../store";
 import { useSelector } from "react-redux";
 import { RootStateType } from "../../../../models/rootReducer";
 import { fetchRenewalScript, saveRenewalScript } from "../../../../models/monitor/monitorSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { NotificationType } from "../../../../models/types/errors";
+import { ApiError, NotificationType } from "../../../../models/types/errors";
 
 export const ScriptsTab: React.FC<ITabProps> = ({ data }) => {
 	const [script, setScript] = useState("");
@@ -27,8 +27,8 @@ export const ScriptsTab: React.FC<ITabProps> = ({ data }) => {
 		dispatch(fetchRenewalScript(monitor.id))
 			.then(unwrapResult)
 			.then((data) => setScript(data))
-			.catch((err) => {
-				createUnknownError(err, "[scriptsTab]~fetchRenewalScript");
+			.catch((err: ApiError) => {
+				createUnknownErrorNotification(err, "[scriptsTab]~fetchRenewalScript");
 			});
 	}, [monitor.id, dispatch]);
 
@@ -36,8 +36,8 @@ export const ScriptsTab: React.FC<ITabProps> = ({ data }) => {
 		dispatch(saveRenewalScript(script))
 			.then(unwrapResult)
 			.then(() => createNotification(NotificationType.Success, { message: "Renewal script saved successfully!" }))
-			.catch((err) => {
-				createUnknownError(err, "[scriptsTab]~saveRenewalScript");
+			.catch((err: ApiError) => {
+				createUnknownErrorNotification(err, "[scriptsTab]~saveRenewalScript");
 			});
 	};
 
@@ -68,7 +68,7 @@ export const ScriptsTab: React.FC<ITabProps> = ({ data }) => {
 					theme: "material",
 					lineNumbers: true,
 				}}
-				onBeforeChange={(_, __, value) => {
+				onBeforeChange={(_: unknown, __: unknown, value: string) => {
 					setScript(value);
 				}}
 			/>

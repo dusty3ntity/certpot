@@ -14,7 +14,8 @@ import { deleteMonitor } from "../../../models/monitors/monitorsSlice";
 import { RootStateType } from "../../../models/rootReducer";
 import { useAppDispatch } from "../../../store";
 import { MonitorPage } from "./MonitorPage";
-import { createUnknownError } from "../../../utils";
+import { createUnknownErrorNotification } from "../../../utils";
+import { ApiError } from "../../../models/types/errors";
 
 export const MonitorPageWrapper = () => {
 	const history = useHistory();
@@ -26,7 +27,7 @@ export const MonitorPageWrapper = () => {
 
 	useEffect(() => {
 		dispatch(fetchMonitorById(monitorId)).catch((err) => {
-			createUnknownError(err, "[monitorPage]~fetchMonitorById");
+			createUnknownErrorNotification(err, "[monitorPage]~fetchMonitorById");
 		});
 
 		return () => {
@@ -40,7 +41,7 @@ export const MonitorPageWrapper = () => {
 			dispatch(deleteMonitor(monitor.id))
 				.then(unwrapResult)
 				.then(() => history.push("/monitors"))
-				.catch((err) => createUnknownError(err, "[monitorPage]~deleteMonitor"));
+				.catch((err: ApiError) => createUnknownErrorNotification(err, "[monitorPage]~deleteMonitor"));
 		};
 
 		const modalContent = <span>Are you sure you want to delete this monitor?</span>;
@@ -51,16 +52,16 @@ export const MonitorPageWrapper = () => {
 	const handleAutoRenewalChange = () => {
 		dispatch(switchAutoRenewal())
 			.then(unwrapResult)
-			.catch((err) => {
-				createUnknownError(err, "[monitorPage]~handleAutoRenewalChange");
+			.catch((err: ApiError) => {
+				createUnknownErrorNotification(err, "[monitorPage]~handleAutoRenewalChange");
 			});
 	};
 
 	const handleForceRenewal = () => {
 		dispatch(forceRenewal())
 			.then(unwrapResult)
-			.catch((err) => {
-				createUnknownError(err, "[monitorPage]~handleForceRenewal");
+			.catch((err: ApiError) => {
+				createUnknownErrorNotification(err, "[monitorPage]~handleForceRenewal");
 			});
 	};
 

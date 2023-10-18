@@ -66,7 +66,7 @@ namespace Application.Users
                 var user = await _userManager.FindByNameAsync(request.Username);
 
                 if (user == null)
-                    throw new RestException(HttpStatusCode.BadRequest, ErrorType.DefaultValidationError);
+                    throw new RestException(HttpStatusCode.NotFound, ErrorType.UserNotFound);
 
                 if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiry < DateTime.Now)
                     throw new RestException(HttpStatusCode.Unauthorized, ErrorType.RefreshTokenExpired);

@@ -1,34 +1,25 @@
-export class CustomError extends Error {
-	body: any;
-	code: number | undefined;
-
-	constructor(body: any, code?: number) {
-		super();
-		this.body = body;
-		this.code = code;
-	}
-}
+import { AxiosError } from "axios";
 
 export enum ErrorType {
-	DefaultErrorsBlockStart = 0,
-	ConnectionRefused = 1,
+	UnknownNetworkError = 1,
 
-	DefaultNotFound = 11,
-	MonitorNotFound = 12,
+	UnknownNotFound = 11,
+	UserNotFound = 12,
+	MonitorNotFound = 13,
 
-	DefaultServerError = 51,
+	UnknownServerError = 51,
 	SavingChangesError = 52,
 
-	DefaultValidationError = 101,
+	UnknownValidationError = 101,
 	BadId = 102,
 
-	Unauthorized = 161,
-	InvalidEmail = 162,
-	InvalidPassword = 163,
+	UnknownAuthenticationError = 161,
+	Unauthorized = 162,
+	InvalidEmail = 163,
+	InvalidPassword = 164,
 
-	RefreshTokenExpired = 171,
-
-	DefaultErrorsBlockEnd = 199,
+	TokenExpired = 171,
+	RefreshTokenExpired = 172,
 
 	HostConnectionTimeout = 701,
 	CertificateParsingError = 702,
@@ -48,6 +39,69 @@ export enum ErrorType {
 	DuplicateUsernameFound = 902,
 
 	Unknown = 9999,
+}
+
+export class ApiError extends Error {
+	originalError: AxiosError;
+	code: number | undefined;
+	isUnknown: boolean;
+	wasHandled: boolean;
+
+	constructor(originalError: AxiosError, code: number, isUnknown: boolean, wasHandled: boolean) {
+		super();
+		this.code = code;
+		this.isUnknown = isUnknown;
+		this.wasHandled = wasHandled;
+
+		const request = originalError.request;
+
+		if (request && !request.data.errors.code) {
+			this.injectCode(originalError, code);
+		}
+		this.originalError = originalError;
+	}
+
+	public getResponse() {
+		return this.originalError.response;
+	}
+
+	private injectCode = (error: AxiosError, code: ErrorType) => {
+		const body = error.response!.data.errors;
+		error.response!.data.errors = {
+			code: code,
+			body: body,
+		};
+	};
+}
+
+export class NetworkError extends ApiError {
+	constructor(originalError: AxiosError, wasHandled: boolean) {
+		super(originalError, ErrorType.UnknownNetworkError, true, wasHandled);
+	}
+}
+
+export class ServerError extends ApiError {
+	constructor(originalError: AxiosError, wasHandled: boolean, code?: number) {
+		super(originalError, code ?? ErrorType.UnknownServerError, !code, wasHandled);
+	}
+}
+
+export class AuthenticationError extends ApiError {
+	constructor(originalError: AxiosError, wasHandled: boolean, code?: number) {
+		super(originalError, code ?? ErrorType.UnknownAuthenticationError, !code, wasHandled);
+	}
+}
+
+export class ValidationError extends ApiError {
+	constructor(originalError: AxiosError, wasHandled: boolean, code?: number) {
+		super(originalError, code ?? ErrorType.UnknownValidationError, !code, wasHandled);
+	}
+}
+
+export class NotFoundError extends ApiError {
+	constructor(originalError: AxiosError, wasHandled: boolean, code?: number) {
+		super(originalError, code ?? ErrorType.UnknownNotFound, !code, wasHandled);
+	}
 }
 
 export enum NotificationType {

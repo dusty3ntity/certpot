@@ -6,9 +6,9 @@ import { LoadingScreen } from "../../../../components";
 import { IMonitor, ISshCredentials, ITabProps } from "../../../../models";
 import { fetchSshCredentials, saveSshCredentials, testSshConnection } from "../../../../models/monitor/monitorSlice";
 import { RootStateType } from "../../../../models/rootReducer";
-import { ErrorType, NotificationType } from "../../../../models/types/errors";
+import { ApiError, ErrorType, NotificationType } from "../../../../models/types/errors";
 import { useAppDispatch } from "../../../../store";
-import { createNotification, createUnknownError } from "../../../../utils";
+import { createNotification, createUnknownErrorNotification } from "../../../../utils";
 import { SshForm } from "./SshForm";
 
 export const SshTab: React.FC<ITabProps> = ({ data }) => {
@@ -21,7 +21,7 @@ export const SshTab: React.FC<ITabProps> = ({ data }) => {
 
 	useEffect(() => {
 		dispatch(fetchSshCredentials(monitor.id)).catch((err) => {
-			createUnknownError(err, "[sshTab]~fetchSshCredentials");
+			createUnknownErrorNotification(err, "[sshTab]~fetchSshCredentials");
 		});
 	}, [monitor.id, dispatch]);
 
@@ -29,8 +29,8 @@ export const SshTab: React.FC<ITabProps> = ({ data }) => {
 		dispatch(saveSshCredentials(data))
 			.then(unwrapResult)
 			.then(() => createNotification(NotificationType.Success, { message: "Credentials saved successfully!" }))
-			.catch((err) => {
-				createUnknownError(err, "[sshTab]~saveSshCredentials");
+			.catch((err: ApiError) => {
+				createUnknownErrorNotification(err, "[sshTab]~saveSshCredentials");
 			});
 	};
 
@@ -44,8 +44,8 @@ export const SshTab: React.FC<ITabProps> = ({ data }) => {
 					createNotification(NotificationType.Error, { message: "Connection establishment failed!" });
 				}
 			})
-			.catch((err) => {
-				if (err.code < ErrorType.DefaultErrorsBlockEnd) {
+			.catch((err: ApiError) => {
+				if (err.wasHandled) {
 					return;
 				}
 
@@ -69,7 +69,7 @@ export const SshTab: React.FC<ITabProps> = ({ data }) => {
 					});
 				} else {
 					createNotification(NotificationType.UnknownError, {
-						error: err.body,
+						error: err.getResponse(),
 						errorOrigin: "[sshTab]~testSshConnection",
 					});
 				}

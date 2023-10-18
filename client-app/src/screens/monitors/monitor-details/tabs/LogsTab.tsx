@@ -11,7 +11,8 @@ import { IMonitor, ITabProps } from "../../../../models";
 import { useAppDispatch } from "../../../../store";
 import { RootStateType } from "../../../../models/rootReducer";
 import { fetchLastRenewalLogs } from "../../../../models/monitor/monitorSlice";
-import { createUnknownError, defaultFormatWithTime } from "../../../../utils";
+import { createUnknownErrorNotification, defaultFormatWithTime } from "../../../../utils";
+import { ApiError } from "../../../../models/types/errors";
 
 export const LogsTab: React.FC<ITabProps> = ({ data }) => {
 	const monitor = data as IMonitor;
@@ -22,8 +23,8 @@ export const LogsTab: React.FC<ITabProps> = ({ data }) => {
 	useEffect(() => {
 		dispatch(fetchLastRenewalLogs(monitor.id))
 			.then(unwrapResult)
-			.catch((err) => {
-				createUnknownError(err, "[logsTab]~fetchLastRenewalLogs");
+			.catch((err: ApiError) => {
+				createUnknownErrorNotification(err, "[logsTab]~fetchLastRenewalLogs");
 			});
 	}, [monitor.id, dispatch]);
 

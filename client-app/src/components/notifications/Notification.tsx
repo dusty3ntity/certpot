@@ -2,7 +2,7 @@ import React from "react";
 import copy from "copy-to-clipboard";
 
 import { NotificationType } from "../../models/types/errors";
-import { createCustomError } from "../../utils/";
+import { createErrorToCopy } from "../../utils/";
 import { IComponentProps } from "../../models/types/components";
 import { combineClassNames } from "../../utils";
 import { Button, CopyIcon, ErrorIcon, InfoIcon, SuccessIcon, WarningIcon } from "../../components";
@@ -49,7 +49,7 @@ export const Notification: React.FC<INotificationProps> = ({
 	}
 
 	if (error) {
-		error = createCustomError(error);
+		error = createErrorToCopy(error);
 	}
 
 	if (!error && errorOrigin) {

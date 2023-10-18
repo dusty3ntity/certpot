@@ -7,8 +7,8 @@ import { RootStateType } from "../../models/rootReducer";
 import { IUserSettings } from "../../models";
 import { SettingsForm } from "./SettingsForm";
 import { updateSettings } from "../../models/user/userSlice";
-import { createNotification, createUnknownError } from "../../utils";
-import { NotificationType } from "../../models/types/errors";
+import { createNotification, createUnknownErrorNotification } from "../../utils";
+import { ApiError, NotificationType } from "../../models/types/errors";
 import { useAppDispatch } from "../../store";
 
 export const SettingsPage: React.FC = () => {
@@ -18,8 +18,8 @@ export const SettingsPage: React.FC = () => {
 	const handleFormSubmit = async (data: IUserSettings) => {
 		await dispatch(updateSettings(data))
 			.then(() => createNotification(NotificationType.Success, { message: "Settings saved successfully!" }))
-			.catch((err) => {
-				createUnknownError(err, "[settingsPage]~up");
+			.catch((err: ApiError) => {
+				createUnknownErrorNotification(err, "[settingsPage]~up");
 			});
 	};
 

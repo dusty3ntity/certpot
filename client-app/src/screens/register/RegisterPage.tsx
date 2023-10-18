@@ -19,7 +19,7 @@ import { RootStateType } from "../../models/rootReducer";
 import { history } from "../../config/history";
 import { useAppDispatch } from "../../store";
 import { registerUser } from "../../models/user/userSlice";
-import { ErrorType, NotificationType } from "../../models/types/errors";
+import { ApiError, ErrorType, NotificationType } from "../../models/types/errors";
 
 export const RegisterPage: React.FC = () => {
 	const validationSchema: Yup.SchemaOf<IRegisterUser> = Yup.object().shape({
@@ -55,27 +55,24 @@ export const RegisterPage: React.FC = () => {
 	const onSubmit = async (newUser: IRegisterUser) => {
 		await dispatch(registerUser(newUser))
 			.then(() => history.push("/monitors"))
-			.catch((err) => {
-				if (err.code < ErrorType.DefaultErrorsBlockEnd) {
+			.catch((err: ApiError) => {
+				if (err.wasHandled) {
 					return;
 				}
 
-				if (err.body.status === 400) {
-					if (err.code === ErrorType.DuplicateEmailFound) {
-						createNotification(NotificationType.Error, {
-							message: "This email is already in use! Please, choose another one.",
-							error: err.body,
-						});
-					}
-					if (err.code === ErrorType.DuplicateUsernameFound) {
-						createNotification(NotificationType.Error, {
-							message: "This username is already in use! Please, choose another one.",
-							error: err.body,
-						});
-					}
+				if (err.code === ErrorType.DuplicateEmailFound) {
+					createNotification(NotificationType.Error, {
+						message: "This email is already in use! Please, choose another one.",
+						error: err.getResponse(),
+					});
+				} else if (err.code === ErrorType.DuplicateUsernameFound) {
+					createNotification(NotificationType.Error, {
+						message: "This username is already in use! Please, choose another one.",
+						error: err.getResponse(),
+					});
 				} else {
 					createNotification(NotificationType.UnknownError, {
-						error: err.body,
+						error: err.getResponse(),
 						errorOrigin: "[registerPage]~register",
 					});
 				}

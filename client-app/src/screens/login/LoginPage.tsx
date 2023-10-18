@@ -13,7 +13,7 @@ import { RootStateType } from "../../models/rootReducer";
 import { useAppDispatch } from "../../store";
 import { loginUser } from "../../models/user/userSlice";
 import { history } from "../../config/history";
-import { ErrorType, NotificationType } from "../../models/types/errors";
+import { ApiError, ErrorType, NotificationType } from "../../models/types/errors";
 
 export const LoginPage: React.FC = () => {
 	const validationSchema: Yup.SchemaOf<ILoginUser> = Yup.object().shape({
@@ -33,19 +33,26 @@ export const LoginPage: React.FC = () => {
 	const onSubmit = async (credentials: ILoginUser) => {
 		await dispatch(loginUser(credentials))
 			.then(() => history.push("/monitors"))
-			.catch((err) => {
-				if (err.code < ErrorType.DefaultErrorsBlockEnd) {
+			.catch((err: ApiError) => {
+				if (err.wasHandled) {
 					return;
 				}
 
-				if (err.body.status === 401) {
+				if (err.code === ErrorType.InvalidEmail) {
 					createNotification(NotificationType.Error, {
-						message: "User's email or password are incorrect! Please, try again or contact the administrator.",
-						error: err.body,
+						title: "Authentication error!",
+						message: "Could not find a user with this email. Check your credentials and try again.",
+						error: err.getResponse(),
+					});
+				} else if (err.code === ErrorType.InvalidPassword) {
+					createNotification(NotificationType.Error, {
+						title: "Authentication error!",
+						message: "The password is incorrect. Check your credentials and try again.",
+						error: err.getResponse(),
 					});
 				} else {
 					createNotification(NotificationType.UnknownError, {
-						error: err.body,
+						error: err.getResponse(),
 						errorOrigin: "[loginPage]~login",
 					});
 				}
